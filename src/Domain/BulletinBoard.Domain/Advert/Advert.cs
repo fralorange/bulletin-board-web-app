@@ -3,6 +3,7 @@
 using Comment = Comment.Comment;
 using User = User.User;
 using Image = Image.Image;
+using Category = Category.Category;
 using BulletinBoard.Domain.Attributes.MaxElementsAttribute;
 
 /// <summary>
@@ -55,7 +56,10 @@ public class Advert
     /// </summary>
     [MaxElements(10)]
     public required IEnumerable<Image> Images { get; init; }
-    //TO-DO: Добавить Category (как сущность)
+    /// <summary>
+    /// Категория объявления
+    /// </summary>
+    public required Category Category { get; init; }
     /// <summary>
     /// Дата создания объявления
     /// </summary>
