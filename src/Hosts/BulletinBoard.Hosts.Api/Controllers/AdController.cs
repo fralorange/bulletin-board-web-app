@@ -1,0 +1,107 @@
+using BulletinBoard.Application.AppServices.Contexts.Ad.Services;
+using BulletinBoard.Contracts.Ad;
+using Microsoft.AspNetCore.Mvc;
+
+namespace BulletinBoard.Hosts.Api.Controllers
+{
+    /// <summary>
+    /// Контроллер для работы с объявлениями.
+    /// </summary>
+    [ApiController]
+    [Route("ad")]
+    public class AdController : ControllerBase
+    {
+        private readonly IAdService _adService;
+
+        /// <summary>
+        /// Инициализирует экземпляр <see cref="AdController"/>
+        /// </summary>
+        /// <param name="adService">Сервис для работы с объявлениями.</param>
+        public AdController(IAdService adService)
+        {
+            _adService = adService;
+        }
+
+        /// <summary>
+        /// Возвращает постраничные объявления.
+        /// </summary>
+        /// <remarks>
+        /// Пример: curl -X 'GET' \ 'https://localhost:port/ad/get-all-by-pages?pageSize=10&amp;pageIndex=0'
+        /// </remarks>
+        /// <param name="cancellationToken">Отмена операции.</param>
+        /// <param name="pageSize">Размер страницы.</param>
+        /// <param name="pageIndex">Номер страницы.</param>
+        /// <returns>Коллекция объявлений <see cref="AdDto"/>.</returns>
+        [HttpGet]
+        [Route("get-all-by-pages")]
+
+        public async Task<IActionResult> GetAllAsync(CancellationToken cancellationToken, int pageSize = 10, int pageIndex = 0)
+        {
+            var result = await _adService.GetAllAsync(cancellationToken, pageSize, pageIndex);
+            return Ok(result);
+        }
+
+        /// <summary>
+        /// Возвращает объявлению по заданному идентификатору.
+        /// </summary>
+        /// <remarks>
+        /// Пример: curl -X 'GET' \'https://localhost:port/ad/get-by-id'
+        /// </remarks>
+        /// <param name="id">Идентификатор объявления.</param>
+        /// <param name="cancellationToken">Отмена операции.</param>
+        /// <returns>Модель объявления <see cref="AdDto"/>.</returns>
+        [HttpGet]
+        [Route("get-by-id")]
+        [ProducesResponseType(typeof(AdDto), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task<IActionResult> GetByIdAsync(Guid id, CancellationToken cancellationToken)
+        {
+            var result = await _adService.GetByIdAsync(id, cancellationToken);
+            if (result == null)
+                return NotFound(result);
+            return Ok(result);
+        }
+
+        /// <summary>
+        /// Создает объявление.
+        /// </summary>
+        /// <remarks>
+        /// Пример: curl -X 'POST' \ 'https://localhost:port/ad' \
+        /// </remarks>
+        /// <param name="dto">Модель создаваемого объявления.</param>
+        /// <param name="cancellationToken">Отмена операции.</param>
+        /// <returns>Идентификатор создаваемого объявления</returns>
+        [HttpPost]
+        [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task<IActionResult> CreateAsync(CreateAdDto dto, CancellationToken cancellationToken)
+        {
+            var dtoId = await _adService.CreateAsync(dto, cancellationToken);
+            return Created(nameof(CreateAsync), dtoId);
+        }
+
+        /// <summary>
+        /// Редактирует объявление.
+        /// </summary>
+        /// <param name="dto">Модель объявления.</param>
+        /// <param name="cancellationToken">Отмена операции.</param>
+        [HttpPut]
+        public async Task<IActionResult> UpdateAsync(AdDto dto, CancellationToken cancellationToken)
+        {
+            return Ok();
+        }
+
+        /// <summary>
+        /// Удаляет объявление по идентификатору.
+        /// </summary>
+        /// <param name="id">Идентификатор объявления.</param>
+        /// <param name="cancellationToken">Отмена операции.</param>
+        [HttpDelete]
+        public async Task<IActionResult> DeleteAsync(Guid id, CancellationToken cancellationToken)
+        {
+            return Ok();
+        }
+    }
+}
