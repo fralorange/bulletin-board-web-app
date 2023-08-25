@@ -17,6 +17,7 @@ namespace BulletinBoard.Application.AppServices.Contexts.Ad.Services
             _adRepository = adRepository;
         }
 
+        /// <inheritdoc/> 
         public Task<IReadOnlyCollection<AdDto>> GetAllAsync(CancellationToken cancellationToken, int pageSize = 10, int pageIndex = 0)
         {
             return _adRepository.GetAllAsync(cancellationToken, pageSize, pageIndex);
