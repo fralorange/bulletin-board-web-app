@@ -26,8 +26,7 @@ namespace BulletinBoard.Contracts.Ad
         /// <summary>
         /// Идентификатор категории.
         /// </summary>
-        [Required(AllowEmptyStrings = false)]
-        public Guid CategoryId { get; init; }
+        public required Guid CategoryId { get; init; }
 
         /// <summary>
         /// Изображения.
