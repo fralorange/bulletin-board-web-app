@@ -1,3 +1,6 @@
+using BulletinBoard.Application.AppServices.Contexts.Ad.Repositories;
+using BulletinBoard.Application.AppServices.Contexts.Ad.Services;
+using BulletinBoard.Infrastructure.DataAccess.Contexts.Ad.Repositories;
 using System.Reflection;
 
 namespace BulletinBoard.Hosts.Api
@@ -29,6 +32,9 @@ namespace BulletinBoard.Hosts.Api
                 }
             });
 
+            builder.Services.AddTransient<IAdService, AdService>();
+            builder.Services.AddSingleton<IAdRepository, AdRepository>();
+
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.
@@ -41,7 +47,6 @@ namespace BulletinBoard.Hosts.Api
             app.UseHttpsRedirection();
 
             app.UseAuthorization();
-
 
             app.MapControllers();
 

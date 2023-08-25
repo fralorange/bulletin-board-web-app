@@ -1,3 +1,4 @@
+using BulletinBoard.Application.AppServices.Contexts.Ad.Services;
 using BulletinBoard.Contracts.Ad;
 using Microsoft.AspNetCore.Mvc;
 
@@ -10,9 +11,23 @@ namespace BulletinBoard.Hosts.Api.Controllers
     [Route("ad")]
     public class AdController : ControllerBase
     {
+        private readonly IAdService _adService;
+
+        /// <summary>
+        /// Инициализирует экземпляр <see cref="AdController"/>
+        /// </summary>
+        /// <param name="adService">Сервис для работы с объявлениями.</param>
+        public AdController(IAdService adService)
+        {
+            _adService = adService;
+        }
+
         /// <summary>
         /// Возвращает постраничные объявления.
         /// </summary>
+        /// <remarks>
+        /// Пример: curl -X 'GET' \ 'https://localhost:port/ad/get-all-by-pages?pageSize=10&amp;pageIndex=0'
+        /// </remarks>
         /// <param name="cancellationToken">Отмена операции.</param>
         /// <param name="pageSize">Размер страницы.</param>
         /// <param name="pageIndex">Номер страницы.</param>
@@ -22,20 +37,30 @@ namespace BulletinBoard.Hosts.Api.Controllers
 
         public async Task<IActionResult> GetAllAsync(CancellationToken cancellationToken, int pageSize = 10, int pageIndex = 0)
         {
-            return Ok();
+            var result = await _adService.GetAllAsync(cancellationToken, pageSize, pageIndex);
+            return Ok(result);
         }
 
         /// <summary>
         /// Возвращает объявлению по заданному идентификатору.
         /// </summary>
+        /// <remarks>
+        /// Пример: curl -X 'GET' \'https://localhost:port/ad/get-by-id'
+        /// </remarks>
         /// <param name="id">Идентификатор объявления.</param>
         /// <param name="cancellationToken">Отмена операции.</param>
         /// <returns>Модель объявления <see cref="AdDto"/>.</returns>
         [HttpGet]
         [Route("get-by-id")]
+        [ProducesResponseType(typeof(AdDto), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> GetByIdAsync(Guid id, CancellationToken cancellationToken)
         {
-            return Ok();
+            var result = await _adService.GetByIdAsync(id, cancellationToken);
+            if (result == null)
+                return NotFound(result);
+            return Ok(result);
         }
 
         /// <summary>
@@ -44,6 +69,7 @@ namespace BulletinBoard.Hosts.Api.Controllers
         /// <param name="dto">Модель объявления.</param>
         /// <param name="cancellationToken">Отмена операции.</param>
         [HttpPost]
+        [ProducesResponseType(StatusCodes.Status201Created)]
         public async Task<IActionResult> CreateAsync(AdDto dto, CancellationToken cancellationToken)
         {
             return Created(string.Empty, null);
