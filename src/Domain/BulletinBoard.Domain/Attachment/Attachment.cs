@@ -1,4 +1,4 @@
-﻿using BulletinBoard.Domain.Ad;
+﻿using BulletinBoard.Domain.Base;
 
 namespace BulletinBoard.Domain.Attachment
 {
