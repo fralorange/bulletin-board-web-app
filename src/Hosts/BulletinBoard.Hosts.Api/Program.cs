@@ -16,8 +16,17 @@ namespace BulletinBoard.Hosts.Api
             builder.Services.AddSwaggerGen(options =>
             {
                 // using System.Reflection;
-                var xmlFilename = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
-                options.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory, xmlFilename));
+                var hostsXmlFilename = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+                options.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory, hostsXmlFilename));
+                
+                var referencedAssemblies = Assembly.GetExecutingAssembly().GetReferencedAssemblies();
+                foreach (var referencedAssembly in referencedAssemblies)
+                {
+                    if (!referencedAssembly.Name!.Contains("BulletinBoard"))
+                        continue;
+                    var xmlFilename = $"{referencedAssembly.Name}.xml";
+                    options.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory, xmlFilename));
+                }
             });
 
             var app = builder.Build();
