@@ -1,0 +1,51 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>BulletinBoard.Hosts.Api</name>
+    </assembly>
+    <members>
+        <member name="T:BulletinBoard.Hosts.Api.Controllers.AdController">
+            <summary>
+            Контроллер для работы с объявлениями.
+            </summary>
+        </member>
+        <member name="M:BulletinBoard.Hosts.Api.Controllers.AdController.GetAllAsync(System.Threading.CancellationToken,System.Int32,System.Int32)">
+            <summary>
+            Возвращает постраничные объявления.
+            </summary>
+            <param name="cancellationToken">Отмена операции.</param>
+            <param name="pageSize">Размер страницы.</param>
+            <param name="pageIndex">Номер страницы.</param>
+            <returns>Коллекция объявлений <see cref="T:BulletinBoard.Contracts.Ad.AdDto"/>.</returns>
+        </member>
+        <member name="M:BulletinBoard.Hosts.Api.Controllers.AdController.GetByIdAsync(System.Guid,System.Threading.CancellationToken)">
+            <summary>
+            Возвращает объявлению по заданному идентификатору.
+            </summary>
+            <param name="id">Идентификатор объявления.</param>
+            <param name="cancellationToken">Отмена операции.</param>
+            <returns>Модель объявления <see cref="T:BulletinBoard.Contracts.Ad.AdDto"/>.</returns>
+        </member>
+        <member name="M:BulletinBoard.Hosts.Api.Controllers.AdController.CreateAsync(BulletinBoard.Contracts.Ad.AdDto,System.Threading.CancellationToken)">
+            <summary>
+            Создает объявление.
+            </summary>
+            <param name="dto">Модель объявления.</param>
+            <param name="cancellationToken">Отмена операции.</param>
+        </member>
+        <member name="M:BulletinBoard.Hosts.Api.Controllers.AdController.UpdateAsync(BulletinBoard.Contracts.Ad.AdDto,System.Threading.CancellationToken)">
+            <summary>
+            Редактирует объявление.
+            </summary>
+            <param name="dto">Модель объявления.</param>
+            <param name="cancellationToken">Отмена операции.</param>
+        </member>
+        <member name="M:BulletinBoard.Hosts.Api.Controllers.AdController.DeleteAsync(System.Guid,System.Threading.CancellationToken)">
+            <summary>
+            Удаляет объявление по идентификатору.
+            </summary>
+            <param name="id">Идентификатор объявления.</param>
+            <param name="cancellationToken">Отмена операции.</param>
+        </member>
+    </members>
+</doc>
