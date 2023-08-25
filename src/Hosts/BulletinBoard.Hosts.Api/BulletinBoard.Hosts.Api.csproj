@@ -12,6 +12,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="12.0.1" />
     <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="7.0.5" />
     <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.18.1" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.4.0" />
@@ -20,6 +21,7 @@
   <ItemGroup>
     <ProjectReference Include="..\..\Application\BulletinBoard.Application.AppServices\BulletinBoard.Application.AppServices.csproj" />
     <ProjectReference Include="..\..\Contracts\BulletinBoard.Contracts\BulletinBoard.Contracts.csproj" />
+    <ProjectReference Include="..\..\Infrastructure\BulletinBoard.Infrastructure.ComponentRegistrar\BulletinBoard.Infrastructure.ComponentRegistrar.csproj" />
     <ProjectReference Include="..\..\Infrastructure\BulletinBoard.Infrastructure.DataAccess\BulletinBoard.Infrastructure.DataAccess.csproj" />
   </ItemGroup>
 

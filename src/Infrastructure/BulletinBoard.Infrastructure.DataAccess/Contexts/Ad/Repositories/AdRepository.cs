@@ -1,78 +1,93 @@
-﻿using BulletinBoard.Application.AppServices.Contexts.Ad.Repositories;
+﻿using AutoMapper;
+using BulletinBoard.Application.AppServices.Contexts.Ad.Repositories;
 using BulletinBoard.Contracts.Ad;
-using BulletinBoard.Contracts.Attachment;
+using System.Collections.ObjectModel;
+using AdEntity = BulletinBoard.Domain.Ad.Ad;
+using AttachmentEntity = BulletinBoard.Domain.Attachment.Attachment;
 
 namespace BulletinBoard.Infrastructure.DataAccess.Contexts.Ad.Repositories
 {
     /// <inheritdoc/>
     public class AdRepository : IAdRepository
     {
-        private readonly IReadOnlyCollection<AdDto> _adCollection;
+        private readonly IList<AdEntity> _adCollection;
+        private readonly IMapper _mapper;
         /// <summary>
         /// Инициализирует экземпляр <see cref="AdRepository"/>
         /// </summary>
-        public AdRepository()
+        public AdRepository(IMapper mapper)
         {
-            _adCollection = new List<AdDto>()
+            _adCollection = new List<AdEntity>()
             {
-                new AdDto
+                new AdEntity
                 {
                     Id = Guid.NewGuid(),
                     Title = "Тестовое название",
                     Description = "Тестовое описание",
-                    CategoryName = "Тестовая категория",
-                    Attachments = new[] { new AttachmentDto { Id = Guid.NewGuid(), Content = Array.Empty<byte>() } },
+                    CategoryId = Guid.NewGuid(),
+                    Attachments = new[] { new AttachmentEntity { Id = Guid.NewGuid(), Content = new byte[] { 111, 222, 11, 254} } },
                     Price = 100,
                 },
-                new AdDto
+                new AdEntity
                 {
                     Id = Guid.NewGuid(),
                     Title = "Тестовое название 2",
                     Description = "Тестовое описание 2",
-                    CategoryName = "Тестовая категория 2",
-                    Attachments = new[] { new AttachmentDto { Id = Guid.NewGuid(), Content = Array.Empty<byte>() } },
+                    CategoryId = Guid.NewGuid(),
+                    Attachments = new[] { new AttachmentEntity { Id = Guid.NewGuid(), Content = Array.Empty<byte>() } },
                     Price = 150,
                 },
-                new AdDto
+                new AdEntity
                 {
                     Id = Guid.NewGuid(),
                     Title = "Тестовое название 3",
                     Description = "Тестовое описание 3",
-                    CategoryName = "Тестовая категория 3",
-                    Attachments = new[] { new AttachmentDto { Id = Guid.NewGuid(), Content = Array.Empty<byte>() } },
+                    CategoryId = Guid.NewGuid(),
+                    Attachments = new[] { new AttachmentEntity { Id = Guid.NewGuid(), Content = Array.Empty<byte>() } },
                     Price = 200,
                 },
-                new AdDto
+                new AdEntity
                 {
                     Id = Guid.NewGuid(),
                     Title = "Тестовое название 4",
                     Description = "Тестовое описание 4",
-                    CategoryName = "Тестовая категория 4",
-                    Attachments = new[] { new AttachmentDto { Id = Guid.NewGuid(), Content = Array.Empty<byte>() } },
+                    CategoryId = Guid.NewGuid(),
+                    Attachments = new[] { new AttachmentEntity { Id = Guid.NewGuid(), Content = Array.Empty<byte>() } },
                     Price = 250,
                 },
-                new AdDto
+                new AdEntity
                 {
                     Id = Guid.NewGuid(),
                     Title = "Тестовое название 5 ",
                     Description = "Тестовое описание 5",
-                    CategoryName = "Тестовая категория 5",
-                    Attachments = new[] { new AttachmentDto { Id = Guid.NewGuid(), Content = Array.Empty<byte>() } },
+                    CategoryId = Guid.NewGuid(),
+                    Attachments = new[] { new AttachmentEntity { Id = Guid.NewGuid(), Content = Array.Empty<byte>() } },
                     Price = 300,
                 }
             };
+
+            _mapper = mapper;
+        }
+
+        /// <inheritdoc/>
+        public Task<Guid> CreateAsync(AdEntity ad, CancellationToken cancellationToken)
+        {
+            ad.Id = Guid.NewGuid();
+            _adCollection.Add(ad);
+            return Task.Run(() => ad.Id);
         }
 
         /// <inheritdoc/>
         public Task<IReadOnlyCollection<AdDto>> GetAllAsync(CancellationToken cancellationToken, int pageSize = 10, int pageIndex = 0)
         {
-            return Task.Run(() => _adCollection, cancellationToken);
+            var dtoCollection = _adCollection.Select(_mapper.Map<AdDto>).ToList().AsReadOnly();
+            return Task.Run(() => dtoCollection, cancellationToken).ContinueWith(x => new ReadOnlyCollection<AdDto>(x.Result) as IReadOnlyCollection<AdDto>);   
         }
 
         /// <inheritdoc/>
         public Task<AdDto?> GetByIdAsync(Guid id, CancellationToken cancellationToken)
         {
-            return Task.Run(() => _adCollection.FirstOrDefault(ad => ad.Id.Equals(id)), cancellationToken);
+            return Task.Run(() => _mapper.Map<AdDto?>(_adCollection.FirstOrDefault(ad => ad.Id.Equals(id))), cancellationToken);
         }
     }
 }

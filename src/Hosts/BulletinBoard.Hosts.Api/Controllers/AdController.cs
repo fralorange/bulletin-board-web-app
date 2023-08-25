@@ -66,13 +66,20 @@ namespace BulletinBoard.Hosts.Api.Controllers
         /// <summary>
         /// Создает объявление.
         /// </summary>
-        /// <param name="dto">Модель объявления.</param>
+        /// <remarks>
+        /// Пример: curl -X 'POST' \ 'https://localhost:port/ad' \
+        /// </remarks>
+        /// <param name="dto">Модель создаваемого объявления.</param>
         /// <param name="cancellationToken">Отмена операции.</param>
+        /// <returns>Идентификатор создаваемого объявления</returns>
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status201Created)]
-        public async Task<IActionResult> CreateAsync(AdDto dto, CancellationToken cancellationToken)
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task<IActionResult> CreateAsync(CreateAdDto dto, CancellationToken cancellationToken)
         {
-            return Created(string.Empty, null);
+            var dtoId = await _adService.CreateAsync(dto, cancellationToken);
+            return Created(nameof(CreateAsync), dtoId);
         }
 
         /// <summary>

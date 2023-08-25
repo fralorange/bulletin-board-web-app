@@ -23,5 +23,13 @@ namespace BulletinBoard.Application.AppServices.Contexts.Ad.Repositories
         /// <param name="pageIndex">Номер страницы.</param>
         /// <returns>Коллекция объявлений <see cref="AdDto"/></returns>
         Task<IReadOnlyCollection<AdDto>> GetAllAsync(CancellationToken cancellationToken, int pageSize = 10, int pageIndex = 0);
+
+        /// <summary>
+        /// Создает объявление.
+        /// </summary>
+        /// <param name="ad">Объявление.</param>
+        /// <param name="cancellationToken">Отмена операции.</param>
+        /// <returns>Идентификатор созданной сущности.</returns>
+        Task<Guid> CreateAsync(Domain.Ad.Ad ad, CancellationToken cancellationToken);
     }
 }
