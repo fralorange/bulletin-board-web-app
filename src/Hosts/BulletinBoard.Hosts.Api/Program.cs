@@ -1,5 +1,8 @@
+using AutoMapper;
 using BulletinBoard.Application.AppServices.Contexts.Ad.Repositories;
 using BulletinBoard.Application.AppServices.Contexts.Ad.Services;
+using BulletinBoard.Infrastructure.ComponentRegistrar.Mappers.Ad;
+using BulletinBoard.Infrastructure.ComponentRegistrar.Mappers.Attachment;
 using BulletinBoard.Infrastructure.DataAccess.Contexts.Ad.Repositories;
 using System.Reflection;
 
@@ -31,6 +34,8 @@ namespace BulletinBoard.Hosts.Api
                     options.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory, xmlFilename));
                 }
             });
+
+            builder.Services.AddAutoMapper(typeof(AdMapper), typeof(AttachmentMapper));
 
             builder.Services.AddTransient<IAdService, AdService>();
             builder.Services.AddSingleton<IAdRepository, AdRepository>();
