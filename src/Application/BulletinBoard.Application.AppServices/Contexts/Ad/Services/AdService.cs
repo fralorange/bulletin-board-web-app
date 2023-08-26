@@ -3,7 +3,6 @@ using BulletinBoard.Application.AppServices.Contexts.Ad.Repositories;
 using BulletinBoard.Contracts.Ad;
 
 using AdEntity = BulletinBoard.Domain.Ad.Ad;
-using AttachmentEntity = BulletinBoard.Domain.Attachment.Attachment;
 
 namespace BulletinBoard.Application.AppServices.Contexts.Ad.Services
 {
@@ -27,8 +26,13 @@ namespace BulletinBoard.Application.AppServices.Contexts.Ad.Services
         /// <inheritdoc/>
         public Task<Guid> CreateAsync(CreateAdDto dto, CancellationToken cancellationToken)
         {
-            var ad = _mapper.Map<AdEntity>(dto);
-            return _adRepository.CreateAsync(ad, cancellationToken);
+            return _adRepository.CreateAsync(_mapper.Map<AdEntity>(dto), cancellationToken);
+        }
+
+        /// <inheritdoc/>
+        public Task<bool> DeleteAsync(Guid id, CancellationToken cancellationToken)
+        {
+            return _adRepository.DeleteAsync(id, cancellationToken);
         }
 
         /// <inheritdoc/> 
@@ -41,6 +45,12 @@ namespace BulletinBoard.Application.AppServices.Contexts.Ad.Services
         public Task<AdDto?> GetByIdAsync(Guid id, CancellationToken cancellationToken)
         {
             return _adRepository.GetByIdAsync(id, cancellationToken);
+        }
+
+        /// <inheritdoc/>
+        public Task UpdateAsync(Guid id, UpdateAdDto dto, CancellationToken cancellationToken)
+        {
+            return _adRepository.UpdateAsync(id, _mapper.Map<AdEntity>(dto), cancellationToken);
         }
     }
 }

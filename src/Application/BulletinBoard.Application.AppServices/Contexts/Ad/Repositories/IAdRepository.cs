@@ -1,4 +1,5 @@
 ﻿using BulletinBoard.Contracts.Ad;
+using System.Security.Principal;
 
 namespace BulletinBoard.Application.AppServices.Contexts.Ad.Repositories
 {
@@ -31,5 +32,20 @@ namespace BulletinBoard.Application.AppServices.Contexts.Ad.Repositories
         /// <param name="cancellationToken">Отмена операции.</param>
         /// <returns>Идентификатор созданной сущности.</returns>
         Task<Guid> CreateAsync(Domain.Ad.Ad ad, CancellationToken cancellationToken);
+
+        /// <summary>
+        /// Редактирует объявление.
+        /// </summary>
+        /// <param name="id">Идентификатор объявления.</param>
+        /// <param name="ad">Объявление.</param>
+        /// <param name="cancellationToken">Отмена операции.</param>
+        Task UpdateAsync(Guid id, Domain.Ad.Ad ad, CancellationToken cancellationToken);
+
+        /// <summary>
+        /// Удаляет объявление по идентификатору.
+        /// </summary>
+        /// <param name="id">Идентификатор объявления.</param>
+        /// <param name="cancellationToken">Отмена операции.</param>
+        Task<bool> DeleteAsync(Guid id, CancellationToken cancellationToken);
     }
 }

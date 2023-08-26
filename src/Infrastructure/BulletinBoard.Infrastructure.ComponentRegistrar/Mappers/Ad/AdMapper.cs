@@ -29,6 +29,9 @@ namespace BulletinBoard.Infrastructure.ComponentRegistrar.Mappers.Ad
                 .ForMember(dest => dest.CategoryId, opt => opt.MapFrom(src => src.CategoryId))
                 .ForMember(dest => dest.Attachments, opt => opt.MapFrom(src => src.Attachments))
                 .ForMember(dest => dest.Price, opt => opt.MapFrom(src => src.Price));
+
+            CreateMap<UpdateAdDto, AdEntity>()
+                .IncludeBase<CreateAdDto, AdEntity>();
         }
     }
 }
