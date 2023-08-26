@@ -32,8 +32,7 @@ namespace BulletinBoard.Hosts.Api.Controllers
         /// <param name="pageSize">Размер страницы.</param>
         /// <param name="pageIndex">Номер страницы.</param>
         /// <returns>Коллекция объявлений <see cref="AdDto"/>.</returns>
-        [HttpGet]
-        [Route("get-all-by-pages")]
+        [HttpGet("get-all-by-pages")]
 
         public async Task<IActionResult> GetAllAsync(CancellationToken cancellationToken, int pageSize = 10, int pageIndex = 0)
         {
@@ -50,8 +49,7 @@ namespace BulletinBoard.Hosts.Api.Controllers
         /// <param name="id">Идентификатор объявления.</param>
         /// <param name="cancellationToken">Отмена операции.</param>
         /// <returns>Модель объявления <see cref="AdDto"/>.</returns>
-        [HttpGet]
-        [Route("get-by-id")]
+        [HttpGet("get-by-id")]
         [ProducesResponseType(typeof(AdDto), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
@@ -85,12 +83,19 @@ namespace BulletinBoard.Hosts.Api.Controllers
         /// <summary>
         /// Редактирует объявление.
         /// </summary>
+        /// <param name="id">Идентификатор объявления.</param>
         /// <param name="dto">Модель объявления.</param>
         /// <param name="cancellationToken">Отмена операции.</param>
-        [HttpPut]
-        public async Task<IActionResult> UpdateAsync(AdDto dto, CancellationToken cancellationToken)
+        [HttpPut("{id:guid}")]
+        public async Task<IActionResult> UpdateAsync(Guid id, UpdateAdDto dto, CancellationToken cancellationToken)
         {
-            return Ok();
+            var ad = await _adService.GetByIdAsync(id, cancellationToken);
+            if (ad is null)
+                return NotFound();
+
+            await _adService.UpdateAsync(id, dto, cancellationToken);
+
+            return NoContent();
         }
 
         /// <summary>

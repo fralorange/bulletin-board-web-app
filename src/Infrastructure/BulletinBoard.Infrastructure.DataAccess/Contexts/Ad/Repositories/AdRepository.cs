@@ -2,6 +2,7 @@
 using BulletinBoard.Application.AppServices.Contexts.Ad.Repositories;
 using BulletinBoard.Contracts.Ad;
 using System.Collections.ObjectModel;
+
 using AdEntity = BulletinBoard.Domain.Ad.Ad;
 using AttachmentEntity = BulletinBoard.Domain.Attachment.Attachment;
 
@@ -10,7 +11,7 @@ namespace BulletinBoard.Infrastructure.DataAccess.Contexts.Ad.Repositories
     /// <inheritdoc/>
     public class AdRepository : IAdRepository
     {
-        private readonly IList<AdEntity> _adCollection;
+        private readonly List<AdEntity> _adCollection;
         private readonly IMapper _mapper;
         /// <summary>
         /// Инициализирует экземпляр <see cref="AdRepository"/>
@@ -81,13 +82,24 @@ namespace BulletinBoard.Infrastructure.DataAccess.Contexts.Ad.Repositories
         public Task<IReadOnlyCollection<AdDto>> GetAllAsync(CancellationToken cancellationToken, int pageSize = 10, int pageIndex = 0)
         {
             var dtoCollection = _adCollection.Select(_mapper.Map<AdDto>).ToList().AsReadOnly();
-            return Task.Run(() => dtoCollection, cancellationToken).ContinueWith(x => new ReadOnlyCollection<AdDto>(x.Result) as IReadOnlyCollection<AdDto>);   
+            return Task.Run(() => dtoCollection, cancellationToken).ContinueWith(x => new ReadOnlyCollection<AdDto>(x.Result) as IReadOnlyCollection<AdDto>);
         }
 
         /// <inheritdoc/>
         public Task<AdDto?> GetByIdAsync(Guid id, CancellationToken cancellationToken)
         {
             return Task.Run(() => _mapper.Map<AdDto?>(_adCollection.FirstOrDefault(ad => ad.Id.Equals(id))), cancellationToken);
+        }
+
+        /// <inheritdoc/>
+        public Task UpdateAsync(Guid id, AdEntity ad, CancellationToken cancellationToken)
+        {
+            return Task.Run(() =>
+            {
+                int index = _adCollection.FindIndex(entity => entity.Id == id);
+                ad.Id = id;
+                _adCollection[index] = ad;
+            }, cancellationToken);
         }
     }
 }

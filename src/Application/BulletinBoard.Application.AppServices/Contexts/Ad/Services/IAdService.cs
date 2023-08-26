@@ -31,5 +31,13 @@ namespace BulletinBoard.Application.AppServices.Contexts.Ad.Services
         /// <param name="cancellationToken">Отмена операции.</param>
         /// <returns>Идентификатор созданной сущности.</returns>
         Task<Guid> CreateAsync(CreateAdDto dto, CancellationToken cancellationToken);
+
+        /// <summary>
+        /// Редактирует объявление.
+        /// </summary>
+        /// <param name="id">Идентификатор объявления.</param>
+        /// <param name="dto">Модель объявления.</param>
+        /// <param name="cancellationToken">Отмена операции.</param>
+        Task UpdateAsync(Guid id, UpdateAdDto dto, CancellationToken cancellationToken);
     }
 }
