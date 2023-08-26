@@ -29,6 +29,12 @@ namespace BulletinBoard.Application.AppServices.Contexts.Ad.Services
             return _adRepository.CreateAsync(_mapper.Map<AdEntity>(dto), cancellationToken);
         }
 
+        /// <inheritdoc/>
+        public Task<bool> DeleteAsync(Guid id, CancellationToken cancellationToken)
+        {
+            return _adRepository.DeleteAsync(id, cancellationToken);
+        }
+
         /// <inheritdoc/> 
         public Task<IReadOnlyCollection<AdDto>> GetAllAsync(CancellationToken cancellationToken, int pageSize = 10, int pageIndex = 0)
         {

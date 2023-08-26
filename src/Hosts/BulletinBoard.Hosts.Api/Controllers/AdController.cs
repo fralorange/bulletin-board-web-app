@@ -103,10 +103,13 @@ namespace BulletinBoard.Hosts.Api.Controllers
         /// </summary>
         /// <param name="id">Идентификатор объявления.</param>
         /// <param name="cancellationToken">Отмена операции.</param>
-        [HttpDelete]
+        [HttpDelete("{id:guid}")]
         public async Task<IActionResult> DeleteAsync(Guid id, CancellationToken cancellationToken)
         {
-            return Ok();
+            var state = await _adService.DeleteAsync(id, cancellationToken);
+            if (!state)
+                return NotFound();
+            return NoContent();
         }
     }
 }

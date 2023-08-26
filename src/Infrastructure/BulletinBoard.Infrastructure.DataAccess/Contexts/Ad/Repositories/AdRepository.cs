@@ -79,6 +79,12 @@ namespace BulletinBoard.Infrastructure.DataAccess.Contexts.Ad.Repositories
         }
 
         /// <inheritdoc/>
+        public Task<bool> DeleteAsync(Guid id, CancellationToken cancellationToken)
+        {
+            return Task.Run(() => _adCollection.RemoveAll(ad => ad.Id == id) > 0, cancellationToken);
+        }
+
+        /// <inheritdoc/>
         public Task<IReadOnlyCollection<AdDto>> GetAllAsync(CancellationToken cancellationToken, int pageSize = 10, int pageIndex = 0)
         {
             var dtoCollection = _adCollection.Select(_mapper.Map<AdDto>).ToList().AsReadOnly();
