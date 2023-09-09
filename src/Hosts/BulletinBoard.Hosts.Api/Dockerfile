@@ -7,7 +7,11 @@ EXPOSE 443
 
 FROM mcr.microsoft.com/dotnet/sdk:7.0 AS build
 WORKDIR /src
-COPY ["src/Hosts/BulletinBoard.Hosts.Api/BulletinBoard.Hosts.Api.csproj", "src/Hosts/BulletinBoard.Hosts.Api/"]
+COPY ["src/Hosts/BulletinBoard.Hosts.Api/*.csproj", "src/Hosts/BulletinBoard.Hosts.Api/"]
+COPY ["src/Application/BulletinBoard.Application.AppServices/*.csproj", "src/Application/BulletinBoard.Application.AppServices/"]
+COPY ["src/Contracts/BulletinBoard.Contracts/*.csproj", "src/Contracts/BulletinBoard.Contracts/"]
+COPY ["src/Infrastructure/BulletinBoard.Infrastructure.ComponentRegistrar/*.csproj", "src/Infrastructure/BulletinBoard.Infrastructure.ComponentRegistrar/"]
+COPY ["src/Infrastructure/BulletinBoard.Infrastructure.DataAccess/*.csproj", "src/Infrastructure/BulletinBoard.Infrastructure.DataAccess/"]
 RUN dotnet restore "src/Hosts/BulletinBoard.Hosts.Api/BulletinBoard.Hosts.Api.csproj"
 COPY . .
 WORKDIR "/src/src/Hosts/BulletinBoard.Hosts.Api"
