@@ -74,7 +74,7 @@ namespace BulletinBoard.Hosts.Api.Controllers
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> CreateAsync(CreateAdDto dto, CancellationToken cancellationToken)
+        public async Task<IActionResult> CreateAsync([FromBody] CreateAdDto dto, CancellationToken cancellationToken)
         {
             var dtoId = await _adService.CreateAsync(dto, cancellationToken);
             return Created(nameof(CreateAsync), dtoId);

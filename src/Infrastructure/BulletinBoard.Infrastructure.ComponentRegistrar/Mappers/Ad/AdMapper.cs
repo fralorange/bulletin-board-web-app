@@ -19,15 +19,15 @@ namespace BulletinBoard.Infrastructure.ComponentRegistrar.Mappers.Ad
                 .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.Id))
                 .ForMember(dest => dest.Title, opt => opt.MapFrom(src => src.Title))
                 .ForMember(dest => dest.Description, opt => opt.MapFrom(src => src.Description))
-                .ForMember(dest => dest.CategoryName, opt => opt.MapFrom(src => src.Category.CategoryName))
-                .ForMember(dest => dest.Attachments, opt => opt.MapFrom(src => src.Attachments))
+                //.ForMember(dest => dest.CategoryName, opt => opt.MapFrom(src => src.Category.CategoryName))
+                //.ForMember(dest => dest.Attachments, opt => opt.MapFrom(src => src.Attachments))
                 .ForMember(dest => dest.Price, opt => opt.MapFrom(src => src.Price));
 
             CreateMap<CreateAdDto, AdEntity>()
                 .ForMember(dest => dest.Title, opt => opt.MapFrom(src => src.Title))
                 .ForMember(dest => dest.Description, opt => opt.MapFrom(src => src.Description))
-                .ForMember(dest => dest.CategoryId, opt => opt.MapFrom(src => src.CategoryId))
-                .ForMember(dest => dest.Attachments, opt => opt.MapFrom(src => src.Attachments))
+                //.ForMember(dest => dest.CategoryId, opt => opt.MapFrom(src => src.CategoryId))
+                //.ForMember(dest => dest.Attachments, opt => opt.MapFrom(src => src.Attachments.Select()))
                 .ForMember(dest => dest.Price, opt => opt.MapFrom(src => src.Price));
 
             CreateMap<UpdateAdDto, AdEntity>()

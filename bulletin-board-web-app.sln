@@ -19,19 +19,23 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Infrastructure", "Infrastru
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Clients", "Clients", "{DA2015B0-3155-4163-AECB-A41539E5E3F7}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BulletinBoard.Hosts.Api", "src\Hosts\BulletinBoard.Hosts.Api\BulletinBoard.Hosts.Api.csproj", "{58C812EF-5CF7-4659-9179-651F5307B629}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BulletinBoard.Hosts.Api", "src\Hosts\BulletinBoard.Hosts.Api\BulletinBoard.Hosts.Api.csproj", "{58C812EF-5CF7-4659-9179-651F5307B629}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BulletinBoard.Domain", "src\Domain\BulletinBoard.Domain\BulletinBoard.Domain.csproj", "{7DCB8955-5C35-4F43-85B6-0FC1AAAF0371}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BulletinBoard.Domain", "src\Domain\BulletinBoard.Domain\BulletinBoard.Domain.csproj", "{7DCB8955-5C35-4F43-85B6-0FC1AAAF0371}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BulletinBoard.Contracts", "src\Contracts\BulletinBoard.Contracts\BulletinBoard.Contracts.csproj", "{B944C401-0C43-42E5-B618-3D5E24CF3D58}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BulletinBoard.Contracts", "src\Contracts\BulletinBoard.Contracts\BulletinBoard.Contracts.csproj", "{B944C401-0C43-42E5-B618-3D5E24CF3D58}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BulletinBoard.Clients", "src\Clients\BulletinBoard.Clients\BulletinBoard.Clients.csproj", "{16536FAF-DEC8-4954-AD5A-6C74AB7507DF}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BulletinBoard.Clients", "src\Clients\BulletinBoard.Clients\BulletinBoard.Clients.csproj", "{16536FAF-DEC8-4954-AD5A-6C74AB7507DF}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BulletinBoard.Application.AppServices", "src\Application\BulletinBoard.Application.AppServices\BulletinBoard.Application.AppServices.csproj", "{8656878B-181B-485B-8228-F828777DAA38}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BulletinBoard.Application.AppServices", "src\Application\BulletinBoard.Application.AppServices\BulletinBoard.Application.AppServices.csproj", "{8656878B-181B-485B-8228-F828777DAA38}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BulletinBoard.Infrastructure.DataAccess", "src\Infrastructure\BulletinBoard.Infrastructure.DataAccess\BulletinBoard.Infrastructure.DataAccess.csproj", "{E24FCEA7-DC98-46BB-B64A-8E86F6D78375}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BulletinBoard.Infrastructure.DataAccess", "src\Infrastructure\BulletinBoard.Infrastructure.DataAccess\BulletinBoard.Infrastructure.DataAccess.csproj", "{E24FCEA7-DC98-46BB-B64A-8E86F6D78375}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BulletinBoard.Infrastructure.ComponentRegistrar", "src\Infrastructure\BulletinBoard.Infrastructure.ComponentRegistrar\BulletinBoard.Infrastructure.ComponentRegistrar.csproj", "{759C8CB5-887B-4BFC-88FB-96E558B1068C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BulletinBoard.Infrastructure.ComponentRegistrar", "src\Infrastructure\BulletinBoard.Infrastructure.ComponentRegistrar\BulletinBoard.Infrastructure.ComponentRegistrar.csproj", "{759C8CB5-887B-4BFC-88FB-96E558B1068C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BulletinBoard.Infrastructure", "src\Infrastructure\BulletinBoard.Infrastructure\BulletinBoard.Infrastructure.csproj", "{9C2278E2-A9A4-4209-B645-FEF94E1B35A3}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BulletinBoard.Hosts.DbMigrator", "src\Hosts\BulletinBoard.Hosts.DbMigrator\BulletinBoard.Hosts.DbMigrator.csproj", "{0802C2AC-840E-40A3-BC42-C875D1C41EA9}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -67,6 +71,14 @@ Global
 		{759C8CB5-887B-4BFC-88FB-96E558B1068C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{759C8CB5-887B-4BFC-88FB-96E558B1068C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{759C8CB5-887B-4BFC-88FB-96E558B1068C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9C2278E2-A9A4-4209-B645-FEF94E1B35A3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9C2278E2-A9A4-4209-B645-FEF94E1B35A3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9C2278E2-A9A4-4209-B645-FEF94E1B35A3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9C2278E2-A9A4-4209-B645-FEF94E1B35A3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0802C2AC-840E-40A3-BC42-C875D1C41EA9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0802C2AC-840E-40A3-BC42-C875D1C41EA9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0802C2AC-840E-40A3-BC42-C875D1C41EA9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0802C2AC-840E-40A3-BC42-C875D1C41EA9}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -85,6 +97,8 @@ Global
 		{8656878B-181B-485B-8228-F828777DAA38} = {B09D4EE3-3C19-4A09-8FF8-C2D39D00C009}
 		{E24FCEA7-DC98-46BB-B64A-8E86F6D78375} = {A03299C3-4FEB-409B-8C30-63268F4E2031}
 		{759C8CB5-887B-4BFC-88FB-96E558B1068C} = {A03299C3-4FEB-409B-8C30-63268F4E2031}
+		{9C2278E2-A9A4-4209-B645-FEF94E1B35A3} = {A03299C3-4FEB-409B-8C30-63268F4E2031}
+		{0802C2AC-840E-40A3-BC42-C875D1C41EA9} = {23A3D023-5670-484F-B1AA-E39BBD6EAA69}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {7AC2ACA2-D317-477A-9A8A-15D72D19D0B2}
