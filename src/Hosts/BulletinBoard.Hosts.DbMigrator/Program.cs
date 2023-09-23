@@ -21,7 +21,7 @@ namespace BulletinBoard.Hosts.DbMigrator
         private static async Task MigrateDatabaseAsync(IServiceProvider serviceProvider)
         {
             using var scope = serviceProvider.CreateScope();
-            var context = scope.ServiceProvider.GetRequiredService<MigrationDbContext>();
+            var context = scope.ServiceProvider.GetRequiredService<MigrationDbContext.MigrationDbContext>();
             await context.Database.MigrateAsync();
         }
     }

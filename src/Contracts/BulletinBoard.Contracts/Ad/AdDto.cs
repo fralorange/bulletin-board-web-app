@@ -21,12 +21,12 @@ namespace BulletinBoard.Contracts.Ad
         /// <summary>
         /// Название категории.
         /// </summary>
-        public required string CategoryName { get; init; }
+        //public required string CategoryName { get; init; }
 
         /// <summary>
         /// Изображения.
         /// </summary>
-        public required IReadOnlyCollection<AttachmentDto> Attachments { get; init; }
+        //public required IReadOnlyCollection<AttachmentDto> Attachments { get; init; }
 
         /// <summary>
         /// Цена.

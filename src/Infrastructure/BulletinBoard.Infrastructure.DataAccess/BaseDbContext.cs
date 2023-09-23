@@ -8,7 +8,7 @@ namespace BulletinBoard.Infrastructure.DataAccess
     /// </summary>
     public class BaseDbContext : DbContext
     {
-        /// <inheritdoc/>
+        /// <inheritdoc cref="DbContext"/>
         public BaseDbContext(DbContextOptions options) : base(options) { }
 
         /// <inheritdoc/>

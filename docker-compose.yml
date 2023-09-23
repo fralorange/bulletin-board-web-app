@@ -1,6 +1,33 @@
 version: '3.7'
 
 services:
+  api:
+        container_name: bulletin-board-api
+        build:
+            context: .
+            dockerfile: src/Hosts/BulletinBoard.Hosts.Api/Dockerfile
+        ports:
+          - 443:80
+        environment:
+          - ConnectionStrings__PostgresBoardDb=Server=postgres;Database=Board;Username=postgres;Password=password;Port=5432
+        networks:
+          - 'bulletin-board-web-app'
+        depends_on:
+          - "postgres"
+
+  migrator:
+        container_name: bulletin-board-migrator
+        build:
+            context: .
+            dockerfile: src/Hosts/BulletinBoard.Hosts.DbMigrator/Dockerfile
+        environment:
+          - ConnectionStrings__PostgresBoardDb=Server=postgres;Database=Board;Username=postgres;Password=password;Port=5432
+        networks:
+          - 'bulletin-board-web-app'
+        depends_on:
+          - "postgres"
+        restart: on-failure:5
+        
   postgres:
         container_name: postgres
         image: postgres

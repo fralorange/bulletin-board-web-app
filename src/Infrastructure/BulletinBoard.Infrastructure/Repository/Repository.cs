@@ -3,13 +3,13 @@ using System.Linq.Expressions;
 
 namespace BulletinBoard.Infrastructure.Repository
 {
-    /// <inheritdoc/>
+    /// <inheritdoc cref="IRepository{TEntity}"/>
     public class Repository<TEntity> : IRepository<TEntity> where TEntity : class
     {
         protected DbContext DbContext { get; }
-        protected DbSet<TEntity> DbSet { get; init; }
+        protected DbSet<TEntity> DbSet { get; }
 
-        public Repository(DbContext dbContext, CancellationToken cancellationToken)
+        public Repository(DbContext dbContext)
         {
             DbContext = dbContext;
             DbSet = DbContext.Set<TEntity>();

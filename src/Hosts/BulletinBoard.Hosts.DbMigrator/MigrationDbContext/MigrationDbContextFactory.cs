@@ -2,7 +2,7 @@
 using Microsoft.EntityFrameworkCore.Design;
 using Microsoft.Extensions.Configuration;
 
-namespace BulletinBoard.Hosts.DbMigrator
+namespace BulletinBoard.Hosts.DbMigrator.MigrationDbContext
 {
     /// <summary>
     /// Фабрика контекста БД для мигратора.

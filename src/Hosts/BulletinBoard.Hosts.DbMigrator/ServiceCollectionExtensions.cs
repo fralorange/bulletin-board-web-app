@@ -30,7 +30,7 @@ namespace BulletinBoard.Hosts.DbMigrator
         private static IServiceCollection ConfigureDbConnections(this IServiceCollection services, IConfiguration configuration)
         {
             var connectionString = configuration.GetConnectionString("PostgresBoardDb");
-            services.AddDbContext<MigrationDbContext>(options => options.UseNpgsql(connectionString));
+            services.AddDbContext<MigrationDbContext.MigrationDbContext>(options => options.UseNpgsql(connectionString));
             return services;
         }
     }

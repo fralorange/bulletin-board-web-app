@@ -26,7 +26,7 @@ namespace BulletinBoard.Infrastructure.DataAccess.Contexts.Ad.Repositories
         public Task<Guid> CreateAsync(AdEntity ad, CancellationToken cancellationToken)
         {
             _repository.AddAsync(ad, cancellationToken);
-            return Task.Run(() => ad.Id );
+            return Task.Run(() => ad.Id);
         }
 
         /// <inheritdoc/>
@@ -38,7 +38,8 @@ namespace BulletinBoard.Infrastructure.DataAccess.Contexts.Ad.Repositories
         /// <inheritdoc/>
         public Task<IReadOnlyCollection<AdDto>> GetAllAsync(CancellationToken cancellationToken, int pageSize = 10, int pageIndex = 0)
         {
-            throw new NotImplementedException();
+            var dtoCollection = _repository.GetAll().Select(_mapper.Map<AdDto>).ToList().AsReadOnly();
+            return Task.Run(() => dtoCollection, cancellationToken).ContinueWith(x => new ReadOnlyCollection<AdDto>(x.Result) as IReadOnlyCollection<AdDto>);
         }
 
         /// <inheritdoc/>

@@ -18,7 +18,7 @@ namespace BulletinBoard.Infrastructure.ComponentRegistrar.Mappers.Attachment
             CreateMap<AttachmentEntity, AttachmentDto>().ReverseMap()
                 .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.Id))
                 .ForMember(dest => dest.Content, opt => opt.MapFrom(src => src.Content))
-                .ForMember(dest => dest.AdId, opt => opt.MapFrom(src => src.AdId));
+                .ForMember(dest => dest.AdId, opt => opt.Ignore());
         }
     }
 }
