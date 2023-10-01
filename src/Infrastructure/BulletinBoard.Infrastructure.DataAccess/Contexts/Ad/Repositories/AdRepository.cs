@@ -15,7 +15,11 @@ namespace BulletinBoard.Infrastructure.DataAccess.Contexts.Ad.Repositories
         private readonly IRepository<AdEntity> _repository;
         private readonly IMapper _mapper;
 
-        /// <inheritdoc/>
+        /// <summary>
+        /// Инициализирует репозиторий объявлений.
+        /// </summary>
+        /// <param name="repository">Базовый репозиторий.</param>
+        /// <param name="mapper">Маппер.</param>
         public AdRepository(IRepository<AdEntity> repository, IMapper mapper)
         {
             _repository = repository;

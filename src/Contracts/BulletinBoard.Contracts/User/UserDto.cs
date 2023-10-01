@@ -9,10 +9,12 @@
         /// Имя пользователя.
         /// </summary>
         public string Name { get; set; }
+
         /// <summary>
         /// Роль пользователя.
         /// </summary>
         public string Role { get; set; }
+
         /// <summary>
         /// Объявления пользователя.
         /// </summary>

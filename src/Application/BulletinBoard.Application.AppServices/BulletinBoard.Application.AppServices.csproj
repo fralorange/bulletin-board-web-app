@@ -18,9 +18,4 @@
     <ProjectReference Include="..\..\Domain\BulletinBoard.Domain\BulletinBoard.Domain.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Contexts\User\Repositories\" />
-    <Folder Include="Contexts\User\Services\" />
-  </ItemGroup>
-
 </Project>

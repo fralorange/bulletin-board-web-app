@@ -1,7 +1,7 @@
 ﻿namespace BulletinBoard.Hosts.Api.Dto
 {
     /// <summary>
-    /// Модель пользователя.
+    /// Модель аутентификационных данных пользователя.
     /// </summary>
     public class AuthUserDto
     {

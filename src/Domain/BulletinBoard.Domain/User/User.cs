@@ -6,23 +6,32 @@
     public class User : Base.BaseEntity
     {
         /// <summary>
-        /// Имя пользователя.
+        /// Имя.
         /// </summary>
         public string Name { get; set; }
+
         /// <summary>
-        /// Логин пользователя.
+        /// Логин.
         /// </summary>
         public string Login { get; set; }
+
         /// <summary>
         /// Пароль пользователя в хешированном виде.
         /// </summary>
-        public string PasswordHash { get; set; }
+        public string HashedPassword { get; set; }
+
+        /// <summary>
+        /// Соль.
+        /// </summary>
+        public string Salt { get; set; }
+
         /// <summary>
         /// Роль пользователя в системе.
         /// </summary>
         public string Role { get; set; }
+
         /// <summary>
-        /// Объявления пользователя.
+        /// Объявления.
         /// </summary>
         public virtual IEnumerable<Ad.Ad>? Adverts { get; set; }
     }

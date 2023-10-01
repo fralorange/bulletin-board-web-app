@@ -6,7 +6,7 @@ using AdEntity = BulletinBoard.Domain.Ad.Ad;
 
 namespace BulletinBoard.Application.AppServices.Contexts.Ad.Services
 {
-    /// <inheritdoc/>
+    /// <inheritdoc cref="IAdService"/>
     public class AdService : IAdService
     {
         private readonly IAdRepository _adRepository;
