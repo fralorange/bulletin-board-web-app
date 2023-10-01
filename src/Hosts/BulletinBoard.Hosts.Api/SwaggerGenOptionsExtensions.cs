@@ -44,6 +44,11 @@ namespace BulletinBoard.Hosts.Api
             return options;
         }
 
+        /// <summary>
+        /// Добавление <see cref="OpenApiSecurityScheme"/> и <see cref="OpenApiSecurityRequirement"/> в Swagger для имплементации авторизации.
+        /// </summary>
+        /// <param name="options"></param>
+        /// <returns></returns>
         public static SwaggerGenOptions AddSecurity(this SwaggerGenOptions options)
         {
             #region SecurityDefenition
