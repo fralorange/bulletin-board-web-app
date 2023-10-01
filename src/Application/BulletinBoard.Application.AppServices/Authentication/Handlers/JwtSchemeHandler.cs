@@ -1,4 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
@@ -6,7 +9,7 @@ using System.Security.Cryptography;
 using System.Text;
 using System.Text.Encodings.Web;
 
-namespace BulletinBoard.Hosts.Api.Authentication
+namespace BulletinBoard.Application.AppServices.Authentication.Handlers
 {
     /// <inheritdoc cref="AuthenticationHandler{TOptions}"/>
     public class JwtSchemeHandler : AuthenticationHandler<JwtSchemeOptions>
@@ -19,7 +22,7 @@ namespace BulletinBoard.Hosts.Api.Authentication
         /// Если токен валидный, то аутентифицируем пользователя.
         /// </summary>
         public JwtSchemeHandler(
-            IOptionsMonitor<JwtSchemeOptions> options, 
+            IOptionsMonitor<JwtSchemeOptions> options,
             ILoggerFactory logger,
             UrlEncoder encoder,
             ISystemClock clock,
@@ -72,7 +75,7 @@ namespace BulletinBoard.Hosts.Api.Authentication
             {
                 return Task.FromResult(AuthenticateResult.Fail("Fail. Invalid Token!"));
             }
-#endregion
+            #endregion
 
             var jwtToken = handler.ReadJwtToken(token);
 

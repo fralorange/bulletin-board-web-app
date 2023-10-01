@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authentication;
 
-namespace BulletinBoard.Hosts.Api.Authentication
+namespace BulletinBoard.Application.AppServices.Authentication
 {
     /// <summary>
     /// Настройки JWT-Схемы.

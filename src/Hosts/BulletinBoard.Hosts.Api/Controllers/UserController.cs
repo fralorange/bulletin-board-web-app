@@ -38,11 +38,11 @@ namespace BulletinBoard.Hosts.Api.Controllers
         /// <summary>
         /// Метод для получения информации о пользователе.
         /// </summary>
-        /// <returns><see cref="UserDto"/></returns>
+        /// <returns><see cref="AuthUserDto"/></returns>
         [HttpPost("get_user_info")]
-        public UserDto GetUserInfo()
+        public AuthUserDto GetUserInfo()
         {
-            return new UserDto
+            return new AuthUserDto
             {
                 Scheme = HttpContext.User.Identity.AuthenticationType,
                 IsAuthenticated = HttpContext.User.Identity.IsAuthenticated,

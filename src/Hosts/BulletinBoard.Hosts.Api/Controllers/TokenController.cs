@@ -1,4 +1,5 @@
-﻿using BulletinBoard.Hosts.Api.Dto;
+﻿using BulletinBoard.Contracts.User;
+using BulletinBoard.Hosts.Api.Dto;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
@@ -33,8 +34,8 @@ namespace BulletinBoard.Hosts.Api.Controllers
         /// <param name="dto">Модель аутентификации.</param>
         /// <returns>Модель с данными для входа.</returns>
         [HttpPost]
-        [ProducesResponseType(typeof(AuthDto), StatusCodes.Status200OK)]
-        public ActionResult Post(AuthDto dto)
+        [ProducesResponseType(typeof(LoginUserDto), StatusCodes.Status200OK)]
+        public ActionResult Post(LoginUserDto dto)
         {
             // Check user credentials
 

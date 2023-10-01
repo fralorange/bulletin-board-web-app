@@ -1,4 +1,4 @@
-﻿namespace BulletinBoard.Hosts.Api.Authentication
+﻿namespace BulletinBoard.Application.AppServices.Authentication.Constants
 {
     /// <summary>
     /// Аутентификационные схемы.
@@ -8,7 +8,7 @@
         /// <summary>
         /// Пользовательская схема.
         /// </summary>
-        public const string Custom = "Custom";
+        public const string Custom = "CustomScheme";
 
         /// <summary>
         /// JWT.

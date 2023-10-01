@@ -3,7 +3,7 @@
     /// <summary>
     /// Модель пользователя.
     /// </summary>
-    public class UserDto
+    public class AuthUserDto
     {
         /// <summary>
         /// Проверка на аутентификацию.
@@ -12,7 +12,7 @@
         /// <summary>
         /// Схема.
         /// </summary>
-        public string Scheme { get; set; }
+        public string? Scheme { get; set; }
         /// <summary>
         /// Заявки.
         /// </summary>
