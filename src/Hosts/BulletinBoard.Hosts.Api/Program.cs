@@ -1,8 +1,8 @@
+using BulletinBoard.Hosts.Api.Authentication;
 using BulletinBoard.Infrastructure.ComponentRegistrar.Mappers.Ad;
 using BulletinBoard.Infrastructure.ComponentRegistrar.Mappers.Attachment;
-using BulletinBoard.Infrastructure.DataAccess;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 using System.Reflection;
 
 namespace BulletinBoard.Hosts.Api
@@ -34,7 +34,38 @@ namespace BulletinBoard.Hosts.Api
                 }
             });
 
+            //TO-DO: Add to ServiceCollectionExtensions
+            //Auth
+            #region Authentication
+            builder.Services.TryAddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+
+            builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+                .AddCookie(options =>
+                {
+                    options.ExpireTimeSpan = TimeSpan.FromMinutes(20);
+                    options.SlidingExpiration = true;
+                    options.Events.OnSignedIn = context =>
+                    {
+                        return Task.CompletedTask;
+                    };
+                })
+                .AddScheme<AuthSchemeOptions, AuthSchemeHandler>("CustomScheme", options => { });
+            #endregion
+            #region Authorization
+            builder.Services.AddAuthorization(options =>
+            {
+                options.AddPolicy("CustomPolicy", policy =>
+                {
+                    policy.RequireRole("Administrator");
+                    policy.RequireClaim("User", "User");
+                });
+            });
+
+            #endregion
+
+            //AutoMapper
             builder.Services.AddAutoMapper(typeof(AdMapper), typeof(AttachmentMapper));
+            //
 
             builder.Services.AddServices();
             builder.Services.AddRepositories();
@@ -52,6 +83,7 @@ namespace BulletinBoard.Hosts.Api
 
             app.UseHttpsRedirection();
 
+            app.UseAuthentication();
             app.UseAuthorization();
 
             app.MapControllers();
