@@ -4,10 +4,17 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace BulletinBoard.Hosts.Api.Controllers
 {
+    /// <summary>
+    /// Контроллер для работы с пользовательскими методами.
+    /// </summary>
     [ApiController]
     [Route("[controller]")]
     public class UserController : ControllerBase
     {
+        /// <summary>
+        /// Публичный метод.
+        /// </summary>
+        /// <returns><see cref="JsonResult"/></returns>
         [AllowAnonymous]
         [HttpPost("public")]
         public JsonResult Public()
@@ -15,6 +22,10 @@ namespace BulletinBoard.Hosts.Api.Controllers
             return new JsonResult("Public");
         }
 
+        /// <summary>
+        /// Метод требующий авторизацию пользователя.
+        /// </summary>
+        /// <returns><see cref="JsonResult"/></returns>
         [Authorize]
         //[Authorize(Roles = "Role")]
         //[Authorize(Policy = "CustomPolicy")]
@@ -24,6 +35,10 @@ namespace BulletinBoard.Hosts.Api.Controllers
             return new JsonResult("Success!");
         }
 
+        /// <summary>
+        /// Метод для получения информации о пользователе.
+        /// </summary>
+        /// <returns><see cref="UserDto"/></returns>
         [HttpPost("get_user_info")]
         public UserDto GetUserInfo()
         {

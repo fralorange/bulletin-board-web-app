@@ -8,6 +8,9 @@ using System.Text;
 
 namespace BulletinBoard.Hosts.Api.Controllers
 {
+    /// <summary>
+    /// Контроллер для работы с токеном.
+    /// </summary>
     [ApiController]
     [Route("[controller]")]
     [AllowAnonymous]
@@ -15,13 +18,23 @@ namespace BulletinBoard.Hosts.Api.Controllers
     {
         private readonly IConfiguration _configuration;
 
+        /// <summary>
+        /// Инициализация конфигурации.
+        /// </summary>
+        /// <param name="configuration">Конфигурация.</param>
         public TokenController(IConfiguration configuration)
         {
             _configuration = configuration;
         }
 
+        /// <summary>
+        /// Метод получения JWT.
+        /// </summary>
+        /// <param name="dto">Модель аутентификации.</param>
+        /// <returns>Модель с данными для входа.</returns>
         [HttpPost]
-        public async Task<ActionResult> Post(AuthDto dto)
+        [ProducesResponseType(typeof(AuthDto), StatusCodes.Status200OK)]
+        public ActionResult Post(AuthDto dto)
         {
             // Check user credentials
 
