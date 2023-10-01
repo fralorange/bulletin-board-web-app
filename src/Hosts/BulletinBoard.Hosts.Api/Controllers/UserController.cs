@@ -17,7 +17,7 @@ namespace BulletinBoard.Hosts.Api.Controllers
 
         [Authorize]
         //[Authorize(Roles = "Role")]
-        [Authorize(Policy = "CustomPolicy")]
+        //[Authorize(Policy = "CustomPolicy")]
         [HttpPost("requiring_authorization")]
         public JsonResult RequiringAuthorization()
         {

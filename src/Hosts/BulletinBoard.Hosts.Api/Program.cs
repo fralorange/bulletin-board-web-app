@@ -1,9 +1,11 @@
 using BulletinBoard.Hosts.Api.Authentication;
 using BulletinBoard.Infrastructure.ComponentRegistrar.Mappers.Ad;
 using BulletinBoard.Infrastructure.ComponentRegistrar.Mappers.Attachment;
-using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.Extensions.DependencyInjection.Extensions;
+using Microsoft.IdentityModel.Tokens;
 using System.Reflection;
+using System.Text;
 
 namespace BulletinBoard.Hosts.Api
 {
@@ -39,17 +41,21 @@ namespace BulletinBoard.Hosts.Api
             #region Authentication
             builder.Services.TryAddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 
-            builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
-                .AddCookie(options =>
+            builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+                .AddJwtBearer(options =>
                 {
-                    options.ExpireTimeSpan = TimeSpan.FromMinutes(20);
-                    options.SlidingExpiration = true;
-                    options.Events.OnSignedIn = context =>
+                    options.RequireHttpsMetadata = false;
+                    options.SaveToken = true;
+                    options.TokenValidationParameters = new TokenValidationParameters()
                     {
-                        return Task.CompletedTask;
+                        ValidateIssuer = true,
+                        ValidateAudience = true,
+                        ValidIssuer = builder.Configuration["Jwt:Issuer"],
+                        ValidAudience = builder.Configuration["Jwt:Audience"],
+                        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"]))
                     };
                 })
-                .AddScheme<AuthSchemeOptions, AuthSchemeHandler>("CustomScheme", options => { });
+                .AddScheme<JwtSchemeOptions, JwtSchemeHandler>("CustomScheme", options => { });
             #endregion
             #region Authorization
             builder.Services.AddAuthorization(options =>

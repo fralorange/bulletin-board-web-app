@@ -1,6 +1,4 @@
-﻿using System.Security.Claims;
-
-namespace BulletinBoard.Hosts.Api.Dto
+﻿namespace BulletinBoard.Hosts.Api.Dto
 {
     public class UserDto
     {

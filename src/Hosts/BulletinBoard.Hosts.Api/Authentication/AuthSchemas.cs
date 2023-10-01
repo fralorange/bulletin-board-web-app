@@ -9,5 +9,10 @@
         /// Пользовательская схема.
         /// </summary>
         public const string Custom = "Custom";
+
+        /// <summary>
+        /// JWT.
+        /// </summary>
+        public const string Jwt = "Jwt";
     }
 }
