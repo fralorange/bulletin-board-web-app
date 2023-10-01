@@ -20,17 +20,17 @@ namespace BulletinBoard.Domain.Ad
         /// <summary>
         /// 
         /// </summary>
-        public required Guid CategoryId { get; init; }
+        //public required Guid CategoryId { get; init; }
 
         /// <summary>
         /// Категория.
         /// </summary>
-        public Category.Category Category { get; init; }
+        //public Category.Category Category { get; init; }
 
         /// <summary>
         /// Изображения.
         /// </summary>
-        public required IReadOnlyCollection<Attachment.Attachment> Attachments { get; init; }
+       // public required IReadOnlyCollection<Attachment.Attachment> Attachments { get; init; }
 
         /// <summary>
         /// Цена.

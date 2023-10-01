@@ -26,18 +26,18 @@ namespace BulletinBoard.Contracts.Ad
         /// <summary>
         /// Идентификатор категории.
         /// </summary>
-        public required Guid CategoryId { get; init; }
+        //public required Guid CategoryId { get; init; }
 
         /// <summary>
         /// Изображения.
         /// </summary>
-        [Limit(1, 5)]
-        public required IReadOnlyCollection<AttachmentDto> Attachments { get; init; }
+        //[Limit(1, 5)]
+        //public required IReadOnlyCollection<AttachmentDto> Attachments { get; init; }
 
         /// <summary>
         /// Цена.
         /// </summary>
-        [Range(0, double.MaxValue)]
+        [Range(0, long.MaxValue)]
         public required decimal Price { get; init; }
     }
 }

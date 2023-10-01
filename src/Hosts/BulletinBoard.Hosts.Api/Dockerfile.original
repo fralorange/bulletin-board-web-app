@@ -10,7 +10,6 @@ WORKDIR /src
 COPY ["src/Hosts/BulletinBoard.Hosts.Api/*.csproj", "src/Hosts/BulletinBoard.Hosts.Api/"]
 COPY ["src/Application/BulletinBoard.Application.AppServices/*.csproj", "src/Application/BulletinBoard.Application.AppServices/"]
 COPY ["src/Contracts/BulletinBoard.Contracts/*.csproj", "src/Contracts/BulletinBoard.Contracts/"]
-COPY ["src/Domain/BulletinBoard.Domain/*.csproj", "src/Domain/BulletinBoard.Domain/"]
 COPY ["src/Infrastructure/BulletinBoard.Infrastructure.ComponentRegistrar/*.csproj", "src/Infrastructure/BulletinBoard.Infrastructure.ComponentRegistrar/"]
 COPY ["src/Infrastructure/BulletinBoard.Infrastructure.DataAccess/*.csproj", "src/Infrastructure/BulletinBoard.Infrastructure.DataAccess/"]
 COPY ["src/Infrastructure/BulletinBoard.Infrastructure/*.csproj", "src/Infrastructure/BulletinBoard.Infrastructure/"]

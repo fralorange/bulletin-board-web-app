@@ -1,9 +1,8 @@
-using AutoMapper;
-using BulletinBoard.Application.AppServices.Contexts.Ad.Repositories;
-using BulletinBoard.Application.AppServices.Contexts.Ad.Services;
 using BulletinBoard.Infrastructure.ComponentRegistrar.Mappers.Ad;
 using BulletinBoard.Infrastructure.ComponentRegistrar.Mappers.Attachment;
-using BulletinBoard.Infrastructure.DataAccess.Contexts.Ad.Repositories;
+using BulletinBoard.Infrastructure.DataAccess;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
 using System.Reflection;
 
 namespace BulletinBoard.Hosts.Api
@@ -24,7 +23,7 @@ namespace BulletinBoard.Hosts.Api
                 // using System.Reflection;
                 var hostsXmlFilename = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
                 options.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory, hostsXmlFilename));
-                
+
                 var referencedAssemblies = Assembly.GetExecutingAssembly().GetReferencedAssemblies();
                 foreach (var referencedAssembly in referencedAssemblies)
                 {
@@ -37,8 +36,10 @@ namespace BulletinBoard.Hosts.Api
 
             builder.Services.AddAutoMapper(typeof(AdMapper), typeof(AttachmentMapper));
 
-            builder.Services.AddTransient<IAdService, AdService>();
-            builder.Services.AddSingleton<IAdRepository, AdRepository>();
+            builder.Services.AddServices();
+            builder.Services.AddRepositories();
+
+            builder.Services.AddDbContextConfiguration();
 
             var app = builder.Build();
 

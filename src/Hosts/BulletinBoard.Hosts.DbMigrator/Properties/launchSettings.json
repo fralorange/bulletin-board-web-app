@@ -1,0 +1,10 @@
+{
+  "profiles": {
+    "BulletinBoard.Hosts.DbMigrator": {
+      "commandName": "Project"
+    },
+    "Docker": {
+      "commandName": "Docker"
+    }
+  }
+}
