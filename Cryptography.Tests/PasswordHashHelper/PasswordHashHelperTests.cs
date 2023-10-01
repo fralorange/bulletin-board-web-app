@@ -11,11 +11,11 @@ namespace Cryptography.Tests.PasswordHelper
             var password = "Test_Password";
 
             // Act
-            var hash1 = PasswordHashHelper.HashPassword(password);
-            var hash2 = PasswordHashHelper.HashPassword(password);
+            var (_, Hash1) = PasswordHashHelper.HashPassword(password);
+            var (_, Hash2) = PasswordHashHelper.HashPassword(password);
 
             // Assert
-            Assert.NotEqual(hash1.Hash, hash2.Hash);
+            Assert.NotEqual(Hash1, Hash2);
         }
     }
 }
