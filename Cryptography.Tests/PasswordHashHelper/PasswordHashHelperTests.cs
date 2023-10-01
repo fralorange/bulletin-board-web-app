@@ -15,7 +15,7 @@ namespace Cryptography.Tests.PasswordHelper
             var hash2 = PasswordHashHelper.HashPassword(password);
 
             // Assert
-            Assert.NotEqual(hash1, hash2);
+            Assert.NotEqual(hash1.Hash, hash2.Hash);
         }
     }
 }
