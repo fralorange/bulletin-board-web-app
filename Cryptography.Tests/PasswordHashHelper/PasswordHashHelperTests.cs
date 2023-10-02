@@ -17,5 +17,19 @@ namespace Cryptography.Tests.PasswordHelper
             // Assert
             Assert.NotEqual(Hash1, Hash2);
         }
+
+        [Fact]
+        public void Test_GenerateEqualHashes_UsingSameSalt_ForSamePassword()
+        {
+            // Arrange
+            var password = "Test_Password";
+
+            // Act
+            var (Salt, Hash1) = PasswordHashHelper.HashPassword(password);
+            var hash2 = PasswordHashHelper.HashPassword(password, Salt);
+
+            // Assert
+            Assert.Equal(Hash1, hash2);
+        }
     }
 }

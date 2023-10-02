@@ -37,5 +37,22 @@ namespace BulletinBoard.Application.AppServices.Cryptography.Helpers
                 return (salt, Convert.ToBase64String(hash));
             }
         }
+
+        /// <summary>
+        /// Хеширование пароля с использованием уже зараннее сгенерированной соли.
+        /// </summary>
+        /// <param name="password"></param>
+        /// <param name="salt"></param>
+        /// <returns></returns>
+        public static string HashPassword(string password, string salt)
+        {
+            byte[] saltBytes = Convert.FromBase64String(salt);
+
+            using (var pbkdf2 = new Rfc2898DeriveBytes(password, saltBytes, Iterations, HashAlgorithmName.SHA256))
+            {
+                byte[] hash = pbkdf2.GetBytes(SaltHashSize);
+                return Convert.ToBase64String(hash);
+            }
+        }
     }
 }
