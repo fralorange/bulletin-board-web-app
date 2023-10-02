@@ -1,4 +1,5 @@
 ﻿using BulletinBoard.Infrastructure.DataAccess.Contexts.Ad.Configuration;
+using BulletinBoard.Infrastructure.DataAccess.Contexts.User.Configuration;
 using Microsoft.EntityFrameworkCore;
 
 namespace BulletinBoard.Infrastructure.DataAccess
@@ -15,6 +16,7 @@ namespace BulletinBoard.Infrastructure.DataAccess
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.ApplyConfiguration(new AdConfiguration());
+            modelBuilder.ApplyConfiguration(new UserConfiguration());
 
             base.OnModelCreating(modelBuilder);
         }

@@ -6,12 +6,12 @@ using AdEntity = BulletinBoard.Domain.Ad.Ad;
 namespace BulletinBoard.Infrastructure.ComponentRegistrar.Mappers.Ad
 {
     /// <summary>
-    /// Маппер для <see cref="AdEntity"/>
+    /// Маппер для <see cref="AdEntity"/>.
     /// </summary>
     public class AdMapper : Profile
     {
         /// <summary>
-        /// Маппер
+        /// Маппер.
         /// </summary>
         public AdMapper()
         {

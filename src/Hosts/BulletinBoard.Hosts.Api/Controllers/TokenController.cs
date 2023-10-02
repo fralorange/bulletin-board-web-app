@@ -12,6 +12,7 @@ namespace BulletinBoard.Hosts.Api.Controllers
     /// <summary>
     /// Контроллер для работы с токеном.
     /// </summary>
+    [Obsolete("TokenController is obsolete. Use AuthController instead!")]
     [ApiController]
     [Route("[controller]")]
     [AllowAnonymous]

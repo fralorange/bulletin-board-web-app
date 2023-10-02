@@ -1,5 +1,4 @@
-﻿using BulletinBoard.Contracts.Base;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace BulletinBoard.Contracts.User
 {

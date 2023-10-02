@@ -36,5 +36,15 @@ namespace BulletinBoard.Domain.Ad
         /// Цена.
         /// </summary>
         public required decimal Price { get; init; }
+
+        /// <summary>
+        /// Пользователь.
+        /// </summary>
+        public required User.User User { get; set; }
+
+        /// <summary>
+        /// Идентификатор пользователя.
+        /// </summary>
+        public required Guid UserId { get; set; }
     }
 }

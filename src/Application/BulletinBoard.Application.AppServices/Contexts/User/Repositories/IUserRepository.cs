@@ -1,4 +1,5 @@
 ﻿using BulletinBoard.Contracts.User;
+using System.Linq.Expressions;
 
 namespace BulletinBoard.Application.AppServices.Contexts.User.Repositories
 {
@@ -22,6 +23,14 @@ namespace BulletinBoard.Application.AppServices.Contexts.User.Repositories
         /// <param name="limit">Ограничение выборки пользователей.</param>
         /// <returns>Коллекция пользователей <see cref="UserDto"/></returns>
         Task<IReadOnlyCollection<UserDto>> GetAllAsync(CancellationToken cancellationToken, int limit = 10);
+
+        /// <summary>
+        /// Возвращает пользователя по заданному условию.
+        /// </summary>
+        /// <param name="predicate">Предиката.</param>
+        /// <param name="cancellationToken">Отмена операции.</param>
+        /// <returns>Модель пользователя <see cref="UserDto"/>.</returns>
+        Task<Domain.User.User?> GetByPredicate(Expression<Func<Domain.User.User, bool>> predicate, CancellationToken cancellationToken);
 
         /// <summary>
         /// Создает пользователя.

@@ -1,6 +1,7 @@
 ﻿using BulletinBoard.Application.AppServices.Contexts.User.Repositories;
 using BulletinBoard.Contracts.User;
 using BulletinBoard.Infrastructure.Repository;
+using System.Linq.Expressions;
 using UserEntity = BulletinBoard.Domain.User.User;
 
 namespace BulletinBoard.Infrastructure.DataAccess.Contexts.User.Repositories
@@ -32,9 +33,16 @@ namespace BulletinBoard.Infrastructure.DataAccess.Contexts.User.Repositories
         }
 
         /// <inheritdoc/>
+        public Task<UserEntity?> GetByPredicate(Expression<Func<UserEntity, bool>> predicate, CancellationToken cancellationToken)
+        {
+            return Task.Run(() => _repository.GetAllFiltered(predicate).FirstOrDefault(), cancellationToken);
+        }
+
+        /// <inheritdoc/>
         public Task<Guid> CreateAsync(UserEntity user, CancellationToken cancellationToken)
         {
-            throw new NotImplementedException();
+            _repository.AddAsync(user, cancellationToken);
+            return Task.Run(() => user.Id);
         }
 
         /// <inheritdoc/>
