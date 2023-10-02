@@ -25,7 +25,7 @@ namespace BulletinBoard.Application.AppServices.Cryptography.Helpers
         /// Хеширование пароля с использованием соли.
         /// </summary>
         /// <param name="password">Пароль</param>
-        /// <returns>Хешированный пароль.</returns>
+        /// <returns>Кортеж соли и хешированного пароля.</returns>
         public static (string Salt, string Hash) HashPassword(string password)
         {
             var salt = GenerateSalt();
@@ -41,9 +41,9 @@ namespace BulletinBoard.Application.AppServices.Cryptography.Helpers
         /// <summary>
         /// Хеширование пароля с использованием уже зараннее сгенерированной соли.
         /// </summary>
-        /// <param name="password"></param>
-        /// <param name="salt"></param>
-        /// <returns></returns>
+        /// <param name="password">Пароль.</param>
+        /// <param name="salt">Соль.</param>
+        /// <returns>Хешированный пароль.</returns>
         public static string HashPassword(string password, string salt)
         {
             byte[] saltBytes = Convert.FromBase64String(salt);
