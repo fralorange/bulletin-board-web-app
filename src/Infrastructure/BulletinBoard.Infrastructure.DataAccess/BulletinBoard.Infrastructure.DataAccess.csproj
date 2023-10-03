@@ -18,4 +18,8 @@
     <ProjectReference Include="..\BulletinBoard.Infrastructure\BulletinBoard.Infrastructure.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Contexts\User\Configuration\" />
+  </ItemGroup>
+
 </Project>

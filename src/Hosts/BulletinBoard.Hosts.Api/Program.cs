@@ -1,10 +1,3 @@
-using BulletinBoard.Infrastructure.ComponentRegistrar.Mappers.Ad;
-using BulletinBoard.Infrastructure.ComponentRegistrar.Mappers.Attachment;
-using BulletinBoard.Infrastructure.DataAccess;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
-using System.Reflection;
-
 namespace BulletinBoard.Hosts.Api
 {
     public class Program
@@ -14,27 +7,22 @@ namespace BulletinBoard.Hosts.Api
             var builder = WebApplication.CreateBuilder(args);
 
             // Add services to the container.
-
             builder.Services.AddControllers();
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
+            // TO-DO: Create SwaggerGenOptionsExtension?
             builder.Services.AddSwaggerGen(options =>
             {
-                // using System.Reflection;
-                var hostsXmlFilename = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
-                options.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory, hostsXmlFilename));
-
-                var referencedAssemblies = Assembly.GetExecutingAssembly().GetReferencedAssemblies();
-                foreach (var referencedAssembly in referencedAssemblies)
-                {
-                    if (!referencedAssembly.Name!.Contains("BulletinBoard"))
-                        continue;
-                    var xmlFilename = $"{referencedAssembly.Name}.xml";
-                    options.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory, xmlFilename));
-                }
+                options.AddSwaggerDoc();
+                options.AddXmlDoc();
+                options.AddSecurity();
             });
 
-            builder.Services.AddAutoMapper(typeof(AdMapper), typeof(AttachmentMapper));
+            builder.Services.AddAuth(builder);
+
+            builder.Services.AddHttpContextAccessor();
+
+            builder.Services.AddAutoMapper();
 
             builder.Services.AddServices();
             builder.Services.AddRepositories();
@@ -52,6 +40,7 @@ namespace BulletinBoard.Hosts.Api
 
             app.UseHttpsRedirection();
 
+            app.UseAuthentication();
             app.UseAuthorization();
 
             app.MapControllers();
