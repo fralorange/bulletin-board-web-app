@@ -52,6 +52,7 @@ namespace BulletinBoard.Hosts.Api.Controllers
         /// <param name="id">Идентификатор объявления.</param>
         /// <param name="cancellationToken">Отмена операции.</param>
         /// <returns>Модель объявления <see cref="AdDto"/>.</returns>
+        [AllowAnonymous]
         [HttpGet("get-by-id")]
         [ProducesResponseType(typeof(AdDto), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]

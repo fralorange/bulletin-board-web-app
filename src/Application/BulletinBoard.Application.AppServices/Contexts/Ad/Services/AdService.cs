@@ -1,7 +1,8 @@
 ﻿using AutoMapper;
 using BulletinBoard.Application.AppServices.Contexts.Ad.Repositories;
 using BulletinBoard.Contracts.Ad;
-
+using Microsoft.AspNetCore.Http;
+using System.Security.Claims;
 using AdEntity = BulletinBoard.Domain.Ad.Ad;
 
 namespace BulletinBoard.Application.AppServices.Contexts.Ad.Services
@@ -11,22 +12,32 @@ namespace BulletinBoard.Application.AppServices.Contexts.Ad.Services
     {
         private readonly IAdRepository _adRepository;
         private readonly IMapper _mapper;
+        private readonly IHttpContextAccessor _httpContextAccessor;
+
+
 
         /// <summary>
-        /// Инициализирует экземпляр <see cref="AdService"/>
+        /// Инициализирует экземпляр <see cref="AdService"/>.
         /// </summary>
         /// <param name="adRepository">Репозиторий для работы с объявлениями.</param>
-        /// <param name="mapper">Маппер</param>
-        public AdService(IAdRepository adRepository, IMapper mapper)
+        /// <param name="mapper">Маппер.</param>
+        /// <param name="httpContextAccessor">HttpContextAccessor.</param>
+        public AdService(IAdRepository adRepository, IMapper mapper, IHttpContextAccessor httpContextAccessor)
         {
             _adRepository = adRepository;
             _mapper = mapper;
+            _httpContextAccessor = httpContextAccessor;
         }
 
         /// <inheritdoc/>
         public Task<Guid> CreateAsync(CreateAdDto dto, CancellationToken cancellationToken)
         {
-            return _adRepository.CreateAsync(_mapper.Map<AdEntity>(dto), cancellationToken);
+            var ad = _mapper.Map<AdEntity>(dto);
+            var userId = _httpContextAccessor.HttpContext!.User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+            ad.UserId = Guid.Parse(userId!);
+
+            return _adRepository.CreateAsync(ad, cancellationToken);
         }
 
         /// <inheritdoc/>

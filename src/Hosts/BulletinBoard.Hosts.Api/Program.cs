@@ -20,6 +20,8 @@ namespace BulletinBoard.Hosts.Api
 
             builder.Services.AddAuth(builder);
 
+            builder.Services.AddHttpContextAccessor();
+
             builder.Services.AddAutoMapper();
 
             builder.Services.AddServices();
