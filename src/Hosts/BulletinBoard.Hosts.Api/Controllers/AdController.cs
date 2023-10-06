@@ -1,6 +1,7 @@
 using BulletinBoard.Application.AppServices.Contexts.Ad.Services;
 using BulletinBoard.Application.AppServices.Exceptions;
 using BulletinBoard.Contracts.Ad;
+using BulletinBoard.Contracts.Attributes;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -91,6 +92,7 @@ namespace BulletinBoard.Hosts.Api.Controllers
         /// <param name="id">Идентификатор объявления.</param>
         /// <param name="dto">Модель объявления.</param>
         /// <param name="cancellationToken">Отмена операции.</param>
+        [Bugged("System.InvalidOperationException: The instance of entity type 'Ad' cannot be tracked because another instance with the same key value for {'Id'} is already being tracked. ")]
         [HttpPut("{id:guid}")]
         public async Task<IActionResult> UpdateAsync(Guid id, UpdateAdDto dto, CancellationToken cancellationToken)
         {
