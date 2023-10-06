@@ -4,6 +4,7 @@ using BulletinBoard.Contracts.Ad;
 using BulletinBoard.Infrastructure.Repository;
 using System.Collections.ObjectModel;
 using System.Security.Cryptography;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 using AdEntity = BulletinBoard.Domain.Ad.Ad;
 using AttachmentEntity = BulletinBoard.Domain.Attachment.Attachment;
 
@@ -34,28 +35,38 @@ namespace BulletinBoard.Infrastructure.DataAccess.Contexts.Ad.Repositories
         }
 
         /// <inheritdoc/>
-        public Task<bool> DeleteAsync(Guid id, CancellationToken cancellationToken)
-        {
-            throw new NotImplementedException();
-        }
-
-        /// <inheritdoc/>
         public Task<IReadOnlyCollection<AdDto>> GetAllAsync(CancellationToken cancellationToken, int pageSize = 10, int pageIndex = 0)
         {
-            var dtoCollection = _repository.GetAll().Select(_mapper.Map<AdDto>).ToList().AsReadOnly();
-            return Task.Run(() => dtoCollection, cancellationToken).ContinueWith(x => new ReadOnlyCollection<AdDto>(x.Result) as IReadOnlyCollection<AdDto>);
+            var adCollection = _repository.GetAll();
+            var dtoCollection = _mapper.Map<List<AdDto>>(adCollection.ToList());
+            IReadOnlyCollection<AdDto> readonlyCollection = dtoCollection.AsReadOnly();
+
+            return Task.Run(() => readonlyCollection);
         }
 
         /// <inheritdoc/>
         public Task<AdDto?> GetByIdAsync(Guid id, CancellationToken cancellationToken)
         {
-            return Task.Run(() => _mapper.Map<AdDto?>(_repository.GetByIdAsync(id)), cancellationToken);
+            var ad = _repository.GetByIdAsync(id).Result;
+            return Task.Run(() => _mapper.Map<AdDto?>(ad), cancellationToken);
         }
+
+        /// <inheritdoc/>
+        public Task<bool> DeleteAsync(Guid id, CancellationToken cancellationToken)
+        {
+            var model = _repository.GetByIdAsync(id).Result;
+            if (model == null)
+                return Task.Run(() => false);
+            _repository.DeleteAsync(model, cancellationToken);
+            return Task.Run(() => true);
+        }
+
 
         /// <inheritdoc/>
         public Task UpdateAsync(Guid id, AdEntity ad, CancellationToken cancellationToken)
         {
-            throw new NotImplementedException();
+            ad.Id = id;
+            return _repository.UpdateAsync(ad, cancellationToken);
         }
     }
 }

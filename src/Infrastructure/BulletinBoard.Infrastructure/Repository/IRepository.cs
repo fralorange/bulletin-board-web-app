@@ -17,7 +17,7 @@ namespace BulletinBoard.Infrastructure.Repository
         /// <summary>
         /// Возвращает отфильтрованную коллекцию.
         /// </summary>
-        /// <param name="predicate"></param>
+        /// <param name="predicate">Предиката.</param>
         /// <returns>Коллекцию <see cref="TEntity"/>.</returns>
         IQueryable<TEntity> GetAllFiltered(Expression<Func<TEntity, bool>> predicate);
 
@@ -26,7 +26,7 @@ namespace BulletinBoard.Infrastructure.Repository
         /// </summary>
         /// <param name="id"></param>
         /// <returns>Модель <see cref="TEntity"/></returns>
-        Task<TEntity> GetByIdAsync(Guid id);
+        Task<TEntity?> GetByIdAsync(Guid id);
 
         /// <summary>
         /// Добавляет модель.
@@ -45,14 +45,8 @@ namespace BulletinBoard.Infrastructure.Repository
         /// <summary>
         /// Удаляет модель.
         /// </summary>
-        /// <param name="id"></param>
+        /// <param name="model"></param>
         /// <param name="cancellationToken">Отмена операции.</param> 
-        Task DeleteAsync(Guid id, CancellationToken cancellationToken);
-
-        /// <summary>
-        /// Сохраняет изменения.
-        /// </summary>
-        /// <param name="cancellationToken">Отмена операции.</param> 
-        Task SaveChangesAsync(CancellationToken cancellationToken);
+        Task DeleteAsync(TEntity model, CancellationToken cancellationToken);
     }
 }

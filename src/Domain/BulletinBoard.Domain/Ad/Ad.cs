@@ -40,7 +40,7 @@ namespace BulletinBoard.Domain.Ad
         /// <summary>
         /// Пользователь.
         /// </summary>
-        public required User.User User { get; set; }
+        public virtual required User.User User { get; set; }
 
         /// <summary>
         /// Идентификатор пользователя.

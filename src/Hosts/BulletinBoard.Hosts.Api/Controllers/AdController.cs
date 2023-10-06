@@ -1,4 +1,5 @@
 using BulletinBoard.Application.AppServices.Contexts.Ad.Services;
+using BulletinBoard.Application.AppServices.Exceptions;
 using BulletinBoard.Contracts.Ad;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -93,11 +94,14 @@ namespace BulletinBoard.Hosts.Api.Controllers
         [HttpPut("{id:guid}")]
         public async Task<IActionResult> UpdateAsync(Guid id, UpdateAdDto dto, CancellationToken cancellationToken)
         {
-            var ad = await _adService.GetByIdAsync(id, cancellationToken);
-            if (ad is null)
-                return NotFound();
-
-            await _adService.UpdateAsync(id, dto, cancellationToken);
+            try
+            {
+                await _adService.UpdateAsync(id, dto, cancellationToken);
+            }
+            catch (EntityNotFoundException ex)
+            {
+                return NotFound(ex.Message);
+            }
 
             return NoContent();
         }

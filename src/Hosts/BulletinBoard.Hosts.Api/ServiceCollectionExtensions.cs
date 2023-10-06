@@ -1,4 +1,5 @@
-﻿using BulletinBoard.Application.AppServices.Authentication;
+﻿using AutoMapper;
+using BulletinBoard.Application.AppServices.Authentication;
 using BulletinBoard.Application.AppServices.Authentication.Constants;
 using BulletinBoard.Application.AppServices.Authentication.Handlers;
 using BulletinBoard.Application.AppServices.Authentication.Services;
@@ -7,6 +8,7 @@ using BulletinBoard.Application.AppServices.Contexts.Ad.Services;
 using BulletinBoard.Application.AppServices.Contexts.User.Repositories;
 using BulletinBoard.Infrastructure.ComponentRegistrar.Mappers.Ad;
 using BulletinBoard.Infrastructure.ComponentRegistrar.Mappers.Attachment;
+using BulletinBoard.Infrastructure.ComponentRegistrar.Mappers.User;
 using BulletinBoard.Infrastructure.DataAccess;
 using BulletinBoard.Infrastructure.DataAccess.Contexts.Ad.Repositories;
 using BulletinBoard.Infrastructure.DataAccess.Contexts.User.Repositories;
@@ -14,6 +16,7 @@ using BulletinBoard.Infrastructure.DataAccess.Interfaces;
 using BulletinBoard.Infrastructure.Repository;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
@@ -77,9 +80,19 @@ namespace BulletinBoard.Hosts.Api
         /// </summary>
         /// <param name="services"></param>
         /// <returns></returns>
-        public static IServiceCollection AddAutoMapper(this IServiceCollection services)
+        public static IServiceCollection AddMapper(this IServiceCollection services)
         {
-            services.AddAutoMapper(typeof(AdMapper), typeof(AttachmentMapper));
+            var config = new MapperConfiguration(cfg =>
+            {
+                cfg.AddProfile<AdMapper>();
+                cfg.AddProfile<AttachmentMapper>();
+                cfg.AddProfile<UserMapper>();
+            });
+
+            config.AssertConfigurationIsValid();
+
+            IMapper mapper = config.CreateMapper();
+            services.AddSingleton(mapper);
 
             return services;
         }

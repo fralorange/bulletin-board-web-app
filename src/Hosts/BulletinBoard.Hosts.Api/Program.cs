@@ -22,7 +22,7 @@ namespace BulletinBoard.Hosts.Api
 
             builder.Services.AddHttpContextAccessor();
 
-            builder.Services.AddAutoMapper();
+            builder.Services.AddMapper();
 
             builder.Services.AddServices();
             builder.Services.AddRepositories();

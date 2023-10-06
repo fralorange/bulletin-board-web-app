@@ -18,6 +18,7 @@
         /// <summary>
         /// Объявления пользователя.
         /// </summary>
-        public IEnumerable<Ad.AdDto>? Adverts { get; set; }
+        
+        public IEnumerable<Ad.InfoAdDto>? Adverts { get; set; }
     }
 }
