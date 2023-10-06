@@ -63,10 +63,13 @@ namespace BulletinBoard.Infrastructure.DataAccess.Contexts.Ad.Repositories
 
 
         /// <inheritdoc/>
-        public Task UpdateAsync(Guid id, AdEntity ad, CancellationToken cancellationToken)
+        public Task<bool> UpdateAsync(Guid id, AdEntity ad, CancellationToken cancellationToken)
         {
+            if (_repository.GetByPredicateAsync(a => a.Id == id).Result == null)
+                return Task.Run(() => false);
             ad.Id = id;
-            return _repository.UpdateAsync(ad, cancellationToken);
+            _repository.UpdateAsync(ad, cancellationToken);
+            return Task.Run(() => true);
         }
     }
 }

@@ -1,6 +1,5 @@
 ﻿using AutoMapper;
 using BulletinBoard.Application.AppServices.Contexts.Ad.Repositories;
-using BulletinBoard.Application.AppServices.Exceptions;
 using BulletinBoard.Contracts.Ad;
 using Microsoft.AspNetCore.Http;
 using System.Security.Claims;
@@ -60,13 +59,10 @@ namespace BulletinBoard.Application.AppServices.Contexts.Ad.Services
         }
 
         /// <inheritdoc/>
-        public Task UpdateAsync(Guid id, UpdateAdDto dto, CancellationToken cancellationToken)
+        public Task<bool> UpdateAsync(Guid id, UpdateAdDto dto, CancellationToken cancellationToken)
         {
-            var entityDto = GetByIdAsync(id, cancellationToken).Result 
-                ?? throw new EntityNotFoundException($"Сущность с идентификатором: `{id}` не найдена!");
-
             var ad = _mapper.Map<AdEntity>(dto);
-            ad.UserId = entityDto.User.Id;
+            ad.UserId = Guid.Parse(_httpContextAccessor.HttpContext!.User.FindFirstValue(ClaimTypes.NameIdentifier)!);
 
             return _adRepository.UpdateAsync(id, ad, cancellationToken);
         }

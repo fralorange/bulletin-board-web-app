@@ -92,19 +92,12 @@ namespace BulletinBoard.Hosts.Api.Controllers
         /// <param name="id">Идентификатор объявления.</param>
         /// <param name="dto">Модель объявления.</param>
         /// <param name="cancellationToken">Отмена операции.</param>
-        [Bugged("System.InvalidOperationException: The instance of entity type 'Ad' cannot be tracked because another instance with the same key value for {'Id'} is already being tracked. ")]
         [HttpPut("{id:guid}")]
         public async Task<IActionResult> UpdateAsync(Guid id, UpdateAdDto dto, CancellationToken cancellationToken)
         {
-            try
-            {
-                await _adService.UpdateAsync(id, dto, cancellationToken);
-            }
-            catch (EntityNotFoundException ex)
-            {
-                return NotFound(ex.Message);
-            }
-
+            var state = await _adService.UpdateAsync(id, dto, cancellationToken);
+            if (!state)
+                return NotFound();
             return NoContent();
         }
 

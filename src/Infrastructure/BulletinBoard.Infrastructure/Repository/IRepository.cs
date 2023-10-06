@@ -24,9 +24,16 @@ namespace BulletinBoard.Infrastructure.Repository
         /// <summary>
         /// Возвращает модель по заданному идентификатору.
         /// </summary>
-        /// <param name="id"></param>
+        /// <param name="id">Идентификатор.</param>
         /// <returns>Модель <see cref="TEntity"/></returns>
         Task<TEntity?> GetByIdAsync(Guid id);
+
+        /// <summary>
+        /// Возвращает модель по заданному условию.
+        /// </summary>
+        /// <param name="predicate">Условие.</param>
+        /// <returns>Модель <see cref="TEntity"/></returns>
+        Task<TEntity?> GetByPredicateAsync(Expression<Func<TEntity, bool>> predicate);
 
         /// <summary>
         /// Добавляет модель.

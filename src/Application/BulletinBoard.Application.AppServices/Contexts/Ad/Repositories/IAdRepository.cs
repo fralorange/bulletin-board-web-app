@@ -39,7 +39,7 @@ namespace BulletinBoard.Application.AppServices.Contexts.Ad.Repositories
         /// <param name="id">Идентификатор объявления.</param>
         /// <param name="ad">Объявление.</param>
         /// <param name="cancellationToken">Отмена операции.</param>
-        Task UpdateAsync(Guid id, Domain.Ad.Ad ad, CancellationToken cancellationToken);
+        Task<bool> UpdateAsync(Guid id, Domain.Ad.Ad ad, CancellationToken cancellationToken);
 
         /// <summary>
         /// Удаляет объявление по идентификатору.

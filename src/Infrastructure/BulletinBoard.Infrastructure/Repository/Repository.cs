@@ -43,6 +43,11 @@ namespace BulletinBoard.Infrastructure.Repository
         }
 
         /// <inheritdoc/>
+        public async Task<TEntity?> GetByPredicateAsync(Expression<Func<TEntity, bool>> predicate)
+        {
+            return await DbSet.AsNoTracking().FirstOrDefaultAsync(predicate);
+        }
+        /// <inheritdoc/>
         public async Task AddAsync(TEntity model, CancellationToken cancellationToken)
         {
             if (model == null)
@@ -75,5 +80,6 @@ namespace BulletinBoard.Infrastructure.Repository
             DbSet.Remove(model);
             await DbContext.SaveChangesAsync(cancellationToken);
         }
+
     }
 }
