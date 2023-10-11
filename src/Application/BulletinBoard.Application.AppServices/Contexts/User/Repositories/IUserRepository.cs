@@ -33,6 +33,14 @@ namespace BulletinBoard.Application.AppServices.Contexts.User.Repositories
         Task<Domain.User.User?> GetByPredicate(Expression<Func<Domain.User.User, bool>> predicate, CancellationToken cancellationToken);
 
         /// <summary>
+        /// Возвращает текущего пользователя.
+        /// </summary>
+        /// <param name="id">Идентификатор.</param>
+        /// <param name="cancellationToken">Отмена операции.</param>
+        /// <returns>Модель пользователя <see cref="InfoUserDto"/></returns>
+        Task<InfoUserDto> GetCurrentUser(Guid id, CancellationToken cancellationToken);
+
+        /// <summary>
         /// Создает пользователя.
         /// </summary>
         /// <param name="user">Пользователь.</param>
@@ -46,7 +54,7 @@ namespace BulletinBoard.Application.AppServices.Contexts.User.Repositories
         /// <param name="id">Идентификатор пользователя.</param>
         /// <param name="user">Пользователь.</param>
         /// <param name="cancellationToken">Отмена операции.</param>
-        Task UpdateAsync(Guid id, Domain.User.User user, CancellationToken cancellationToken);
+        Task<bool> UpdateAsync(Guid id, Domain.User.User user, CancellationToken cancellationToken);
 
         /// <summary>
         /// Удаляет пользователя по идентификатору.

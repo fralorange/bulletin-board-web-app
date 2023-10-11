@@ -1,4 +1,5 @@
 ﻿using BulletinBoard.Contracts.User;
+using Microsoft.AspNetCore.Http;
 
 namespace BulletinBoard.Application.AppServices.Contexts.User.Services
 {
@@ -24,20 +25,19 @@ namespace BulletinBoard.Application.AppServices.Contexts.User.Services
         Task<IReadOnlyCollection<UserDto>> GetAllAsync(CancellationToken cancellationToken, int limit = 10);
 
         /// <summary>
-        /// Создает нового пользователя.
+        /// Возвращает текущего пользователя.
         /// </summary>
-        /// <param name="dto">Модель пользователя..</param>
         /// <param name="cancellationToken">Отмена операции.</param>
-        /// <returns>Идентификатор созданной сущности.</returns>
-        Task<Guid> CreateAsync(CreateUserDto dto, CancellationToken cancellationToken);
+        /// <returns>Модель пользователя <see cref="InfoUserDto"/></returns>
+        Task<InfoUserDto> GetCurrentUser(CancellationToken cancellationToken);
 
         /// <summary>
         /// Редактирует данные пользователя.
         /// </summary>
-        /// <param name="id">Идентификатор польхователя.</param>
+        /// <param name="id">Идентификатор пользователя.</param>
         /// <param name="dto">Модель пользователя.</param>
         /// <param name="cancellationToken">Отмена операции.</param>
-        Task UpdateAsync(Guid id, UpdateUserDto dto, CancellationToken cancellationToken);
+        Task<bool> UpdateAsync(Guid id, UpdateUserDto dto, CancellationToken cancellationToken);
 
         /// <summary>
         /// Удаляет пользователя по идентификатору.

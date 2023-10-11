@@ -1,6 +1,9 @@
-﻿using BulletinBoard.Hosts.Api.Dto;
+﻿using BulletinBoard.Application.AppServices.Authentication.Constants;
+using BulletinBoard.Application.AppServices.Contexts.User.Services;
+using BulletinBoard.Contracts.User;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 
 namespace BulletinBoard.Hosts.Api.Controllers
 {
@@ -11,43 +14,117 @@ namespace BulletinBoard.Hosts.Api.Controllers
     [Route("[controller]")]
     public class UserController : ControllerBase
     {
+        private readonly IUserService _userService;
+
         /// <summary>
-        /// Публичный метод.
+        /// Инициализирует экземпляр <see cref="UserController"/>
         /// </summary>
-        /// <returns><see cref="JsonResult"/></returns>
-        [AllowAnonymous]
-        [HttpPost("public")]
-        public JsonResult Public()
+        /// <param name="userService"></param>
+        public UserController(IUserService userService)
         {
-            return new JsonResult("Public");
+            _userService = userService;
         }
 
         /// <summary>
-        /// Метод требующий авторизацию пользователя.
+        /// Возвращает список всех пользователей.
         /// </summary>
-        /// <returns><see cref="JsonResult"/></returns>
+        /// <param name="limit">Ограничение.</param>
+        /// <param name="cancellationToken"></param>
+        /// <returns></returns>
         [Authorize]
-        //[Authorize(Roles = "Role")]
-        //[Authorize(Policy = "CustomPolicy")]
-        [HttpPost("requiring_authorization")]
-        public JsonResult RequiringAuthorization()
+        [Authorize(Roles = AuthRoles.Admin)]
+        [HttpGet("get-all-with-limit")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        public async Task<IActionResult> GetAllAsync(CancellationToken cancellationToken, int limit = 10)
         {
-            return new JsonResult("Success!");
+            var result = await _userService.GetAllAsync(cancellationToken, limit);
+            return Ok(result);
         }
 
         /// <summary>
-        /// Метод для получения информации о пользователе.
+        /// Возвращает пользователя по заданному идентификатору.
         /// </summary>
-        /// <returns><see cref="AuthUserDto"/></returns>
-        [HttpPost("get_user_info")]
-        public AuthUserDto GetUserInfo()
+        /// <param name="id"></param>
+        /// <param name="cancellationToken"></param>
+        /// <returns></returns>
+        [AllowAnonymous]
+        [HttpGet("get-by-id")]
+        [ProducesResponseType(typeof(UserDto), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<IActionResult> GetByIdAsync(Guid id, CancellationToken cancellationToken)
         {
-            return new AuthUserDto
-            {
-                Scheme = HttpContext.User.Identity.AuthenticationType,
-                IsAuthenticated = HttpContext.User.Identity.IsAuthenticated,
-                Claims = HttpContext.User.Claims.Select(claim => (object) new {claim.Type, claim.Value}).ToList()
-            };
+            //TO-DO: Сделать чтобы возвращал логин.
+            var result = await _userService.GetByIdAsync(id, cancellationToken);
+            if (result == null)
+                return NotFound(result);
+            return Ok(result);
+        }
+
+        /// <summary>
+        /// Возвращает текущего пользователя.
+        /// </summary>
+        /// <param name="cancellationToken"></param>
+        /// <returns></returns>
+        [Authorize]
+        [HttpGet("get-current-user")]
+        [ProducesResponseType(typeof(InfoUserDto), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        public async Task<IActionResult> GetCurrentUserAsync(CancellationToken cancellationToken)
+        {
+            var result = await _userService.GetCurrentUser(cancellationToken);
+            return Ok(result);
+        }
+
+        /// <summary>
+        /// Редактирует пользователя.
+        /// </summary>
+        /// <param name="id">Идентификатор.</param>
+        /// <param name="dto">Модель.</param>
+        /// <param name="cancellationToken"></param>
+        /// <returns></returns>
+        [Authorize]
+        [HttpPut("{id:guid}")]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<IActionResult> UpdateAsync(Guid id, UpdateUserDto dto, CancellationToken cancellationToken)
+        {
+            var currentUserId = HttpContext.User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var currentUserRole = HttpContext.User.FindFirstValue(ClaimTypes.Role);
+
+            if (currentUserId != id.ToString() && currentUserRole != AuthRoles.Admin)
+                return Forbid();
+            var state = await _userService.UpdateAsync(id, dto, cancellationToken);
+            if (!state)
+                return NotFound();
+            return NoContent();
+        }
+
+        /// <summary>
+        /// Удаляет пользователя.
+        /// </summary>
+        /// <param name="id">Идентификатор.</param>
+        /// <param name="cancellationToken"></param>
+        /// <returns></returns>
+        [Authorize]
+        [HttpDelete("{id:guid}")]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        public async Task<IActionResult> DeleteAsync(Guid id, CancellationToken cancellationToken)
+        {
+            var currentUserId = HttpContext.User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var currentUserRole = HttpContext.User.FindFirstValue(ClaimTypes.Role);
+
+            if (currentUserId != id.ToString() && currentUserRole != AuthRoles.Admin)
+                return Forbid();
+            var state = await _userService.DeleteAsync(id, cancellationToken);
+            if (!state)
+                return NotFound();
+            return NoContent();
         }
     }
 }

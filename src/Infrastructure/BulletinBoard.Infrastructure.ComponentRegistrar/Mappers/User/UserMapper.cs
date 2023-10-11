@@ -24,6 +24,14 @@ namespace BulletinBoard.Infrastructure.ComponentRegistrar.Mappers.User
                 .ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.Name))
                 .ForMember(dest => dest.Role, opt => opt.MapFrom(src => src.Role))
                 .ForMember(dest => dest.Adverts, opt => opt.MapFrom(src => src.Adverts));
+
+            CreateMap<UserEntity, InfoUserDto>(MemberList.None)
+                .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.Id))
+                .ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.Name))
+                .ForMember(dest => dest.Role, opt => opt.MapFrom(src => src.Role));
+
+            CreateMap<UpdateUserDto, UserEntity>(MemberList.None)
+                .IncludeBase<CreateUserDto, UserEntity>();
         }
     }
 }

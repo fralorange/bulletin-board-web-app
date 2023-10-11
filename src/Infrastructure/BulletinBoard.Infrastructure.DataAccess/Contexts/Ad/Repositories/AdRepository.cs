@@ -31,7 +31,7 @@ namespace BulletinBoard.Infrastructure.DataAccess.Contexts.Ad.Repositories
         public Task<Guid> CreateAsync(AdEntity ad, CancellationToken cancellationToken)
         {
             _repository.AddAsync(ad, cancellationToken);
-            return Task.Run(() => ad.Id);
+            return Task.FromResult(ad.Id);
         }
 
         /// <inheritdoc/>
@@ -41,7 +41,7 @@ namespace BulletinBoard.Infrastructure.DataAccess.Contexts.Ad.Repositories
             var dtoCollection = _mapper.Map<List<AdDto>>(adCollection.ToList());
             IReadOnlyCollection<AdDto> readonlyCollection = dtoCollection.AsReadOnly();
 
-            return Task.Run(() => readonlyCollection);
+            return Task.Run(() => readonlyCollection, cancellationToken);
         }
 
         /// <inheritdoc/>
@@ -56,9 +56,9 @@ namespace BulletinBoard.Infrastructure.DataAccess.Contexts.Ad.Repositories
         {
             var model = _repository.GetByIdAsync(id).Result;
             if (model == null)
-                return Task.Run(() => false);
+                return Task.FromResult(false);
             _repository.DeleteAsync(model, cancellationToken);
-            return Task.Run(() => true);
+            return Task.FromResult(true);
         }
 
 
@@ -66,10 +66,10 @@ namespace BulletinBoard.Infrastructure.DataAccess.Contexts.Ad.Repositories
         public Task<bool> UpdateAsync(Guid id, AdEntity ad, CancellationToken cancellationToken)
         {
             if (_repository.GetByPredicateAsync(a => a.Id == id).Result == null)
-                return Task.Run(() => false);
+                return Task.FromResult(false);
             ad.Id = id;
             _repository.UpdateAsync(ad, cancellationToken);
-            return Task.Run(() => true);
+            return Task.FromResult(true);
         }
     }
 }

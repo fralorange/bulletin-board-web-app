@@ -6,6 +6,11 @@
     public class UserDto : Base.BaseDto
     {
         /// <summary>
+        /// Логин пользователя.
+        /// </summary>
+        public string Login { get; set; }
+
+        /// <summary>
         /// Имя пользователя.
         /// </summary>
         public string Name { get; set; }
@@ -17,8 +22,7 @@
 
         /// <summary>
         /// Объявления пользователя.
-        /// </summary>
-        
+        /// </summary>     
         public IEnumerable<Ad.InfoAdDto>? Adverts { get; set; }
     }
 }

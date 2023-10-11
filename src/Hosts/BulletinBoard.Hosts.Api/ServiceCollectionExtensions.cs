@@ -6,6 +6,7 @@ using BulletinBoard.Application.AppServices.Authentication.Services;
 using BulletinBoard.Application.AppServices.Contexts.Ad.Repositories;
 using BulletinBoard.Application.AppServices.Contexts.Ad.Services;
 using BulletinBoard.Application.AppServices.Contexts.User.Repositories;
+using BulletinBoard.Application.AppServices.Contexts.User.Services;
 using BulletinBoard.Infrastructure.ComponentRegistrar.Mappers.Ad;
 using BulletinBoard.Infrastructure.ComponentRegistrar.Mappers.Attachment;
 using BulletinBoard.Infrastructure.ComponentRegistrar.Mappers.User;
@@ -16,7 +17,6 @@ using BulletinBoard.Infrastructure.DataAccess.Interfaces;
 using BulletinBoard.Infrastructure.Repository;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
@@ -37,6 +37,7 @@ namespace BulletinBoard.Hosts.Api
         {
             services.AddTransient<IAdService, AdService>();
             services.AddTransient<IAuthService, AuthService>();
+            services.AddTransient<IUserService, UserService>();
 
             return services;
         }

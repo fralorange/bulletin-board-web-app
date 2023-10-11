@@ -1,5 +1,10 @@
-﻿using BulletinBoard.Application.AppServices.Contexts.User.Repositories;
+﻿using AutoMapper;
+using BulletinBoard.Application.AppServices.Contexts.User.Repositories;
+using BulletinBoard.Application.AppServices.Cryptography.Helpers;
 using BulletinBoard.Contracts.User;
+using BulletinBoard.Domain.Ad;
+using Microsoft.AspNetCore.Http;
+using System.Security.Claims;
 
 namespace BulletinBoard.Application.AppServices.Contexts.User.Services
 {
@@ -7,45 +12,58 @@ namespace BulletinBoard.Application.AppServices.Contexts.User.Services
     public class UserService : IUserService
     {
         private readonly IUserRepository _userRepository;
+        private readonly IHttpContextAccessor _httpContextAccessor;
+        private readonly IMapper _mapper;
 
         /// <summary>
         /// Инициализирует экземпляр <see cref="UserService"/>
         /// </summary>
         /// <param name="userRepository">Репозиторий.</param>
-        public UserService(IUserRepository userRepository)
+        /// <param name="httpContextAccessor"></param>
+        /// <param name="mapper">Маппер.</param>
+        public UserService(IUserRepository userRepository, IHttpContextAccessor httpContextAccessor, IMapper mapper)
         {
             _userRepository = userRepository;
+            _httpContextAccessor = httpContextAccessor;
+            _mapper = mapper;
         }
 
-
         /// <inheritdoc/>
-        public Task<IReadOnlyCollection<UserDto>> GetAllAsync(CancellationToken cancellationToken, int limit = 10)
+        public Task<IReadOnlyCollection<UserDto>> GetAllAsync(CancellationToken cancellationToken, int limit)
         {
-            throw new NotImplementedException();
+            return _userRepository.GetAllAsync(cancellationToken, limit);
         }
 
         /// <inheritdoc/>
         public Task<UserDto?> GetByIdAsync(Guid id, CancellationToken cancellationToken)
         {
-            throw new NotImplementedException();
+            return _userRepository.GetByIdAsync(id, cancellationToken);
         }
 
         /// <inheritdoc/>
-        public Task<Guid> CreateAsync(CreateUserDto dto, CancellationToken cancellationToken)
+        public Task<InfoUserDto> GetCurrentUser(CancellationToken cancellationToken)
         {
-            throw new NotImplementedException();
+            var userId = Guid.Parse(_httpContextAccessor.HttpContext!.User.FindFirstValue(ClaimTypes.NameIdentifier)!);
+            return _userRepository.GetCurrentUser(userId, cancellationToken);
         }
 
         /// <inheritdoc/>
-        public Task UpdateAsync(Guid id, UpdateUserDto dto, CancellationToken cancellationToken)
+        public Task<bool> UpdateAsync(Guid id, UpdateUserDto dto, CancellationToken cancellationToken)
         {
-            throw new NotImplementedException();
+            var (Salt, Password) = PasswordHashHelper.HashPassword(dto.Password);
+            var user = _mapper.Map<Domain.User.User>(dto);
+
+            user.Salt = Salt;
+            user.HashedPassword = Password;
+            user.Role = GetByIdAsync(id, cancellationToken).Result!.Role;
+
+            return _userRepository.UpdateAsync(id, user, cancellationToken);
         }
 
         /// <inheritdoc/>
         public Task<bool> DeleteAsync(Guid id, CancellationToken cancellationToken)
         {
-            throw new NotImplementedException();
+            return _userRepository.DeleteAsync(id, cancellationToken);
         }
     }
 }

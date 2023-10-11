@@ -11,7 +11,6 @@ namespace BulletinBoard.Hosts.Api.Controllers
     /// Контроллер для работы с объявлениями.
     /// </summary>
     [ApiController]
-    [Authorize]
     [Route("ad")]
     public class AdController : ControllerBase
     {
@@ -38,7 +37,7 @@ namespace BulletinBoard.Hosts.Api.Controllers
         /// <returns>Коллекция объявлений <see cref="AdDto"/>.</returns>
         [AllowAnonymous]
         [HttpGet("get-all-by-pages")]
-
+        [ProducesResponseType(StatusCodes.Status200OK)]
         public async Task<IActionResult> GetAllAsync(CancellationToken cancellationToken, int pageSize = 10, int pageIndex = 0)
         {
             var result = await _adService.GetAllAsync(cancellationToken, pageSize, pageIndex);
@@ -58,7 +57,6 @@ namespace BulletinBoard.Hosts.Api.Controllers
         [HttpGet("get-by-id")]
         [ProducesResponseType(typeof(AdDto), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> GetByIdAsync(Guid id, CancellationToken cancellationToken)
         {
             var result = await _adService.GetByIdAsync(id, cancellationToken);
@@ -76,10 +74,10 @@ namespace BulletinBoard.Hosts.Api.Controllers
         /// <param name="dto">Модель создаваемого объявления.</param>
         /// <param name="cancellationToken">Отмена операции.</param>
         /// <returns>Идентификатор создаваемого объявления</returns>
+        [Authorize]
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> CreateAsync([FromBody] CreateAdDto dto, CancellationToken cancellationToken)
         {
             var dtoId = await _adService.CreateAsync(dto, cancellationToken);
@@ -92,7 +90,11 @@ namespace BulletinBoard.Hosts.Api.Controllers
         /// <param name="id">Идентификатор объявления.</param>
         /// <param name="dto">Модель объявления.</param>
         /// <param name="cancellationToken">Отмена операции.</param>
+        [Authorize]
         [HttpPut("{id:guid}")]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> UpdateAsync(Guid id, UpdateAdDto dto, CancellationToken cancellationToken)
         {
             var state = await _adService.UpdateAsync(id, dto, cancellationToken);
@@ -106,7 +108,11 @@ namespace BulletinBoard.Hosts.Api.Controllers
         /// </summary>
         /// <param name="id">Идентификатор объявления.</param>
         /// <param name="cancellationToken">Отмена операции.</param>
+        [Authorize]
         [HttpDelete("{id:guid}")]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> DeleteAsync(Guid id, CancellationToken cancellationToken)
         {
             var state = await _adService.DeleteAsync(id, cancellationToken);

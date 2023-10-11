@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using BulletinBoard.Application.AppServices.Authentication.Constants;
 using BulletinBoard.Application.AppServices.Authentication.Exceptions;
 using BulletinBoard.Application.AppServices.Contexts.User.Repositories;
 using BulletinBoard.Application.AppServices.Cryptography.Helpers;
@@ -76,7 +77,7 @@ namespace BulletinBoard.Application.AppServices.Authentication.Services
             var (Salt, Hash) = PasswordHashHelper.HashPassword(dto.Password);
             user.HashedPassword = Hash;
             user.Salt = Salt;
-            user.Role = "Default";
+            user.Role = AuthRoles.Default;
 
             var result = await _userRepository.CreateAsync(user, cancellationToken);
             return result;
