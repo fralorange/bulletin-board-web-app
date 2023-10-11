@@ -64,10 +64,7 @@ namespace BulletinBoard.Infrastructure.DataAccess.Contexts.User.Repositories
         /// <inheritdoc/>
         public Task<bool> UpdateAsync(Guid id, UserEntity user, CancellationToken cancellationToken)
         {
-            var model = _repository.GetByIdAsync(id).Result!;
-            if (model == null)
-                return Task.FromResult(false);
-            _repository.UpdateAsync(model, cancellationToken);
+            _repository.UpdateAsync(user, cancellationToken);
             return Task.FromResult(true);
         }
 

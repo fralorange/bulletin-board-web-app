@@ -50,14 +50,19 @@ namespace BulletinBoard.Application.AppServices.Contexts.User.Services
         /// <inheritdoc/>
         public Task<bool> UpdateAsync(Guid id, UpdateUserDto dto, CancellationToken cancellationToken)
         {
+            var model = _userRepository.GetByPredicate(u => u.Id == id, cancellationToken).Result;
+            if (model == null)
+                return Task.FromResult(false);
+
             var (Salt, Password) = PasswordHashHelper.HashPassword(dto.Password);
-            var user = _mapper.Map<Domain.User.User>(dto);
 
-            user.Salt = Salt;
-            user.HashedPassword = Password;
-            user.Role = GetByIdAsync(id, cancellationToken).Result!.Role;
+            model.Login = dto.Login;
+            model.Name = dto.Name;
+            model.Salt = Salt;
+            model.HashedPassword = Password;
+            model.Role = GetByIdAsync(id, cancellationToken).Result!.Role;
 
-            return _userRepository.UpdateAsync(id, user, cancellationToken);
+            return _userRepository.UpdateAsync(id, model, cancellationToken);
         }
 
         /// <inheritdoc/>

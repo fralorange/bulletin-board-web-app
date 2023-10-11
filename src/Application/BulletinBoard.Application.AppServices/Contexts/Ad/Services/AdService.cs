@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using BulletinBoard.Application.AppServices.Contexts.Ad.Repositories;
 using BulletinBoard.Contracts.Ad;
+using BulletinBoard.Domain.Ad;
 using Microsoft.AspNetCore.Http;
 using System.Security.Claims;
 using AdEntity = BulletinBoard.Domain.Ad.Ad;
@@ -40,11 +41,6 @@ namespace BulletinBoard.Application.AppServices.Contexts.Ad.Services
             return _adRepository.CreateAsync(ad, cancellationToken);
         }
 
-        /// <inheritdoc/>
-        public Task<bool> DeleteAsync(Guid id, CancellationToken cancellationToken)
-        {
-            return _adRepository.DeleteAsync(id, cancellationToken);
-        }
 
         /// <inheritdoc/> 
         public Task<IReadOnlyCollection<AdDto>> GetAllAsync(CancellationToken cancellationToken, int pageSize = 10, int pageIndex = 0)
@@ -61,10 +57,22 @@ namespace BulletinBoard.Application.AppServices.Contexts.Ad.Services
         /// <inheritdoc/>
         public Task<bool> UpdateAsync(Guid id, UpdateAdDto dto, CancellationToken cancellationToken)
         {
-            var ad = _mapper.Map<AdEntity>(dto);
-            ad.UserId = Guid.Parse(_httpContextAccessor.HttpContext!.User.FindFirstValue(ClaimTypes.NameIdentifier)!);
+            var ad = _adRepository.GetByPredicate(a => a.Id == id, cancellationToken).Result;
+            if (ad == null)
+                return Task.FromResult(false);
+
+            ad.Title = dto.Title;
+            ad.Description = dto.Description;
+            ad.Price = dto.Price;
+            ad.Id = id;
 
             return _adRepository.UpdateAsync(id, ad, cancellationToken);
+        }
+
+        /// <inheritdoc/>
+        public Task<bool> DeleteAsync(Guid id, CancellationToken cancellationToken)
+        {
+            return _adRepository.DeleteAsync(id, cancellationToken);
         }
     }
 }

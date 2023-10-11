@@ -1,4 +1,6 @@
 ﻿using BulletinBoard.Contracts.Ad;
+using BulletinBoard.Contracts.User;
+using System.Linq.Expressions;
 using System.Security.Principal;
 
 namespace BulletinBoard.Application.AppServices.Contexts.Ad.Repositories
@@ -24,6 +26,14 @@ namespace BulletinBoard.Application.AppServices.Contexts.Ad.Repositories
         /// <param name="pageIndex">Номер страницы.</param>
         /// <returns>Коллекция объявлений <see cref="AdDto"/></returns>
         Task<IReadOnlyCollection<AdDto>> GetAllAsync(CancellationToken cancellationToken, int pageSize = 10, int pageIndex = 0);
+
+        /// <summary>
+        /// Возвращает объявление по заданному условию.
+        /// </summary>
+        /// <param name="predicate">Предиката.</param>
+        /// <param name="cancellationToken">Отмена операции.</param>
+        /// <returns>Модель объявления <see cref="Domain.Ad.Ad"/>.</returns>
+        Task<Domain.Ad.Ad?> GetByPredicate(Expression<Func<Domain.Ad.Ad, bool>> predicate, CancellationToken cancellationToken);
 
         /// <summary>
         /// Создает объявление.

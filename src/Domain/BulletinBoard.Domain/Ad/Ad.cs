@@ -10,12 +10,12 @@ namespace BulletinBoard.Domain.Ad
         /// <summary>
         /// Заголовок.
         /// </summary>
-        public required string Title { get; init; }
+        public required string Title { get; set; }
 
         /// <summary>
         /// Описание.
         /// </summary>
-        public required string Description { get; init; }
+        public required string Description { get; set; }
 
         /// <summary>
         /// 
@@ -35,7 +35,7 @@ namespace BulletinBoard.Domain.Ad
         /// <summary>
         /// Цена.
         /// </summary>
-        public required decimal Price { get; init; }
+        public required decimal Price { get; set; }
 
         /// <summary>
         /// Пользователь.

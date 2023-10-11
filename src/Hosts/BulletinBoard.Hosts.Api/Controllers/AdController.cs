@@ -1,3 +1,4 @@
+using BulletinBoard.Application.AppServices.Authentication.Constants;
 using BulletinBoard.Application.AppServices.Contexts.Ad.Services;
 using BulletinBoard.Application.AppServices.Exceptions;
 using BulletinBoard.Contracts.Ad;
@@ -91,9 +92,11 @@ namespace BulletinBoard.Hosts.Api.Controllers
         /// <param name="dto">Модель объявления.</param>
         /// <param name="cancellationToken">Отмена операции.</param>
         [Authorize]
+        [AuthorizeRoleOwner(AuthRoles.Admin)]
         [HttpPut("{id:guid}")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> UpdateAsync(Guid id, UpdateAdDto dto, CancellationToken cancellationToken)
         {
@@ -109,10 +112,12 @@ namespace BulletinBoard.Hosts.Api.Controllers
         /// <param name="id">Идентификатор объявления.</param>
         /// <param name="cancellationToken">Отмена операции.</param>
         [Authorize]
+        [AuthorizeRoleOwner(AuthRoles.Admin)]
         [HttpDelete("{id:guid}")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
         public async Task<IActionResult> DeleteAsync(Guid id, CancellationToken cancellationToken)
         {
             var state = await _adService.DeleteAsync(id, cancellationToken);

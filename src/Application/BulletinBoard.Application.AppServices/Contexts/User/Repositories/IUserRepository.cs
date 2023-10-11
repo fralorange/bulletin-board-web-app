@@ -29,7 +29,7 @@ namespace BulletinBoard.Application.AppServices.Contexts.User.Repositories
         /// </summary>
         /// <param name="predicate">Предиката.</param>
         /// <param name="cancellationToken">Отмена операции.</param>
-        /// <returns>Модель пользователя <see cref="UserDto"/>.</returns>
+        /// <returns>Модель пользователя <see cref="Domain.User.User"/>.</returns>
         Task<Domain.User.User?> GetByPredicate(Expression<Func<Domain.User.User, bool>> predicate, CancellationToken cancellationToken);
 
         /// <summary>

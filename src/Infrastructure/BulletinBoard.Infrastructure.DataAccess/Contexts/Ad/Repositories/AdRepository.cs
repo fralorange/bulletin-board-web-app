@@ -3,6 +3,7 @@ using BulletinBoard.Application.AppServices.Contexts.Ad.Repositories;
 using BulletinBoard.Contracts.Ad;
 using BulletinBoard.Infrastructure.Repository;
 using System.Collections.ObjectModel;
+using System.Linq.Expressions;
 using System.Security.Cryptography;
 using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 using AdEntity = BulletinBoard.Domain.Ad.Ad;
@@ -45,6 +46,12 @@ namespace BulletinBoard.Infrastructure.DataAccess.Contexts.Ad.Repositories
         }
 
         /// <inheritdoc/>
+        public Task<Domain.Ad.Ad?> GetByPredicate(Expression<Func<AdEntity, bool>> predicate, CancellationToken cancellationToken)
+        {
+            return Task.Run(() => (_repository.GetAllFiltered(predicate).FirstOrDefault()), cancellationToken);
+        }
+
+        /// <inheritdoc/>
         public Task<AdDto?> GetByIdAsync(Guid id, CancellationToken cancellationToken)
         {
             var ad = _repository.GetByIdAsync(id).Result;
@@ -65,9 +72,6 @@ namespace BulletinBoard.Infrastructure.DataAccess.Contexts.Ad.Repositories
         /// <inheritdoc/>
         public Task<bool> UpdateAsync(Guid id, AdEntity ad, CancellationToken cancellationToken)
         {
-            if (_repository.GetByPredicateAsync(a => a.Id == id).Result == null)
-                return Task.FromResult(false);
-            ad.Id = id;
             _repository.UpdateAsync(ad, cancellationToken);
             return Task.FromResult(true);
         }
