@@ -1,8 +1,6 @@
-using BulletinBoard.Application.AppServices.Authentication.Constants;
 using BulletinBoard.Application.AppServices.Contexts.Ad.Services;
 using BulletinBoard.Application.AppServices.Exceptions;
 using BulletinBoard.Contracts.Ad;
-using BulletinBoard.Contracts.Attributes;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -92,7 +90,6 @@ namespace BulletinBoard.Hosts.Api.Controllers
         /// <param name="dto">Модель объявления.</param>
         /// <param name="cancellationToken">Отмена операции.</param>
         [Authorize]
-        [AuthorizeRoleOwner(AuthRoles.Admin)]
         [HttpPut("{id:guid}")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
@@ -100,9 +97,21 @@ namespace BulletinBoard.Hosts.Api.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> UpdateAsync(Guid id, UpdateAdDto dto, CancellationToken cancellationToken)
         {
-            var state = await _adService.UpdateAsync(id, dto, cancellationToken);
-            if (!state)
-                return NotFound();
+            try
+            {
+                await _adService.UpdateAsync(id, dto, cancellationToken);
+            }
+            catch (EntityNotFoundException ex)
+            {
+                ModelState.AddModelError("NotFoundError", ex.Message);
+                return NotFound(ModelState);
+            }
+            catch (EntityForbiddenException ex)
+            {
+                ModelState.AddModelError("ForbiddenError", ex.Message);
+                return StatusCode(403, ModelState);
+            }
+
             return NoContent();
         }
 
@@ -112,7 +121,6 @@ namespace BulletinBoard.Hosts.Api.Controllers
         /// <param name="id">Идентификатор объявления.</param>
         /// <param name="cancellationToken">Отмена операции.</param>
         [Authorize]
-        [AuthorizeRoleOwner(AuthRoles.Admin)]
         [HttpDelete("{id:guid}")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
@@ -120,9 +128,21 @@ namespace BulletinBoard.Hosts.Api.Controllers
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
         public async Task<IActionResult> DeleteAsync(Guid id, CancellationToken cancellationToken)
         {
-            var state = await _adService.DeleteAsync(id, cancellationToken);
-            if (!state)
-                return NotFound();
+            try
+            {
+                await _adService.DeleteAsync(id, cancellationToken);
+            }
+            catch (EntityNotFoundException ex)
+            {
+                ModelState.AddModelError("NotFoundError", ex.Message);
+                return NotFound(ModelState);
+            }
+            catch (EntityForbiddenException ex)
+            {
+                ModelState.AddModelError("ForbiddenError", ex.Message);
+                return StatusCode(403, ModelState);
+            }
+
             return NoContent();
         }
     }

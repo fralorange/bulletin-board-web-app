@@ -1,7 +1,9 @@
 ﻿using AutoMapper;
+using BulletinBoard.Application.AppServices.Authentication.Constants;
+using BulletinBoard.Application.AppServices.Authentication.Services;
 using BulletinBoard.Application.AppServices.Contexts.Ad.Repositories;
+using BulletinBoard.Application.AppServices.Exceptions;
 using BulletinBoard.Contracts.Ad;
-using BulletinBoard.Domain.Ad;
 using Microsoft.AspNetCore.Http;
 using System.Security.Claims;
 using AdEntity = BulletinBoard.Domain.Ad.Ad;
@@ -14,8 +16,7 @@ namespace BulletinBoard.Application.AppServices.Contexts.Ad.Services
         private readonly IAdRepository _adRepository;
         private readonly IMapper _mapper;
         private readonly IHttpContextAccessor _httpContextAccessor;
-
-
+        private readonly IEntityAuthorizationService _entityAuthorizationService;
 
         /// <summary>
         /// Инициализирует экземпляр <see cref="AdService"/>.
@@ -23,11 +24,13 @@ namespace BulletinBoard.Application.AppServices.Contexts.Ad.Services
         /// <param name="adRepository">Репозиторий для работы с объявлениями.</param>
         /// <param name="mapper">Маппер.</param>
         /// <param name="httpContextAccessor">HttpContextAccessor.</param>
-        public AdService(IAdRepository adRepository, IMapper mapper, IHttpContextAccessor httpContextAccessor)
+        /// <param name="entityAuthorizationService"></param>
+        public AdService(IAdRepository adRepository, IMapper mapper, IHttpContextAccessor httpContextAccessor, IEntityAuthorizationService entityAuthorizationService)
         {
             _adRepository = adRepository;
             _mapper = mapper;
             _httpContextAccessor = httpContextAccessor;
+            _entityAuthorizationService = entityAuthorizationService;
         }
 
         /// <inheritdoc/>
@@ -55,11 +58,12 @@ namespace BulletinBoard.Application.AppServices.Contexts.Ad.Services
         }
 
         /// <inheritdoc/>
-        public Task<bool> UpdateAsync(Guid id, UpdateAdDto dto, CancellationToken cancellationToken)
+        public Task UpdateAsync(Guid id, UpdateAdDto dto, CancellationToken cancellationToken)
         {
-            var ad = _adRepository.GetByPredicate(a => a.Id == id, cancellationToken).Result;
-            if (ad == null)
-                return Task.FromResult(false);
+            var ad = _adRepository.GetByPredicate(a => a.Id == id, cancellationToken).Result ?? throw new EntityNotFoundException();
+
+            if (_entityAuthorizationService.Validate(_httpContextAccessor.HttpContext!.User, id, AuthRoles.Admin).Result)
+                throw new EntityForbiddenException();
 
             ad.Title = dto.Title;
             ad.Description = dto.Description;
@@ -70,9 +74,14 @@ namespace BulletinBoard.Application.AppServices.Contexts.Ad.Services
         }
 
         /// <inheritdoc/>
-        public Task<bool> DeleteAsync(Guid id, CancellationToken cancellationToken)
+        public Task DeleteAsync(Guid id, CancellationToken cancellationToken)
         {
-            return _adRepository.DeleteAsync(id, cancellationToken);
+            var ad = _adRepository.GetByPredicate(a => a.Id == id, cancellationToken).Result ?? throw new EntityNotFoundException();
+
+            if (_entityAuthorizationService.Validate(_httpContextAccessor.HttpContext!.User, id, AuthRoles.Admin).Result)
+                throw new EntityForbiddenException();
+
+            return _adRepository.DeleteAsync(ad, cancellationToken);
         }
     }
 }

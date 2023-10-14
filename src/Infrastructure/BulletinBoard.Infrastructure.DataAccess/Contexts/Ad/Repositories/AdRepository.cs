@@ -2,12 +2,8 @@
 using BulletinBoard.Application.AppServices.Contexts.Ad.Repositories;
 using BulletinBoard.Contracts.Ad;
 using BulletinBoard.Infrastructure.Repository;
-using System.Collections.ObjectModel;
 using System.Linq.Expressions;
-using System.Security.Cryptography;
-using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 using AdEntity = BulletinBoard.Domain.Ad.Ad;
-using AttachmentEntity = BulletinBoard.Domain.Attachment.Attachment;
 
 namespace BulletinBoard.Infrastructure.DataAccess.Contexts.Ad.Repositories
 {
@@ -46,7 +42,7 @@ namespace BulletinBoard.Infrastructure.DataAccess.Contexts.Ad.Repositories
         }
 
         /// <inheritdoc/>
-        public Task<Domain.Ad.Ad?> GetByPredicate(Expression<Func<AdEntity, bool>> predicate, CancellationToken cancellationToken)
+        public Task<AdEntity?> GetByPredicate(Expression<Func<AdEntity, bool>> predicate, CancellationToken cancellationToken)
         {
             return Task.Run(() => (_repository.GetAllFiltered(predicate).FirstOrDefault()), cancellationToken);
         }
@@ -59,21 +55,15 @@ namespace BulletinBoard.Infrastructure.DataAccess.Contexts.Ad.Repositories
         }
 
         /// <inheritdoc/>
-        public Task<bool> DeleteAsync(Guid id, CancellationToken cancellationToken)
+        public Task UpdateAsync(Guid id, AdEntity ad, CancellationToken cancellationToken)
         {
-            var model = _repository.GetByIdAsync(id).Result;
-            if (model == null)
-                return Task.FromResult(false);
-            _repository.DeleteAsync(model, cancellationToken);
-            return Task.FromResult(true);
+            return _repository.UpdateAsync(ad, cancellationToken);
         }
 
-
         /// <inheritdoc/>
-        public Task<bool> UpdateAsync(Guid id, AdEntity ad, CancellationToken cancellationToken)
+        public Task DeleteAsync(AdEntity ad, CancellationToken cancellationToken)
         {
-            _repository.UpdateAsync(ad, cancellationToken);
-            return Task.FromResult(true);
+            return _repository.DeleteAsync(ad, cancellationToken);
         }
     }
 }

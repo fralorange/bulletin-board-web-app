@@ -8,14 +8,6 @@ namespace BulletinBoard.Application.AppServices.Contexts.Ad.Services
     public interface IAdService
     {
         /// <summary>
-        /// Возвращает объявлению по заданному идентификатору.
-        /// </summary>
-        /// <param name="id">Идентификатор объявления.</param>
-        /// <param name="cancellationToken">Отмена операции.</param>
-        /// <returns>Модель объявления <see cref="AdDto"/>.</returns>
-        Task<AdDto?> GetByIdAsync(Guid id, CancellationToken cancellationToken);
-
-        /// <summary>
         /// Возвращает объявления в пределах страницы.
         /// </summary>
         /// <param name="cancellationToken">Отмена операции</param>
@@ -23,6 +15,14 @@ namespace BulletinBoard.Application.AppServices.Contexts.Ad.Services
         /// <param name="pageIndex">Номер страницы.</param>
         /// <returns>Коллекция объявлений <see cref="AdDto"/></returns>
         Task<IReadOnlyCollection<AdDto>> GetAllAsync(CancellationToken cancellationToken, int pageSize = 10, int pageIndex = 0);
+
+        /// <summary>
+        /// Возвращает объявлению по заданному идентификатору.
+        /// </summary>
+        /// <param name="id">Идентификатор объявления.</param>
+        /// <param name="cancellationToken">Отмена операции.</param>
+        /// <returns>Модель объявления <see cref="AdDto"/>.</returns>
+        Task<AdDto?> GetByIdAsync(Guid id, CancellationToken cancellationToken);
 
         /// <summary>
         /// Создает объявление.
@@ -38,13 +38,13 @@ namespace BulletinBoard.Application.AppServices.Contexts.Ad.Services
         /// <param name="id">Идентификатор объявления.</param>
         /// <param name="dto">Модель объявления.</param>
         /// <param name="cancellationToken">Отмена операции.</param>
-        Task<bool> UpdateAsync(Guid id, UpdateAdDto dto, CancellationToken cancellationToken);
+        Task UpdateAsync(Guid id, UpdateAdDto dto, CancellationToken cancellationToken);
 
         /// <summary>
         /// Удаляет объявление по идентификатору.
         /// </summary>
         /// <param name="id">Идентификатор объявления.</param>
         /// <param name="cancellationToken">Отмена операции.</param>
-        Task<bool> DeleteAsync(Guid id, CancellationToken cancellationToken);
+        Task DeleteAsync(Guid id, CancellationToken cancellationToken);
     }
 }

@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 namespace BulletinBoard.Infrastructure.DataAccess.Contexts.Ad.Configuration
 {
     /// <summary>
-    /// Конфигурация таблицы Ads.
+    /// Конфигурация отношения Ad.
     /// </summary>
     public class AdConfiguration : IEntityTypeConfiguration<Domain.Ad.Ad>
     {
@@ -24,6 +24,11 @@ namespace BulletinBoard.Infrastructure.DataAccess.Contexts.Ad.Configuration
             builder.HasOne(a => a.User)
                 .WithMany(u => u.Adverts)
                 .HasForeignKey(a => a.UserId);
+
+            builder.HasMany(a => a.Attachments)
+                .WithOne(att => att.Ad)
+                .HasForeignKey(att => att.AdId)
+                .OnDelete(DeleteBehavior.Cascade);
         }
     }
 }

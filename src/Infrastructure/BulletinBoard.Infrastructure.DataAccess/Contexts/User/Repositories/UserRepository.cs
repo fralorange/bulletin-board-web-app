@@ -62,20 +62,15 @@ namespace BulletinBoard.Infrastructure.DataAccess.Contexts.User.Repositories
         }
 
         /// <inheritdoc/>
-        public Task<bool> UpdateAsync(Guid id, UserEntity user, CancellationToken cancellationToken)
+        public Task UpdateAsync(Guid id, UserEntity user, CancellationToken cancellationToken)
         {
-            _repository.UpdateAsync(user, cancellationToken);
-            return Task.FromResult(true);
+            return _repository.UpdateAsync(user, cancellationToken);
         }
 
         /// <inheritdoc/>
-        public Task<bool> DeleteAsync(Guid id, CancellationToken cancellationToken)
+        public Task DeleteAsync(UserEntity user, CancellationToken cancellationToken)
         {
-            var model = _repository.GetByIdAsync(id).Result;
-            if (model == null)
-                return Task.FromResult(false);
-            _repository.DeleteAsync(model, cancellationToken);
-            return Task.FromResult(true);
+            return _repository.DeleteAsync(user, cancellationToken);
         }
     }
 }

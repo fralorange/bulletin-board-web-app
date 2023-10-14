@@ -30,7 +30,7 @@ namespace BulletinBoard.Domain.Ad
         /// <summary>
         /// Изображения.
         /// </summary>
-       // public required IReadOnlyCollection<Attachment.Attachment> Attachments { get; init; }
+        public virtual required ICollection<Attachment.Attachment> Attachments { get; set; }
 
         /// <summary>
         /// Цена.

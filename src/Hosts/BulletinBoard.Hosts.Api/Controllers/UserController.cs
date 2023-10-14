@@ -1,5 +1,6 @@
 ﻿using BulletinBoard.Application.AppServices.Authentication.Constants;
 using BulletinBoard.Application.AppServices.Contexts.User.Services;
+using BulletinBoard.Application.AppServices.Exceptions;
 using BulletinBoard.Contracts.User;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -92,14 +93,21 @@ namespace BulletinBoard.Hosts.Api.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> UpdateAsync(Guid id, UpdateUserDto dto, CancellationToken cancellationToken)
         {
-            var currentUserId = HttpContext.User.FindFirstValue(ClaimTypes.NameIdentifier);
-            var currentUserRole = HttpContext.User.FindFirstValue(ClaimTypes.Role);
+            try
+            {
+                await _userService.UpdateAsync(id, dto, cancellationToken);
+            }
+            catch (EntityNotFoundException ex)
+            {
+                ModelState.AddModelError("NotFoundError", ex.Message);
+                return NotFound(ModelState);
+            }
+            catch (EntityForbiddenException ex)
+            {
+                ModelState.AddModelError("ForbiddenError", ex.Message);
+                return StatusCode(403, ModelState);
+            }
 
-            if (currentUserId != id.ToString() && currentUserRole != AuthRoles.Admin)
-                return Forbid();
-            var state = await _userService.UpdateAsync(id, dto, cancellationToken);
-            if (!state)
-                return NotFound();
             return NoContent();
         }
 
@@ -112,18 +120,26 @@ namespace BulletinBoard.Hosts.Api.Controllers
         [Authorize]
         [HttpDelete("{id:guid}")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> DeleteAsync(Guid id, CancellationToken cancellationToken)
         {
-            var currentUserId = HttpContext.User.FindFirstValue(ClaimTypes.NameIdentifier);
-            var currentUserRole = HttpContext.User.FindFirstValue(ClaimTypes.Role);
+            try
+            {
+                await _userService.DeleteAsync(id, cancellationToken);
+            }
+            catch (EntityNotFoundException ex)
+            {
+                ModelState.AddModelError("NotFoundError", ex.Message);
+                return NotFound(ModelState);
+            }
+            catch (EntityForbiddenException ex)
+            {
+                ModelState.AddModelError("ForbiddenError", ex.Message);
+                return StatusCode(403, ModelState);
+            }
 
-            if (currentUserId != id.ToString() && currentUserRole != AuthRoles.Admin)
-                return Forbid();
-            var state = await _userService.DeleteAsync(id, cancellationToken);
-            if (!state)
-                return NotFound();
             return NoContent();
         }
     }

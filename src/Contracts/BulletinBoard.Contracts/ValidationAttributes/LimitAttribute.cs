@@ -1,7 +1,7 @@
 ﻿using BulletinBoard.Contracts.Attachment;
 using System.ComponentModel.DataAnnotations;
 
-namespace BulletinBoard.Contracts.Attributes
+namespace BulletinBoard.Contracts.ValidationAttributes
 {
     /// <summary>
     /// Определяет минимальный и максимальный размер коллекции.

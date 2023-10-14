@@ -20,6 +20,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="Contexts\Attachment\Repositories\" />
     <Folder Include="Contexts\User\Configuration\" />
   </ItemGroup>
 

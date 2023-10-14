@@ -5,6 +5,8 @@ using BulletinBoard.Application.AppServices.Authentication.Handlers;
 using BulletinBoard.Application.AppServices.Authentication.Services;
 using BulletinBoard.Application.AppServices.Contexts.Ad.Repositories;
 using BulletinBoard.Application.AppServices.Contexts.Ad.Services;
+using BulletinBoard.Application.AppServices.Contexts.Attachment.Repositories;
+using BulletinBoard.Application.AppServices.Contexts.Attachment.Services;
 using BulletinBoard.Application.AppServices.Contexts.User.Repositories;
 using BulletinBoard.Application.AppServices.Contexts.User.Services;
 using BulletinBoard.Infrastructure.ComponentRegistrar.Mappers.Ad;
@@ -12,6 +14,7 @@ using BulletinBoard.Infrastructure.ComponentRegistrar.Mappers.Attachment;
 using BulletinBoard.Infrastructure.ComponentRegistrar.Mappers.User;
 using BulletinBoard.Infrastructure.DataAccess;
 using BulletinBoard.Infrastructure.DataAccess.Contexts.Ad.Repositories;
+using BulletinBoard.Infrastructure.DataAccess.Contexts.Attachment.Repositories;
 using BulletinBoard.Infrastructure.DataAccess.Contexts.User.Repositories;
 using BulletinBoard.Infrastructure.DataAccess.Interfaces;
 using BulletinBoard.Infrastructure.Repository;
@@ -38,6 +41,8 @@ namespace BulletinBoard.Hosts.Api
             services.AddTransient<IAdService, AdService>();
             services.AddTransient<IAuthService, AuthService>();
             services.AddTransient<IUserService, UserService>();
+            services.AddTransient<IAttachmentService, AttachmentService>();
+            services.AddTransient<IEntityAuthorizationService, EntityAuthorizationService>();
 
             return services;
         }
@@ -52,6 +57,7 @@ namespace BulletinBoard.Hosts.Api
             services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
             services.AddScoped<IAdRepository, AdRepository>();
             services.AddScoped<IUserRepository, UserRepository>();
+            services.AddScoped<IAttachmentRepository, AttachmentRepository>();
 
             return services;
         }

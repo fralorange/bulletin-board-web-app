@@ -1,6 +1,10 @@
 ﻿using AutoMapper;
+using BulletinBoard.Application.AppServices.Authentication.Constants;
+using BulletinBoard.Application.AppServices.Authentication.Services;
+using BulletinBoard.Application.AppServices.Contexts.Ad.Repositories;
 using BulletinBoard.Application.AppServices.Contexts.User.Repositories;
 using BulletinBoard.Application.AppServices.Cryptography.Helpers;
+using BulletinBoard.Application.AppServices.Exceptions;
 using BulletinBoard.Contracts.User;
 using BulletinBoard.Domain.Ad;
 using Microsoft.AspNetCore.Http;
@@ -14,6 +18,7 @@ namespace BulletinBoard.Application.AppServices.Contexts.User.Services
         private readonly IUserRepository _userRepository;
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly IMapper _mapper;
+        private readonly IEntityAuthorizationService _entityAuthorizationService;
 
         /// <summary>
         /// Инициализирует экземпляр <see cref="UserService"/>
@@ -21,11 +26,13 @@ namespace BulletinBoard.Application.AppServices.Contexts.User.Services
         /// <param name="userRepository">Репозиторий.</param>
         /// <param name="httpContextAccessor"></param>
         /// <param name="mapper">Маппер.</param>
-        public UserService(IUserRepository userRepository, IHttpContextAccessor httpContextAccessor, IMapper mapper)
+        /// <param name="entityAuthorizationService"></param>
+        public UserService(IUserRepository userRepository, IHttpContextAccessor httpContextAccessor, IMapper mapper, IEntityAuthorizationService entityAuthorizationService)
         {
             _userRepository = userRepository;
             _httpContextAccessor = httpContextAccessor;
             _mapper = mapper;
+            _entityAuthorizationService = entityAuthorizationService;
         }
 
         /// <inheritdoc/>
@@ -48,27 +55,33 @@ namespace BulletinBoard.Application.AppServices.Contexts.User.Services
         }
 
         /// <inheritdoc/>
-        public Task<bool> UpdateAsync(Guid id, UpdateUserDto dto, CancellationToken cancellationToken)
+        public Task UpdateAsync(Guid id, UpdateUserDto dto, CancellationToken cancellationToken)
         {
-            var model = _userRepository.GetByPredicate(u => u.Id == id, cancellationToken).Result;
-            if (model == null)
-                return Task.FromResult(false);
+            var user = _userRepository.GetByPredicate(u => u.Id == id, cancellationToken).Result ?? throw new EntityNotFoundException();
+
+            if (_entityAuthorizationService.ValidateUserOnly(_httpContextAccessor.HttpContext!.User, id, AuthRoles.Admin).Result)
+                throw new EntityForbiddenException();
 
             var (Salt, Password) = PasswordHashHelper.HashPassword(dto.Password);
 
-            model.Login = dto.Login;
-            model.Name = dto.Name;
-            model.Salt = Salt;
-            model.HashedPassword = Password;
-            model.Role = GetByIdAsync(id, cancellationToken).Result!.Role;
+            user.Login = dto.Login;
+            user.Name = dto.Name;
+            user.Salt = Salt;
+            user.HashedPassword = Password;
+            user.Role = GetByIdAsync(id, cancellationToken).Result!.Role;
 
-            return _userRepository.UpdateAsync(id, model, cancellationToken);
+            return _userRepository.UpdateAsync(id, user, cancellationToken);
         }
 
         /// <inheritdoc/>
-        public Task<bool> DeleteAsync(Guid id, CancellationToken cancellationToken)
+        public Task DeleteAsync(Guid id, CancellationToken cancellationToken)
         {
-            return _userRepository.DeleteAsync(id, cancellationToken);
+            var user = _userRepository.GetByPredicate(u => u.Id == id, cancellationToken).Result ?? throw new EntityNotFoundException();
+
+            if (_entityAuthorizationService.ValidateUserOnly(_httpContextAccessor.HttpContext!.User, id, AuthRoles.Admin).Result)
+                throw new EntityForbiddenException();
+
+            return _userRepository.DeleteAsync(user, cancellationToken);
         }
     }
 }

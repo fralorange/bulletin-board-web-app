@@ -1,5 +1,4 @@
-﻿using BulletinBoard.Contracts.Filters;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
+﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.SwaggerGen;
 using System.Reflection;
@@ -19,7 +18,6 @@ namespace BulletinBoard.Hosts.Api
         public static SwaggerGenOptions AddSwaggerDoc(this SwaggerGenOptions options)
         {
             options.SwaggerDoc("v1", new OpenApiInfo { Title = "BulletinBoard", Version = "v1" });
-            options.OperationFilter<BuggedOperationFilter>();
 
             return options;
         }

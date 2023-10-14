@@ -37,13 +37,13 @@ namespace BulletinBoard.Application.AppServices.Contexts.User.Services
         /// <param name="id">Идентификатор пользователя.</param>
         /// <param name="dto">Модель пользователя.</param>
         /// <param name="cancellationToken">Отмена операции.</param>
-        Task<bool> UpdateAsync(Guid id, UpdateUserDto dto, CancellationToken cancellationToken);
+        Task UpdateAsync(Guid id, UpdateUserDto dto, CancellationToken cancellationToken);
 
         /// <summary>
         /// Удаляет пользователя по идентификатору.
         /// </summary>
         /// <param name="id">Идентификатор пользователя.</param>
         /// <param name="cancellationToken">Отмена операции.</param>
-        Task<bool> DeleteAsync(Guid id, CancellationToken cancellationToken);
+        Task DeleteAsync(Guid id, CancellationToken cancellationToken);
     }
 }

@@ -28,7 +28,7 @@ namespace BulletinBoard.Contracts.Ad
         /// <summary>
         /// Изображения.
         /// </summary>
-        //public required IReadOnlyCollection<AttachmentDto> Attachments { get; init; }
+        public required IReadOnlyCollection<AttachmentDto> Attachments { get; set; }
 
         /// <summary>
         /// Цена.
