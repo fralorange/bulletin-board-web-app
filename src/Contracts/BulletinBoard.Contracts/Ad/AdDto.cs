@@ -1,5 +1,7 @@
 ﻿using BulletinBoard.Contracts.Attachment;
 using BulletinBoard.Contracts.Base;
+using BulletinBoard.Contracts.User;
+using System.Text.Json.Serialization;
 
 namespace BulletinBoard.Contracts.Ad
 {
@@ -26,11 +28,16 @@ namespace BulletinBoard.Contracts.Ad
         /// <summary>
         /// Изображения.
         /// </summary>
-        //public required IReadOnlyCollection<AttachmentDto> Attachments { get; init; }
+        public required IReadOnlyCollection<AttachmentDto> Attachments { get; set; }
 
         /// <summary>
         /// Цена.
         /// </summary>
         public required decimal Price { get; init; }
+
+        /// <summary>
+        /// Пользователь.
+        /// </summary>
+        public required UserDto User { get; init; }
     }
 }

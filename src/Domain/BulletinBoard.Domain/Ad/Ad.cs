@@ -10,12 +10,12 @@ namespace BulletinBoard.Domain.Ad
         /// <summary>
         /// Заголовок.
         /// </summary>
-        public required string Title { get; init; }
+        public required string Title { get; set; }
 
         /// <summary>
         /// Описание.
         /// </summary>
-        public required string Description { get; init; }
+        public required string Description { get; set; }
 
         /// <summary>
         /// 
@@ -30,11 +30,21 @@ namespace BulletinBoard.Domain.Ad
         /// <summary>
         /// Изображения.
         /// </summary>
-       // public required IReadOnlyCollection<Attachment.Attachment> Attachments { get; init; }
+        public virtual required ICollection<Attachment.Attachment> Attachments { get; set; }
 
         /// <summary>
         /// Цена.
         /// </summary>
-        public required decimal Price { get; init; }
+        public required decimal Price { get; set; }
+
+        /// <summary>
+        /// Пользователь.
+        /// </summary>
+        public virtual required User.User User { get; set; }
+
+        /// <summary>
+        /// Идентификатор пользователя.
+        /// </summary>
+        public required Guid UserId { get; set; }
     }
 }

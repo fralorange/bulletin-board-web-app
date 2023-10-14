@@ -1,5 +1,7 @@
 using BulletinBoard.Application.AppServices.Contexts.Ad.Services;
+using BulletinBoard.Application.AppServices.Exceptions;
 using BulletinBoard.Contracts.Ad;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BulletinBoard.Hosts.Api.Controllers
@@ -32,8 +34,9 @@ namespace BulletinBoard.Hosts.Api.Controllers
         /// <param name="pageSize">Размер страницы.</param>
         /// <param name="pageIndex">Номер страницы.</param>
         /// <returns>Коллекция объявлений <see cref="AdDto"/>.</returns>
+        [AllowAnonymous]
         [HttpGet("get-all-by-pages")]
-
+        [ProducesResponseType(StatusCodes.Status200OK)]
         public async Task<IActionResult> GetAllAsync(CancellationToken cancellationToken, int pageSize = 10, int pageIndex = 0)
         {
             var result = await _adService.GetAllAsync(cancellationToken, pageSize, pageIndex);
@@ -49,10 +52,10 @@ namespace BulletinBoard.Hosts.Api.Controllers
         /// <param name="id">Идентификатор объявления.</param>
         /// <param name="cancellationToken">Отмена операции.</param>
         /// <returns>Модель объявления <see cref="AdDto"/>.</returns>
+        [AllowAnonymous]
         [HttpGet("get-by-id")]
         [ProducesResponseType(typeof(AdDto), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> GetByIdAsync(Guid id, CancellationToken cancellationToken)
         {
             var result = await _adService.GetByIdAsync(id, cancellationToken);
@@ -70,10 +73,10 @@ namespace BulletinBoard.Hosts.Api.Controllers
         /// <param name="dto">Модель создаваемого объявления.</param>
         /// <param name="cancellationToken">Отмена операции.</param>
         /// <returns>Идентификатор создаваемого объявления</returns>
+        [Authorize]
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> CreateAsync([FromBody] CreateAdDto dto, CancellationToken cancellationToken)
         {
             var dtoId = await _adService.CreateAsync(dto, cancellationToken);
@@ -86,14 +89,28 @@ namespace BulletinBoard.Hosts.Api.Controllers
         /// <param name="id">Идентификатор объявления.</param>
         /// <param name="dto">Модель объявления.</param>
         /// <param name="cancellationToken">Отмена операции.</param>
+        [Authorize]
         [HttpPut("{id:guid}")]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> UpdateAsync(Guid id, UpdateAdDto dto, CancellationToken cancellationToken)
         {
-            var ad = await _adService.GetByIdAsync(id, cancellationToken);
-            if (ad is null)
-                return NotFound();
-
-            await _adService.UpdateAsync(id, dto, cancellationToken);
+            try
+            {
+                await _adService.UpdateAsync(id, dto, cancellationToken);
+            }
+            catch (EntityNotFoundException ex)
+            {
+                ModelState.AddModelError("NotFoundError", ex.Message);
+                return NotFound(ModelState);
+            }
+            catch (EntityForbiddenException ex)
+            {
+                ModelState.AddModelError("ForbiddenError", ex.Message);
+                return StatusCode(403, ModelState);
+            }
 
             return NoContent();
         }
@@ -103,12 +120,29 @@ namespace BulletinBoard.Hosts.Api.Controllers
         /// </summary>
         /// <param name="id">Идентификатор объявления.</param>
         /// <param name="cancellationToken">Отмена операции.</param>
+        [Authorize]
         [HttpDelete("{id:guid}")]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
         public async Task<IActionResult> DeleteAsync(Guid id, CancellationToken cancellationToken)
         {
-            var state = await _adService.DeleteAsync(id, cancellationToken);
-            if (!state)
-                return NotFound();
+            try
+            {
+                await _adService.DeleteAsync(id, cancellationToken);
+            }
+            catch (EntityNotFoundException ex)
+            {
+                ModelState.AddModelError("NotFoundError", ex.Message);
+                return NotFound(ModelState);
+            }
+            catch (EntityForbiddenException ex)
+            {
+                ModelState.AddModelError("ForbiddenError", ex.Message);
+                return StatusCode(403, ModelState);
+            }
+
             return NoContent();
         }
     }

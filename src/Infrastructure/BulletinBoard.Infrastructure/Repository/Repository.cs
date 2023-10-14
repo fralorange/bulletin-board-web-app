@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using BulletinBoard.Domain.Ad;
+using Microsoft.EntityFrameworkCore;
 using System.Linq.Expressions;
 
 namespace BulletinBoard.Infrastructure.Repository
@@ -9,6 +10,10 @@ namespace BulletinBoard.Infrastructure.Repository
         protected DbContext DbContext { get; }
         protected DbSet<TEntity> DbSet { get; }
 
+        /// <summary>
+        /// Экземпляр базового репозитория.
+        /// </summary>
+        /// <param name="dbContext">Контекст БД.</param>
         public Repository(DbContext dbContext)
         {
             DbContext = dbContext;
@@ -32,11 +37,16 @@ namespace BulletinBoard.Infrastructure.Repository
         }
 
         /// <inheritdoc/>
-        public async Task<TEntity> GetByIdAsync(Guid id)
+        public async Task<TEntity?> GetByIdAsync(Guid id)
         {
             return await DbSet.FindAsync(id);
         }
 
+        /// <inheritdoc/>
+        public async Task<TEntity?> GetByPredicateAsync(Expression<Func<TEntity, bool>> predicate)
+        {
+            return await DbSet.AsNoTracking().FirstOrDefaultAsync(predicate);
+        }
         /// <inheritdoc/>
         public async Task AddAsync(TEntity model, CancellationToken cancellationToken)
         {
@@ -45,7 +55,7 @@ namespace BulletinBoard.Infrastructure.Repository
                 throw new ArgumentNullException(nameof(model));
             }
             await DbSet.AddAsync(model, cancellationToken);
-            await SaveChangesAsync(cancellationToken);
+            await DbContext.SaveChangesAsync(cancellationToken);
         }
 
         /// <inheritdoc/>
@@ -56,27 +66,20 @@ namespace BulletinBoard.Infrastructure.Repository
                 throw new ArgumentNullException(nameof(model));
             }
             DbSet.Update(model);
-            await SaveChangesAsync(cancellationToken);
+            await DbContext.SaveChangesAsync(cancellationToken);
         }
 
         /// <inheritdoc/>
-        public async Task DeleteAsync(Guid id, CancellationToken cancellationToken)
+        public async Task DeleteAsync(TEntity model, CancellationToken cancellationToken)
         {
-            var model = DbSet.FindAsync(id).Result;
-
             if (model == null)
             {
-                throw new ArgumentException(nameof(model));
+                throw new ArgumentException(null, nameof(model));
             }
 
             DbSet.Remove(model);
-            await SaveChangesAsync(cancellationToken);
-        }
-
-        /// <inheritdoc/>
-        public async Task SaveChangesAsync(CancellationToken cancellationToken=default)
-        {
             await DbContext.SaveChangesAsync(cancellationToken);
         }
+
     }
 }

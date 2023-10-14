@@ -1,5 +1,5 @@
 ﻿using BulletinBoard.Contracts.Attachment;
-using BulletinBoard.Contracts.Attributes;
+using BulletinBoard.Contracts.ValidationAttributes;
 using System.ComponentModel.DataAnnotations;
 
 namespace BulletinBoard.Contracts.Ad

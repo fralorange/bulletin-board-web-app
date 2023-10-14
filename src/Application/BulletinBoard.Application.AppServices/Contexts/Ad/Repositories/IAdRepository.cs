@@ -1,5 +1,5 @@
 ﻿using BulletinBoard.Contracts.Ad;
-using System.Security.Principal;
+using System.Linq.Expressions;
 
 namespace BulletinBoard.Application.AppServices.Contexts.Ad.Repositories
 {
@@ -26,6 +26,14 @@ namespace BulletinBoard.Application.AppServices.Contexts.Ad.Repositories
         Task<IReadOnlyCollection<AdDto>> GetAllAsync(CancellationToken cancellationToken, int pageSize = 10, int pageIndex = 0);
 
         /// <summary>
+        /// Возвращает объявление по заданному условию.
+        /// </summary>
+        /// <param name="predicate">Предиката.</param>
+        /// <param name="cancellationToken">Отмена операции.</param>
+        /// <returns>Модель объявления <see cref="Domain.Ad.Ad"/>.</returns>
+        Task<Domain.Ad.Ad?> GetByPredicate(Expression<Func<Domain.Ad.Ad, bool>> predicate, CancellationToken cancellationToken);
+
+        /// <summary>
         /// Создает объявление.
         /// </summary>
         /// <param name="ad">Объявление.</param>
@@ -44,8 +52,8 @@ namespace BulletinBoard.Application.AppServices.Contexts.Ad.Repositories
         /// <summary>
         /// Удаляет объявление по идентификатору.
         /// </summary>
-        /// <param name="id">Идентификатор объявления.</param>
+        /// <param name="ad">Объявление.</param>
         /// <param name="cancellationToken">Отмена операции.</param>
-        Task<bool> DeleteAsync(Guid id, CancellationToken cancellationToken);
+        Task DeleteAsync(Domain.Ad.Ad ad, CancellationToken cancellationToken);
     }
 }

@@ -28,7 +28,8 @@ namespace BulletinBoard.Infrastructure.DataAccess
 
             options
                 .UseNpgsql(connectionString)
-                .EnableDetailedErrors(true);
+                .EnableDetailedErrors(true)
+                .UseLazyLoadingProxies();
         }
     }
 }
