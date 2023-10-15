@@ -3,6 +3,7 @@ using System;
 using BulletinBoard.Hosts.DbMigrator.MigrationDbContext;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace BulletinBoard.Hosts.DbMigrator.Migrations
 {
     [DbContext(typeof(MigrationDbContext.MigrationDbContext))]
-    partial class MigrationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20231015160535_AddCategoriesInTheProject")]
+    partial class AddCategoriesInTheProject
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -73,7 +76,7 @@ namespace BulletinBoard.Hosts.DbMigrator.Migrations
 
                     b.HasIndex("AdId");
 
-                    b.ToTable("Attachment", (string)null);
+                    b.ToTable("Attachment");
                 });
 
             modelBuilder.Entity("BulletinBoard.Domain.Category.Category", b =>
@@ -84,8 +87,7 @@ namespace BulletinBoard.Hosts.DbMigrator.Migrations
 
                     b.Property<string>("CategoryName")
                         .IsRequired()
-                        .HasMaxLength(30)
-                        .HasColumnType("character varying(30)");
+                        .HasColumnType("text");
 
                     b.Property<Guid?>("ParentId")
                         .HasColumnType("uuid");
@@ -94,7 +96,7 @@ namespace BulletinBoard.Hosts.DbMigrator.Migrations
 
                     b.HasIndex("ParentId");
 
-                    b.ToTable("Category", (string)null);
+                    b.ToTable("Category");
                 });
 
             modelBuilder.Entity("BulletinBoard.Domain.User.User", b =>
@@ -169,8 +171,7 @@ namespace BulletinBoard.Hosts.DbMigrator.Migrations
                 {
                     b.HasOne("BulletinBoard.Domain.Category.Category", "Parent")
                         .WithMany("Children")
-                        .HasForeignKey("ParentId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .HasForeignKey("ParentId");
 
                     b.Navigation("Parent");
                 });

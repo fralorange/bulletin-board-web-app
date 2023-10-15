@@ -1,21 +1,17 @@
-﻿using BulletinBoard.Domain.Base;
+﻿using BulletinBoard.Contracts.Ad;
+using BulletinBoard.Contracts.Base;
 
-namespace BulletinBoard.Domain.Category
+namespace BulletinBoard.Contracts.Category
 {
     /// <summary>
-    /// Категория объявления.
+    /// Модель пользователя.
     /// </summary>
-    public class Category : BaseEntity
+    public class CategoryDto : BaseDto
     {
         /// <summary>
         /// Название категории.
         /// </summary>
         public string CategoryName { get; set; }
-
-        /// <summary>
-        /// Родительская категория.
-        /// </summary>
-        public virtual Category? Parent { get; set; }
 
         /// <summary>
         /// Идентификатор родительской категории.
@@ -25,11 +21,11 @@ namespace BulletinBoard.Domain.Category
         /// <summary>
         /// Дочерние категории.
         /// </summary>
-        public virtual IEnumerable<Category>? Children { get; set; }
+        public IEnumerable<InfoCategoryDto>? Children { get; set; }
 
         /// <summary>
         /// Объявления принадлежащие категории.
         /// </summary>
-        public virtual IEnumerable<Ad.Ad>? Adverts { get; set; }
+        public IEnumerable<InfoAdDto>? Adverts { get; set; }
     }
 }

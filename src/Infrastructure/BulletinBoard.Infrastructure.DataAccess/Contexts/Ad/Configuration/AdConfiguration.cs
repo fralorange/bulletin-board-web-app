@@ -25,6 +25,10 @@ namespace BulletinBoard.Infrastructure.DataAccess.Contexts.Ad.Configuration
                 .WithMany(u => u.Adverts)
                 .HasForeignKey(a => a.UserId);
 
+            builder.HasOne(a => a.Category)
+                .WithMany(c => c.Adverts)
+                .HasForeignKey(a => a.CategoryId);
+
             builder.HasMany(a => a.Attachments)
                 .WithOne(att => att.Ad)
                 .HasForeignKey(att => att.AdId)

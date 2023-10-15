@@ -68,7 +68,6 @@ namespace BulletinBoard.Application.AppServices.Contexts.Ad.Services
             ad.Title = dto.Title;
             ad.Description = dto.Description;
             ad.Price = dto.Price;
-            ad.Id = id;
 
             return _adRepository.UpdateAsync(id, ad, cancellationToken);
         }
