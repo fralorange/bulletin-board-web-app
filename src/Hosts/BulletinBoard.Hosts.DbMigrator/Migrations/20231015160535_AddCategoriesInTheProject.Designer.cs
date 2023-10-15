@@ -3,6 +3,7 @@ using System;
 using BulletinBoard.Hosts.DbMigrator.MigrationDbContext;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace BulletinBoard.Hosts.DbMigrator.Migrations
 {
     [DbContext(typeof(MigrationDbContext.MigrationDbContext))]
-    partial class MigrationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20231015160535_AddCategoriesInTheProject")]
+    partial class AddCategoriesInTheProject
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -73,7 +76,7 @@ namespace BulletinBoard.Hosts.DbMigrator.Migrations
 
                     b.HasIndex("AdId");
 
-                    b.ToTable("Attachment", (string)null);
+                    b.ToTable("Attachment");
                 });
 
             modelBuilder.Entity("BulletinBoard.Domain.Category.Category", b =>
@@ -84,8 +87,7 @@ namespace BulletinBoard.Hosts.DbMigrator.Migrations
 
                     b.Property<string>("CategoryName")
                         .IsRequired()
-                        .HasMaxLength(30)
-                        .HasColumnType("character varying(30)");
+                        .HasColumnType("text");
 
                     b.Property<Guid?>("ParentId")
                         .HasColumnType("uuid");
@@ -94,41 +96,7 @@ namespace BulletinBoard.Hosts.DbMigrator.Migrations
 
                     b.HasIndex("ParentId");
 
-                    b.ToTable("Category", (string)null);
-                });
-
-            modelBuilder.Entity("BulletinBoard.Domain.Comment.Comment", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid");
-
-                    b.Property<Guid>("AdId")
-                        .HasColumnType("uuid");
-
-                    b.Property<string>("Content")
-                        .IsRequired()
-                        .HasMaxLength(1000)
-                        .HasColumnType("character varying(1000)");
-
-                    b.Property<DateTime>("PublishedAt")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("timestamp with time zone")
-                        .HasDefaultValueSql("now()");
-
-                    b.Property<int>("Rating")
-                        .HasColumnType("integer");
-
-                    b.Property<Guid>("UserId")
-                        .HasColumnType("uuid");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("AdId");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("Comment", (string)null);
+                    b.ToTable("Category");
                 });
 
             modelBuilder.Entity("BulletinBoard.Domain.User.User", b =>
@@ -203,36 +171,14 @@ namespace BulletinBoard.Hosts.DbMigrator.Migrations
                 {
                     b.HasOne("BulletinBoard.Domain.Category.Category", "Parent")
                         .WithMany("Children")
-                        .HasForeignKey("ParentId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .HasForeignKey("ParentId");
 
                     b.Navigation("Parent");
-                });
-
-            modelBuilder.Entity("BulletinBoard.Domain.Comment.Comment", b =>
-                {
-                    b.HasOne("BulletinBoard.Domain.Ad.Ad", "Ad")
-                        .WithMany("Comments")
-                        .HasForeignKey("AdId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("BulletinBoard.Domain.User.User", "User")
-                        .WithMany("Comments")
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Ad");
-
-                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("BulletinBoard.Domain.Ad.Ad", b =>
                 {
                     b.Navigation("Attachments");
-
-                    b.Navigation("Comments");
                 });
 
             modelBuilder.Entity("BulletinBoard.Domain.Category.Category", b =>
@@ -245,8 +191,6 @@ namespace BulletinBoard.Hosts.DbMigrator.Migrations
             modelBuilder.Entity("BulletinBoard.Domain.User.User", b =>
                 {
                     b.Navigation("Adverts");
-
-                    b.Navigation("Comments");
                 });
 #pragma warning restore 612, 618
         }

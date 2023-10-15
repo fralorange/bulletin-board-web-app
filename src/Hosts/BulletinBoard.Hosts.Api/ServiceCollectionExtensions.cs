@@ -7,14 +7,22 @@ using BulletinBoard.Application.AppServices.Contexts.Ad.Repositories;
 using BulletinBoard.Application.AppServices.Contexts.Ad.Services;
 using BulletinBoard.Application.AppServices.Contexts.Attachment.Repositories;
 using BulletinBoard.Application.AppServices.Contexts.Attachment.Services;
+using BulletinBoard.Application.AppServices.Contexts.Category.Repositories;
+using BulletinBoard.Application.AppServices.Contexts.Category.Services;
+using BulletinBoard.Application.AppServices.Contexts.Comment.Repositories;
+using BulletinBoard.Application.AppServices.Contexts.Comment.Services;
 using BulletinBoard.Application.AppServices.Contexts.User.Repositories;
 using BulletinBoard.Application.AppServices.Contexts.User.Services;
 using BulletinBoard.Infrastructure.ComponentRegistrar.Mappers.Ad;
 using BulletinBoard.Infrastructure.ComponentRegistrar.Mappers.Attachment;
+using BulletinBoard.Infrastructure.ComponentRegistrar.Mappers.Category;
+using BulletinBoard.Infrastructure.ComponentRegistrar.Mappers.Comment;
 using BulletinBoard.Infrastructure.ComponentRegistrar.Mappers.User;
 using BulletinBoard.Infrastructure.DataAccess;
 using BulletinBoard.Infrastructure.DataAccess.Contexts.Ad.Repositories;
 using BulletinBoard.Infrastructure.DataAccess.Contexts.Attachment.Repositories;
+using BulletinBoard.Infrastructure.DataAccess.Contexts.Category.Repositories;
+using BulletinBoard.Infrastructure.DataAccess.Contexts.Comment.Repositories;
 using BulletinBoard.Infrastructure.DataAccess.Contexts.User.Repositories;
 using BulletinBoard.Infrastructure.DataAccess.Interfaces;
 using BulletinBoard.Infrastructure.Repository;
@@ -43,6 +51,8 @@ namespace BulletinBoard.Hosts.Api
             services.AddTransient<IUserService, UserService>();
             services.AddTransient<IAttachmentService, AttachmentService>();
             services.AddTransient<IEntityAuthorizationService, EntityAuthorizationService>();
+            services.AddTransient<ICategoryService, CategoryService>();
+            services.AddTransient<ICommentService, CommentService>();
 
             return services;
         }
@@ -58,9 +68,12 @@ namespace BulletinBoard.Hosts.Api
             services.AddScoped<IAdRepository, AdRepository>();
             services.AddScoped<IUserRepository, UserRepository>();
             services.AddScoped<IAttachmentRepository, AttachmentRepository>();
+            services.AddScoped<ICategoryRepository, CategoryRepository>();
+            services.AddScoped<ICommentRepository, CommentRepository>();
 
             return services;
         }
+
 
         /// <summary>
         /// Добавляет контекст БД в DI.
@@ -94,6 +107,8 @@ namespace BulletinBoard.Hosts.Api
                 cfg.AddProfile<AdMapper>();
                 cfg.AddProfile<AttachmentMapper>();
                 cfg.AddProfile<UserMapper>();
+                cfg.AddProfile<CategoryMapper>();
+                cfg.AddProfile<CommentMapper>();
             });
 
             config.AssertConfigurationIsValid();

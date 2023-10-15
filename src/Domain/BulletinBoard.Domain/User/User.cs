@@ -34,5 +34,10 @@
         /// Объявления.
         /// </summary>
         public virtual IEnumerable<Ad.Ad>? Adverts { get; set; }
+
+        /// <summary>
+        /// Комментарии.
+        /// </summary>
+        public virtual IEnumerable<Comment.Comment>? Comments { get; set; }
     }
 }

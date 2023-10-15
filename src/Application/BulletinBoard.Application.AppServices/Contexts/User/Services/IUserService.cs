@@ -1,5 +1,4 @@
 ﻿using BulletinBoard.Contracts.User;
-using Microsoft.AspNetCore.Http;
 
 namespace BulletinBoard.Application.AppServices.Contexts.User.Services
 {

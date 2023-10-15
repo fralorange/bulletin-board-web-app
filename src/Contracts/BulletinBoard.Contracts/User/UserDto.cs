@@ -24,5 +24,10 @@
         /// Объявления пользователя.
         /// </summary>     
         public IEnumerable<Ad.InfoAdDto>? Adverts { get; set; }
+
+        /// <summary>
+        /// Комментарии пользователя.
+        /// </summary>
+        public IEnumerable<Comment.InfoCommentDto>? Comments { get; set; }
     }
 }

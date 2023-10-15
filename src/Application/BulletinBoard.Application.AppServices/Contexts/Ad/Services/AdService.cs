@@ -33,18 +33,6 @@ namespace BulletinBoard.Application.AppServices.Contexts.Ad.Services
             _entityAuthorizationService = entityAuthorizationService;
         }
 
-        /// <inheritdoc/>
-        public Task<Guid> CreateAsync(CreateAdDto dto, CancellationToken cancellationToken)
-        {
-            var ad = _mapper.Map<AdEntity>(dto);
-            var userId = _httpContextAccessor.HttpContext!.User.FindFirstValue(ClaimTypes.NameIdentifier);
-
-            ad.UserId = Guid.Parse(userId!);
-
-            return _adRepository.CreateAsync(ad, cancellationToken);
-        }
-
-
         /// <inheritdoc/> 
         public Task<IReadOnlyCollection<AdDto>> GetAllAsync(CancellationToken cancellationToken, int pageSize = 10, int pageIndex = 0)
         {
@@ -58,6 +46,17 @@ namespace BulletinBoard.Application.AppServices.Contexts.Ad.Services
         }
 
         /// <inheritdoc/>
+        public Task<Guid> CreateAsync(CreateAdDto dto, CancellationToken cancellationToken)
+        {
+            var ad = _mapper.Map<AdEntity>(dto);
+            var userId = _httpContextAccessor.HttpContext!.User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+            ad.UserId = Guid.Parse(userId!);
+
+            return _adRepository.CreateAsync(ad, cancellationToken);
+        }
+
+        /// <inheritdoc/>
         public Task UpdateAsync(Guid id, UpdateAdDto dto, CancellationToken cancellationToken)
         {
             var ad = _adRepository.GetByPredicate(a => a.Id == id, cancellationToken).Result ?? throw new EntityNotFoundException();
@@ -68,7 +67,6 @@ namespace BulletinBoard.Application.AppServices.Contexts.Ad.Services
             ad.Title = dto.Title;
             ad.Description = dto.Description;
             ad.Price = dto.Price;
-            ad.Id = id;
 
             return _adRepository.UpdateAsync(id, ad, cancellationToken);
         }

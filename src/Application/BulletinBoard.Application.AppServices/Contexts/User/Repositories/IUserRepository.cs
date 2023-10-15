@@ -17,7 +17,7 @@ namespace BulletinBoard.Application.AppServices.Contexts.User.Repositories
         Task<UserDto?> GetByIdAsync(Guid id, CancellationToken cancellationToken);
 
         /// <summary>
-        /// Возвращает пользователя в пределах страницы.
+        /// Возвращает ограниченный список пользователей.
         /// </summary>
         /// <param name="cancellationToken">Отмена операции</param>
         /// <param name="limit">Ограничение выборки пользователей.</param>
