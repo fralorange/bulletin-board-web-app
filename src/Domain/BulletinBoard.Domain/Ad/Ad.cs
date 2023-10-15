@@ -23,6 +23,11 @@ namespace BulletinBoard.Domain.Ad
         public virtual ICollection<Attachment.Attachment> Attachments { get; set; }
 
         /// <summary>
+        /// Комментарии.
+        /// </summary>
+        public virtual ICollection<Comment.Comment> Comments { get; set; }
+
+        /// <summary>
         /// Цена.
         /// </summary>
         public decimal Price { get; set; }

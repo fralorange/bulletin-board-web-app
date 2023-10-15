@@ -33,6 +33,11 @@ namespace BulletinBoard.Infrastructure.DataAccess.Contexts.Ad.Configuration
                 .WithOne(att => att.Ad)
                 .HasForeignKey(att => att.AdId)
                 .OnDelete(DeleteBehavior.Cascade);
+
+            builder.HasMany(a => a.Comments)
+                .WithOne(c => c.Ad)
+                .HasForeignKey(c => c.AdId)
+                .OnDelete(DeleteBehavior.Cascade);
         }
     }
 }

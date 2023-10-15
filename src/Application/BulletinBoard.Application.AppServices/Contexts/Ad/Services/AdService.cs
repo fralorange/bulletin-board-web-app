@@ -33,18 +33,6 @@ namespace BulletinBoard.Application.AppServices.Contexts.Ad.Services
             _entityAuthorizationService = entityAuthorizationService;
         }
 
-        /// <inheritdoc/>
-        public Task<Guid> CreateAsync(CreateAdDto dto, CancellationToken cancellationToken)
-        {
-            var ad = _mapper.Map<AdEntity>(dto);
-            var userId = _httpContextAccessor.HttpContext!.User.FindFirstValue(ClaimTypes.NameIdentifier);
-
-            ad.UserId = Guid.Parse(userId!);
-
-            return _adRepository.CreateAsync(ad, cancellationToken);
-        }
-
-
         /// <inheritdoc/> 
         public Task<IReadOnlyCollection<AdDto>> GetAllAsync(CancellationToken cancellationToken, int pageSize = 10, int pageIndex = 0)
         {
@@ -55,6 +43,17 @@ namespace BulletinBoard.Application.AppServices.Contexts.Ad.Services
         public Task<AdDto?> GetByIdAsync(Guid id, CancellationToken cancellationToken)
         {
             return _adRepository.GetByIdAsync(id, cancellationToken);
+        }
+
+        /// <inheritdoc/>
+        public Task<Guid> CreateAsync(CreateAdDto dto, CancellationToken cancellationToken)
+        {
+            var ad = _mapper.Map<AdEntity>(dto);
+            var userId = _httpContextAccessor.HttpContext!.User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+            ad.UserId = Guid.Parse(userId!);
+
+            return _adRepository.CreateAsync(ad, cancellationToken);
         }
 
         /// <inheritdoc/>
