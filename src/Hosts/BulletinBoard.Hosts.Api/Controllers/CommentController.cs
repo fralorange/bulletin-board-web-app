@@ -29,14 +29,15 @@ namespace BulletinBoard.Hosts.Api.Controllers
         /// Возвращает постраничные объявления.
         /// </summary>
         /// <param name="cancellationToken">Отмена операции.</param>
-        /// <param name="limit">Ограничение.</param>
+        /// <param name="pageSize">Размер страницы.</param>
+        /// <param name="pageIndex">Номер страницы.</param>
         /// <returns></returns>
         [AllowAnonymous]
         [HttpGet("get-all-with-limit")]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public async Task<IActionResult> GetAllAsync(CancellationToken cancellationToken, int limit = 10)
+        public async Task<IActionResult> GetAllAsync(CancellationToken cancellationToken, int pageSize = 10, int pageIndex = 0)
         {
-            var result = await _commentService.GetAllAsync(cancellationToken);
+            var result = await _commentService.GetAllAsync(cancellationToken, pageSize, pageIndex);
             return Ok(result);
         }
 
