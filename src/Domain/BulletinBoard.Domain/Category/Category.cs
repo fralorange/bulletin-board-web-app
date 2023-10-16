@@ -10,16 +10,26 @@ namespace BulletinBoard.Domain.Category
         /// <summary>
         /// Название категории.
         /// </summary>
-        public required string CategoryName { get; init; }
+        public string CategoryName { get; set; }
+
+        /// <summary>
+        /// Родительская категория.
+        /// </summary>
+        public virtual Category? Parent { get; set; }
 
         /// <summary>
         /// Идентификатор родительской категории.
         /// </summary>
-        public required Guid? ParentCategoryId { get; init; }
+        public Guid? ParentId { get; set; }
 
         /// <summary>
-        /// Массив дочерних идентификаторов категории.
+        /// Дочерние категории.
         /// </summary>
-        public required Guid[] ChildCategoryIds { get; init; }
+        public virtual IEnumerable<Category>? Children { get; set; }
+
+        /// <summary>
+        /// Объявления принадлежащие категории.
+        /// </summary>
+        public virtual IEnumerable<Ad.Ad>? Adverts { get; set; }
     }
 }

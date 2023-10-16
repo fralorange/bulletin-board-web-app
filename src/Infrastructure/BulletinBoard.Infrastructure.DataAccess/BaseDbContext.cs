@@ -1,4 +1,7 @@
 ﻿using BulletinBoard.Infrastructure.DataAccess.Contexts.Ad.Configuration;
+using BulletinBoard.Infrastructure.DataAccess.Contexts.Attachment.Configuration;
+using BulletinBoard.Infrastructure.DataAccess.Contexts.Category.Configuration;
+using BulletinBoard.Infrastructure.DataAccess.Contexts.Comment.Configuration;
 using BulletinBoard.Infrastructure.DataAccess.Contexts.User.Configuration;
 using Microsoft.EntityFrameworkCore;
 
@@ -17,6 +20,9 @@ namespace BulletinBoard.Infrastructure.DataAccess
         {
             modelBuilder.ApplyConfiguration(new AdConfiguration());
             modelBuilder.ApplyConfiguration(new UserConfiguration());
+            modelBuilder.ApplyConfiguration(new AttachmentConfiguration());
+            modelBuilder.ApplyConfiguration(new CategoryConfiguration());
+            modelBuilder.ApplyConfiguration(new CommentConfiguration());
 
             base.OnModelCreating(modelBuilder);
         }

@@ -3,6 +3,7 @@ using BulletinBoard.Application.AppServices.Authentication.Constants;
 using BulletinBoard.Application.AppServices.Authentication.Services;
 using BulletinBoard.Application.AppServices.Contexts.Ad.Repositories;
 using BulletinBoard.Application.AppServices.Exceptions;
+using BulletinBoard.Application.AppServices.Pagination.Helpers;
 using BulletinBoard.Contracts.Ad;
 using Microsoft.AspNetCore.Http;
 using System.Security.Claims;
@@ -33,6 +34,21 @@ namespace BulletinBoard.Application.AppServices.Contexts.Ad.Services
             _entityAuthorizationService = entityAuthorizationService;
         }
 
+        /// <inheritdoc/> 
+        public Task<IReadOnlyCollection<AdDto>> GetAllAsync(int pageSize, int pageIndex, CancellationToken cancellationToken)
+        {
+            var modelCollection = _adRepository.GetAllAsync(cancellationToken).Result;
+            var paginatedCollection = PaginationHelper<AdDto>.SplitByPages(modelCollection, pageSize, pageIndex);
+            
+            return Task.FromResult(paginatedCollection);
+        }
+
+        /// <inheritdoc/>
+        public Task<AdDto?> GetByIdAsync(Guid id, CancellationToken cancellationToken)
+        {
+            return _adRepository.GetByIdAsync(id, cancellationToken);
+        }
+
         /// <inheritdoc/>
         public Task<Guid> CreateAsync(CreateAdDto dto, CancellationToken cancellationToken)
         {
@@ -42,19 +58,6 @@ namespace BulletinBoard.Application.AppServices.Contexts.Ad.Services
             ad.UserId = Guid.Parse(userId!);
 
             return _adRepository.CreateAsync(ad, cancellationToken);
-        }
-
-
-        /// <inheritdoc/> 
-        public Task<IReadOnlyCollection<AdDto>> GetAllAsync(CancellationToken cancellationToken, int pageSize = 10, int pageIndex = 0)
-        {
-            return _adRepository.GetAllAsync(cancellationToken, pageSize, pageIndex);
-        }
-
-        /// <inheritdoc/>
-        public Task<AdDto?> GetByIdAsync(Guid id, CancellationToken cancellationToken)
-        {
-            return _adRepository.GetByIdAsync(id, cancellationToken);
         }
 
         /// <inheritdoc/>
@@ -68,7 +71,6 @@ namespace BulletinBoard.Application.AppServices.Contexts.Ad.Services
             ad.Title = dto.Title;
             ad.Description = dto.Description;
             ad.Price = dto.Price;
-            ad.Id = id;
 
             return _adRepository.UpdateAsync(id, ad, cancellationToken);
         }

@@ -1,5 +1,6 @@
 ﻿using BulletinBoard.Contracts.Attachment;
 using BulletinBoard.Contracts.Base;
+using BulletinBoard.Contracts.Comment;
 using BulletinBoard.Contracts.User;
 using System.Text.Json.Serialization;
 
@@ -13,31 +14,31 @@ namespace BulletinBoard.Contracts.Ad
         /// <summary>
         /// Заголовок.
         /// </summary>
-        public required string Title { get; init; }
+        public string Title { get; init; }
 
         /// <summary>
         /// Описание.
         /// </summary>
-        public required string Description { get; init; }
-
-        /// <summary>
-        /// Название категории.
-        /// </summary>
-        //public required string CategoryName { get; init; }
+        public string Description { get; init; }
 
         /// <summary>
         /// Изображения.
         /// </summary>
-        public required IReadOnlyCollection<AttachmentDto> Attachments { get; set; }
+        public IReadOnlyCollection<AttachmentDto> Attachments { get; set; }
+
+        /// <summary>
+        /// Комментарии.
+        /// </summary>
+        public IReadOnlyCollection<CommentDto> Comments { get; set; }
 
         /// <summary>
         /// Цена.
         /// </summary>
-        public required decimal Price { get; init; }
+        public decimal Price { get; init; }
 
         /// <summary>
         /// Пользователь.
         /// </summary>
-        public required UserDto User { get; init; }
+        public UserDto User { get; init; }
     }
 }
