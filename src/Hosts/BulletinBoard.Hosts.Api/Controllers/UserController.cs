@@ -29,7 +29,8 @@ namespace BulletinBoard.Hosts.Api.Controllers
         /// <summary>
         /// Возвращает список всех пользователей.
         /// </summary>
-        /// <param name="limit">Ограничение.</param>
+        /// <param name="pageSize">Размер страницы.</param>
+        /// <param name="pageIndex">Номер страницы.</param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
         [Authorize]
@@ -38,9 +39,9 @@ namespace BulletinBoard.Hosts.Api.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
-        public async Task<IActionResult> GetAllAsync(CancellationToken cancellationToken, int limit = 10)
+        public async Task<IActionResult> GetAllAsync(CancellationToken cancellationToken, int pageSize = 10, int pageIndex = 0)
         {
-            var result = await _userService.GetAllAsync(cancellationToken, limit);
+            var result = await _userService.GetAllAsync(cancellationToken, pageSize, pageIndex);
             return Ok(result);
         }
 

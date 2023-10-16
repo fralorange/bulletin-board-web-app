@@ -25,7 +25,7 @@ namespace BulletinBoard.Infrastructure.DataAccess.Contexts.User.Repositories
         }
 
         /// <inheritdoc/>
-        public Task<IReadOnlyCollection<UserDto>> GetAllAsync(CancellationToken cancellationToken, int limit = 10)
+        public Task<IReadOnlyCollection<UserDto>> GetAllAsync(CancellationToken cancellationToken)
         {
             var userCollection = _repository.GetAll();
             var dtoCollection = _mapper.Map<List<UserDto>>(userCollection.ToList());

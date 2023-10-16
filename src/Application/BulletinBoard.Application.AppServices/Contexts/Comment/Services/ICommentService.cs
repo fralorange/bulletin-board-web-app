@@ -10,11 +10,11 @@ namespace BulletinBoard.Application.AppServices.Contexts.Comment.Services
         /// <summary>
         /// Возвращает ограниченный список комментариев.
         /// </summary>
-        /// <param name="cancellationToken">Отмена операции</param>
         /// <param name="pageSize">Размер страницы.</param>
         /// <param name="pageIndex">Номер страницы.</param>
+        /// <param name="cancellationToken">Отмена операции</param>
         /// <returns>Коллекция комментариев <see cref="CommentDto"/>.</returns>
-        Task<IReadOnlyCollection<CommentDto>> GetAllAsync(CancellationToken cancellationToken, int pageSize, int pageIndex);
+        Task<IReadOnlyCollection<CommentDto>> GetAllAsync(int pageSize, int pageIndex, CancellationToken cancellationToken);
 
         /// <summary>
         /// Возвращает комментарий по заданному идентификатору.

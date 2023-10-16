@@ -1,5 +1,4 @@
-﻿using BulletinBoard.Application.AppServices.Authentication.Constants;
-using BulletinBoard.Application.AppServices.Contexts.Comment.Services;
+﻿using BulletinBoard.Application.AppServices.Contexts.Comment.Services;
 using BulletinBoard.Application.AppServices.Exceptions;
 using BulletinBoard.Contracts.Comment;
 using Microsoft.AspNetCore.Authorization;
