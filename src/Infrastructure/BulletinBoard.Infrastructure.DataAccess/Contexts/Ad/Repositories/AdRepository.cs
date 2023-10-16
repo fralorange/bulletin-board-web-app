@@ -32,7 +32,7 @@ namespace BulletinBoard.Infrastructure.DataAccess.Contexts.Ad.Repositories
         }
 
         /// <inheritdoc/>
-        public Task<IReadOnlyCollection<AdDto>> GetAllAsync(CancellationToken cancellationToken, int pageSize = 10, int pageIndex = 0)
+        public Task<IReadOnlyCollection<AdDto>> GetAllAsync(CancellationToken cancellationToken)
         {
             var adCollection = _repository.GetAll();
             var dtoCollection = _mapper.Map<List<AdDto>>(adCollection.ToList());

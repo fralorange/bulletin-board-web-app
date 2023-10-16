@@ -20,10 +20,8 @@ namespace BulletinBoard.Application.AppServices.Contexts.Ad.Repositories
         /// Возвращает объявления в пределах страницы.
         /// </summary>
         /// <param name="cancellationToken">Отмена операции</param>
-        /// <param name="pageSize">Размер страницы.</param>
-        /// <param name="pageIndex">Номер страницы.</param>
         /// <returns>Коллекция объявлений <see cref="AdDto"/>.</returns>
-        Task<IReadOnlyCollection<AdDto>> GetAllAsync(CancellationToken cancellationToken, int pageSize = 10, int pageIndex = 0);
+        Task<IReadOnlyCollection<AdDto>> GetAllAsync(CancellationToken cancellationToken);
 
         /// <summary>
         /// Возвращает объявление по заданному условию.
