@@ -26,7 +26,7 @@ namespace BulletinBoard.Hosts.Api.Controllers
         }
 
         /// <summary>
-        /// Возвращает ограниченный список всех комментариев.
+        /// Возвращает постраничные объявления.
         /// </summary>
         /// <param name="cancellationToken">Отмена операции.</param>
         /// <param name="limit">Ограничение.</param>
