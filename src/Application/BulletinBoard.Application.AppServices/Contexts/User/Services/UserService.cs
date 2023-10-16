@@ -1,12 +1,11 @@
 ﻿using AutoMapper;
 using BulletinBoard.Application.AppServices.Authentication.Constants;
 using BulletinBoard.Application.AppServices.Authentication.Services;
-using BulletinBoard.Application.AppServices.Contexts.Ad.Repositories;
 using BulletinBoard.Application.AppServices.Contexts.User.Repositories;
 using BulletinBoard.Application.AppServices.Cryptography.Helpers;
 using BulletinBoard.Application.AppServices.Exceptions;
+using BulletinBoard.Application.AppServices.Pagination.Helpers;
 using BulletinBoard.Contracts.User;
-using BulletinBoard.Domain.Ad;
 using Microsoft.AspNetCore.Http;
 using System.Security.Claims;
 
@@ -36,9 +35,12 @@ namespace BulletinBoard.Application.AppServices.Contexts.User.Services
         }
 
         /// <inheritdoc/>
-        public Task<IReadOnlyCollection<UserDto>> GetAllAsync(CancellationToken cancellationToken, int limit)
+        public Task<IReadOnlyCollection<UserDto>> GetAllAsync(int pageSize, int pageIndex, CancellationToken cancellationToken)
         {
-            return _userRepository.GetAllAsync(cancellationToken, limit);
+            var modelCollection = _userRepository.GetAllAsync(cancellationToken).Result;
+            var paginatedCollection = PaginationHelper<UserDto>.SplitByPages(modelCollection, pageSize, pageIndex);
+
+            return Task.FromResult(paginatedCollection);
         }
 
         /// <inheritdoc/>

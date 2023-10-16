@@ -25,7 +25,7 @@ namespace BulletinBoard.Infrastructure.DataAccess.Contexts.Comment.Repositories
         }
 
         /// <inheritdoc/>
-        public Task<IReadOnlyCollection<CommentDto>> GetAllAsync(CancellationToken cancellationToken, int limit = 10)
+        public Task<IReadOnlyCollection<CommentDto>> GetAllAsync(CancellationToken cancellationToken)
         {
             var commentCollection = _repository.GetAll();
             var dtoCollection = _mapper.Map<List<CommentDto>>(commentCollection.ToList());

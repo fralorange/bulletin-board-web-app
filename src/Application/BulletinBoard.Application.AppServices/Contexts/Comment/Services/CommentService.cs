@@ -3,6 +3,7 @@ using BulletinBoard.Application.AppServices.Authentication.Constants;
 using BulletinBoard.Application.AppServices.Authentication.Services;
 using BulletinBoard.Application.AppServices.Contexts.Comment.Repositories;
 using BulletinBoard.Application.AppServices.Exceptions;
+using BulletinBoard.Application.AppServices.Pagination.Helpers;
 using BulletinBoard.Contracts.Comment;
 using Microsoft.AspNetCore.Http;
 using System.Security.Claims;
@@ -33,9 +34,12 @@ namespace BulletinBoard.Application.AppServices.Contexts.Comment.Services
         }
 
         /// <inheritdoc/>
-        public Task<IReadOnlyCollection<CommentDto>> GetAllAsync(CancellationToken cancellationToken, int limit = 10)
+        public Task<IReadOnlyCollection<CommentDto>> GetAllAsync(int pageSize, int pageIndex, CancellationToken cancellationToken)
         {
-            return _commentRepository.GetAllAsync(cancellationToken, limit);
+            var modelCollection = _commentRepository.GetAllAsync(cancellationToken).Result;
+            var paginatedCollection = PaginationHelper<CommentDto>.SplitByPages(modelCollection, pageSize, pageIndex);
+
+            return Task.FromResult(paginatedCollection);
         }
 
         /// <inheritdoc/>

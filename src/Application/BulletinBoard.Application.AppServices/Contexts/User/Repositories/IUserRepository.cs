@@ -20,9 +20,8 @@ namespace BulletinBoard.Application.AppServices.Contexts.User.Repositories
         /// Возвращает ограниченный список пользователей.
         /// </summary>
         /// <param name="cancellationToken">Отмена операции</param>
-        /// <param name="limit">Ограничение выборки пользователей.</param>
         /// <returns>Коллекция пользователей <see cref="UserDto"/></returns>
-        Task<IReadOnlyCollection<UserDto>> GetAllAsync(CancellationToken cancellationToken, int limit = 10);
+        Task<IReadOnlyCollection<UserDto>> GetAllAsync(CancellationToken cancellationToken);
 
         /// <summary>
         /// Возвращает пользователя по заданному условию.
