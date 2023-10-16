@@ -41,6 +41,10 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Cryptography", "Cryptograph
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Cryptography.Tests", "tests\Cryptography.Tests\Cryptography.Tests.csproj", "{4D0685D3-FD72-45F3-938B-B7A3A7B176C6}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Pagination", "Pagination", "{7F2609E1-7C6F-4784-BEC3-1A7661A6DBFF}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pagination.Tests", "Pagination.Tests\Pagination.Tests.csproj", "{49A7FD00-0C77-4A74-A616-FB103D9B5391}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -87,6 +91,10 @@ Global
 		{4D0685D3-FD72-45F3-938B-B7A3A7B176C6}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4D0685D3-FD72-45F3-938B-B7A3A7B176C6}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4D0685D3-FD72-45F3-938B-B7A3A7B176C6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{49A7FD00-0C77-4A74-A616-FB103D9B5391}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{49A7FD00-0C77-4A74-A616-FB103D9B5391}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{49A7FD00-0C77-4A74-A616-FB103D9B5391}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{49A7FD00-0C77-4A74-A616-FB103D9B5391}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -109,6 +117,8 @@ Global
 		{0802C2AC-840E-40A3-BC42-C875D1C41EA9} = {23A3D023-5670-484F-B1AA-E39BBD6EAA69}
 		{E85C6BAA-C571-4615-A286-1F822EECFA9A} = {598D1596-828F-472D-B58E-F0B0CCD56DDD}
 		{4D0685D3-FD72-45F3-938B-B7A3A7B176C6} = {E85C6BAA-C571-4615-A286-1F822EECFA9A}
+		{7F2609E1-7C6F-4784-BEC3-1A7661A6DBFF} = {598D1596-828F-472D-B58E-F0B0CCD56DDD}
+		{49A7FD00-0C77-4A74-A616-FB103D9B5391} = {7F2609E1-7C6F-4784-BEC3-1A7661A6DBFF}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {7AC2ACA2-D317-477A-9A8A-15D72D19D0B2}
