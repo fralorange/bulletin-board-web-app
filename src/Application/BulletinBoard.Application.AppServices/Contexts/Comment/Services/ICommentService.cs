@@ -14,7 +14,7 @@ namespace BulletinBoard.Application.AppServices.Contexts.Comment.Services
         /// <param name="pageSize">Размер страницы.</param>
         /// <param name="pageIndex">Номер страницы.</param>
         /// <returns>Коллекция комментариев <see cref="CommentDto"/>.</returns>
-        Task<IReadOnlyCollection<CommentDto>> GetAllAsync(CancellationToken cancellationToken, int pageSize = 10, int pageIndex = 0);
+        Task<IReadOnlyCollection<CommentDto>> GetAllAsync(CancellationToken cancellationToken, int pageSize, int pageIndex);
 
         /// <summary>
         /// Возвращает комментарий по заданному идентификатору.
