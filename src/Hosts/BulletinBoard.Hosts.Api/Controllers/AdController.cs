@@ -44,7 +44,7 @@ namespace BulletinBoard.Hosts.Api.Controllers
         }
 
         /// <summary>
-        /// Возвращает объявлению по заданному идентификатору.
+        /// Возвращает объявления по заданному идентификатору.
         /// </summary>
         /// <remarks>
         /// Пример: curl -X 'GET' \'https://localhost:port/ad/get-by-id'
