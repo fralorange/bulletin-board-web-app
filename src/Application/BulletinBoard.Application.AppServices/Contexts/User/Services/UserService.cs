@@ -35,7 +35,7 @@ namespace BulletinBoard.Application.AppServices.Contexts.User.Services
         }
 
         /// <inheritdoc/>
-        public Task<IReadOnlyCollection<UserDto>> GetAllAsync(CancellationToken cancellationToken, int pageSize = 10, int pageIndex = 0)
+        public Task<IReadOnlyCollection<UserDto>> GetAllAsync(int pageSize, int pageIndex, CancellationToken cancellationToken)
         {
             var modelCollection = _userRepository.GetAllAsync(cancellationToken).Result;
             var paginatedCollection = PaginationHelper<UserDto>.SplitByPages(modelCollection, pageSize, pageIndex);

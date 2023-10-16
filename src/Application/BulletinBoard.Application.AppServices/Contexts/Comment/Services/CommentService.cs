@@ -34,7 +34,7 @@ namespace BulletinBoard.Application.AppServices.Contexts.Comment.Services
         }
 
         /// <inheritdoc/>
-        public Task<IReadOnlyCollection<CommentDto>> GetAllAsync(CancellationToken cancellationToken, int pageSize = 10, int pageIndex = 0)
+        public Task<IReadOnlyCollection<CommentDto>> GetAllAsync(int pageSize, int pageIndex, CancellationToken cancellationToken)
         {
             var modelCollection = _commentRepository.GetAllAsync(cancellationToken).Result;
             var paginatedCollection = PaginationHelper<CommentDto>.SplitByPages(modelCollection, pageSize, pageIndex);

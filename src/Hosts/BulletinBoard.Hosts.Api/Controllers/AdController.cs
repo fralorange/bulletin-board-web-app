@@ -39,7 +39,7 @@ namespace BulletinBoard.Hosts.Api.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         public async Task<IActionResult> GetAllAsync(CancellationToken cancellationToken, int pageSize = 10, int pageIndex = 0)
         {
-            var result = await _adService.GetAllAsync(cancellationToken, pageSize, pageIndex);
+            var result = await _adService.GetAllAsync(pageSize, pageIndex, cancellationToken);
             return Ok(result);
         }
 
