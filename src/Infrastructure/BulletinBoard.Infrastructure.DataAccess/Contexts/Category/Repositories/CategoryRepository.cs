@@ -36,7 +36,7 @@ namespace BulletinBoard.Infrastructure.DataAccess.Contexts.Category.Repositories
         /// <inheritdoc/>
         public Task<CategoryDto?> GetByIdAsync(Guid id, CancellationToken cancellationToken)
         {
-            var category = _repository.GetByIdAsync(id);
+            var category = _repository.GetByIdAsync(id).Result;
             return Task.Run(() => _mapper.Map<CategoryDto?>(category), cancellationToken);
         }
 
