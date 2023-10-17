@@ -70,7 +70,7 @@ namespace BulletinBoard.Hosts.Api.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
-        public async Task<IActionResult> CreateAsync([FromForm] CreateCategoryDto dto, CancellationToken cancellationToken)
+        public async Task<IActionResult> CreateAsync([FromBody] CreateCategoryDto dto, CancellationToken cancellationToken)
         {
             var dtoId = await _categoryService.CreateAsync(dto, cancellationToken);
             return Created(nameof(CreateAsync), dtoId);
