@@ -20,9 +20,8 @@ namespace BulletinBoard.Application.AppServices.Contexts.Category.Repositories
         /// Возвращает ограниченный список категорий.
         /// </summary>
         /// <param name="cancellationToken">Отмена операции</param>
-        /// <param name="limit">Ограничение выборки категорий.</param>
         /// <returns>Коллекция категорий <see cref="CategoryDto"/></returns>
-        Task<IReadOnlyCollection<CategoryDto>> GetAllAsync(CancellationToken cancellationToken, int limit = 10);
+        Task<IReadOnlyCollection<CategoryDto>> GetAllAsync(CancellationToken cancellationToken);
 
         /// <summary>
         /// Возвращает категории по заданному условию.

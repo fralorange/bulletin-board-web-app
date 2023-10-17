@@ -68,7 +68,7 @@ namespace BulletinBoard.Hosts.Api.Controllers
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<IActionResult> CreateAsync([FromForm] CreateCommentDto dto, CancellationToken cancellationToken)
+        public async Task<IActionResult> CreateAsync([FromBody] CreateCommentDto dto, CancellationToken cancellationToken)
         {
             var dtoId = await _commentService.CreateAsync(dto, cancellationToken);
 

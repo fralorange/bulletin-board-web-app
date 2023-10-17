@@ -24,7 +24,7 @@ namespace BulletinBoard.Infrastructure.DataAccess.Contexts.Category.Repositories
         }
 
         /// <inheritdoc/>
-        public Task<IReadOnlyCollection<CategoryDto>> GetAllAsync(CancellationToken cancellationToken, int limit = 10)
+        public Task<IReadOnlyCollection<CategoryDto>> GetAllAsync(CancellationToken cancellationToken)
         {
             var categoryCollection = _repository.GetAll();
             var dtoCollection = _mapper.Map<List<CategoryDto>>(categoryCollection.ToList());
@@ -36,7 +36,7 @@ namespace BulletinBoard.Infrastructure.DataAccess.Contexts.Category.Repositories
         /// <inheritdoc/>
         public Task<CategoryDto?> GetByIdAsync(Guid id, CancellationToken cancellationToken)
         {
-            var category = _repository.GetByIdAsync(id);
+            var category = _repository.GetByIdAsync(id).Result;
             return Task.Run(() => _mapper.Map<CategoryDto?>(category), cancellationToken);
         }
 

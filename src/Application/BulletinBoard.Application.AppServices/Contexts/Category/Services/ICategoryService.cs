@@ -19,9 +19,8 @@ namespace BulletinBoard.Application.AppServices.Contexts.Category.Services
         /// Возвращает все категории в заданных пределах (по-умолчанию: 10).
         /// </summary>
         /// <param name="cancellationToken">Отмена операции.</param>
-        /// <param name="limit">Ограничение выборки категорий.</param>
         /// <returns>Коллекция категорий <see cref="CategoryDto"/>.</returns>
-        Task<IReadOnlyCollection<CategoryDto>> GetAllAsync(CancellationToken cancellationToken, int limit = 10);
+        Task<IReadOnlyCollection<CategoryDto>> GetAllAsync(CancellationToken cancellationToken);
 
         /// <summary>
         /// Создаёт категорию.

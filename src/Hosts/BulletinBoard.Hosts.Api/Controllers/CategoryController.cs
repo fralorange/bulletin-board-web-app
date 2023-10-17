@@ -29,14 +29,13 @@ namespace BulletinBoard.Hosts.Api.Controllers
         /// Возвращает ограниченный список всех категорий.
         /// </summary>
         /// <param name="cancellationToken">Отмена операции.</param>
-        /// <param name="limit">Ограничение.</param>
         /// <returns></returns>
         [AllowAnonymous]
         [HttpGet("get-all-with-limit")]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public async Task<IActionResult> GetAllAsync(CancellationToken cancellationToken, int limit = 10)
+        public async Task<IActionResult> GetAllAsync(CancellationToken cancellationToken)
         {
-            var result = await _categoryService.GetAllAsync(cancellationToken, limit);
+            var result = await _categoryService.GetAllAsync(cancellationToken);
             return Ok(result);
         }
 
@@ -71,7 +70,7 @@ namespace BulletinBoard.Hosts.Api.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
-        public async Task<IActionResult> CreateAsync([FromForm] CreateCategoryDto dto, CancellationToken cancellationToken)
+        public async Task<IActionResult> CreateAsync([FromBody] CreateCategoryDto dto, CancellationToken cancellationToken)
         {
             var dtoId = await _categoryService.CreateAsync(dto, cancellationToken);
             return Created(nameof(CreateAsync), dtoId);
