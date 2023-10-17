@@ -27,7 +27,7 @@ namespace WebAPI.Infrastructure.Tests
                 Name = "test_username_1",
                 HashedPassword = Password,
                 Salt = Salt,
-                Role = AuthRoles.Default,
+                Role = AuthRoles.Admin,
             };
 
             db.Add(testUser);

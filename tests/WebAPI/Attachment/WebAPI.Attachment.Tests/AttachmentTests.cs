@@ -51,7 +51,7 @@ namespace WebAPI.Attachment.Tests
         }
 
         [Fact]
-        public async Task Test_Ad_Delete_Success()
+        public async Task Test_Attachment_Delete_Success()
         {
             // Arrange
             var httpClient = _webApplicationFactory.CreateClient();
@@ -65,9 +65,9 @@ namespace WebAPI.Attachment.Tests
 
             // Проверить, что сущность была удалена
             await using var dbContext = _webApplicationFactory.CreateDbContext();
-            var advert = dbContext.Find<BulletinBoard.Domain.Attachment.Attachment>(DataSeedHelper.TestAttachmentId);
+            var attachment = dbContext.Find<BulletinBoard.Domain.Attachment.Attachment>(DataSeedHelper.TestAttachmentId);
 
-            Assert.Null(advert);
+            Assert.Null(attachment);
         }
     }
 }

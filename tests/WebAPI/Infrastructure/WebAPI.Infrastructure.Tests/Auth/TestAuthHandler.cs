@@ -19,7 +19,7 @@ namespace WebAPI.Infrastructure.Tests.Auth
             var claims = new[] 
             { 
                 new Claim(ClaimTypes.NameIdentifier, DataSeedHelper.TestUserId.ToString()),
-                new Claim(ClaimTypes.Role, AuthRoles.Default)
+                new Claim(ClaimTypes.Role, AuthRoles.Admin)
             };
             var identity = new ClaimsIdentity(claims, "test");
             var principal = new ClaimsPrincipal(identity);
