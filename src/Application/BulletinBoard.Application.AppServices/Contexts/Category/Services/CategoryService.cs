@@ -24,7 +24,7 @@ namespace BulletinBoard.Application.AppServices.Contexts.Category.Services
         }
 
         /// <inheritdoc/>
-        public Task<IReadOnlyCollection<CategoryDto>> GetAllAsync(CancellationToken cancellationToken, int limit = 10)
+        public Task<IReadOnlyCollection<CategoryDto>> GetAllAsync(CancellationToken cancellationToken)
         {
             return _categoryRepository.GetAllAsync(cancellationToken);
         }

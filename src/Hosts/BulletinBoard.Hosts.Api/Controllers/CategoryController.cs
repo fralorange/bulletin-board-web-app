@@ -29,14 +29,13 @@ namespace BulletinBoard.Hosts.Api.Controllers
         /// Возвращает ограниченный список всех категорий.
         /// </summary>
         /// <param name="cancellationToken">Отмена операции.</param>
-        /// <param name="limit">Ограничение.</param>
         /// <returns></returns>
         [AllowAnonymous]
         [HttpGet("get-all-with-limit")]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public async Task<IActionResult> GetAllAsync(CancellationToken cancellationToken, int limit = 10)
+        public async Task<IActionResult> GetAllAsync(CancellationToken cancellationToken)
         {
-            var result = await _categoryService.GetAllAsync(cancellationToken, limit);
+            var result = await _categoryService.GetAllAsync(cancellationToken);
             return Ok(result);
         }
 
