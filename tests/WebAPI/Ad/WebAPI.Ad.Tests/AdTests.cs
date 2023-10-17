@@ -3,7 +3,6 @@ using Newtonsoft.Json;
 using System.Net;
 using System.Net.Http.Json;
 using System.Text;
-using System.Text.Json;
 using WebAPI.Infrastructure.Tests;
 using WebAPI.Infrastructure.Tests.Factories;
 
@@ -12,6 +11,7 @@ namespace WebAPI.Ad.Tests
     public class AdTests : IClassFixture<BulletinBoardWebApplicationFactory>
     {
         private readonly BulletinBoardWebApplicationFactory _webApplicationFactory;
+
         public AdTests(BulletinBoardWebApplicationFactory webApplicationFactory)
         {
             _webApplicationFactory = webApplicationFactory;
@@ -142,6 +142,5 @@ namespace WebAPI.Ad.Tests
 
             Assert.Null(advert);
         }
-
     }
 }
