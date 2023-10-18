@@ -16,6 +16,7 @@ namespace BulletinBoard.Hosts.Api.Controllers
     public class CategoryController : ControllerBase
     {
         private const string CacheKey = "CategoryList";
+
         private readonly ICategoryService _categoryService;
         private readonly IMemoryCache _memoryCache;
         private readonly ILogger<CategoryController> _logger;
