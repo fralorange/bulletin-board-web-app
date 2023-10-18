@@ -37,10 +37,10 @@ namespace BulletinBoard.Application.AppServices.Contexts.Ad.Services
         /// <inheritdoc/> 
         public Task<IReadOnlyCollection<AdDto>> GetAllAsync(int pageSize, int pageIndex, CancellationToken cancellationToken)
         {
-            var modelCollection = _adRepository.GetAllAsync(cancellationToken);
+            var modelCollection = _adRepository.GetAllAsync(cancellationToken).Result;
             var paginatedCollection = PaginationHelper<AdDto>.SplitByPages(modelCollection, pageSize, pageIndex);
             
-            return paginatedCollection;
+            return Task.FromResult(paginatedCollection);
         }
 
         /// <inheritdoc/>
@@ -63,37 +63,27 @@ namespace BulletinBoard.Application.AppServices.Contexts.Ad.Services
         /// <inheritdoc/>
         public Task UpdateAsync(Guid id, UpdateAdDto dto, CancellationToken cancellationToken)
         {
-            return _adRepository.GetByPredicate(a => a.Id == id, cancellationToken).ContinueWith(t => {
-                var ad = t.Result ?? throw new EntityNotFoundException();
+            var ad = _adRepository.GetByPredicate(a => a.Id == id, cancellationToken).Result ?? throw new EntityNotFoundException();
 
-                return _entityAuthorizationService.Validate(_httpContextAccessor.HttpContext!.User, id, AuthRoles.Admin).ContinueWith(t2 =>
-                {
-                    if (t2.Result)
-                        throw new EntityForbiddenException();
+            if (_entityAuthorizationService.Validate(_httpContextAccessor.HttpContext!.User, id, AuthRoles.Admin).Result)
+                throw new EntityForbiddenException();
 
-                    ad.Title = dto.Title;
-                    ad.Description = dto.Description;
-                    ad.Price = dto.Price;
+            ad.Title = dto.Title;
+            ad.Description = dto.Description;
+            ad.Price = dto.Price;
 
-                    return _adRepository.UpdateAsync(id, ad, cancellationToken);
-                });
-            });
+            return _adRepository.UpdateAsync(id, ad, cancellationToken);
         }
 
         /// <inheritdoc/>
         public Task DeleteAsync(Guid id, CancellationToken cancellationToken)
         {
-            return _adRepository.GetByPredicate(a => a.Id == id, cancellationToken).ContinueWith(t => {
-                var ad = t.Result ?? throw new EntityNotFoundException();
+            var ad = _adRepository.GetByPredicate(a => a.Id == id, cancellationToken).Result ?? throw new EntityNotFoundException();
 
-                return _entityAuthorizationService.Validate(_httpContextAccessor.HttpContext!.User, id, AuthRoles.Admin).ContinueWith(t2 =>
-                {
-                    if (t2.Result)
-                        throw new EntityForbiddenException();
+            if (_entityAuthorizationService.Validate(_httpContextAccessor.HttpContext!.User, id, AuthRoles.Admin).Result)
+                throw new EntityForbiddenException();
 
-                    return _adRepository.DeleteAsync(ad, cancellationToken);
-                });
-            }).Unwrap();
+            return _adRepository.DeleteAsync(ad, cancellationToken);
         }
     }
 }

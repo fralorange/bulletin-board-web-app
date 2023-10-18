@@ -47,13 +47,11 @@ namespace BulletinBoard.Application.AppServices.Contexts.Attachment.Services
         public Task<Guid> CreateAsync(CreateAttachmentDto dto, CancellationToken cancellationToken)
         {
             var attachment = _mapper.Map<Domain.Attachment.Attachment>(dto);
+            
+            if (_entityAuthorizationService.Validate(_httpContextAccessor.HttpContext!.User, dto.AdId, AuthRoles.Admin).Result)
+                throw new EntityForbiddenException();
 
-            return _entityAuthorizationService.Validate(_httpContextAccessor.HttpContext!.User, dto.AdId, AuthRoles.Admin).ContinueWith(t =>
-            {
-                if (t.Result)
-                    throw new EntityForbiddenException();
-                return _attachmentRepository.CreateAsync(attachment, cancellationToken);
-            }).Unwrap();
+            return _attachmentRepository.CreateAsync(attachment, cancellationToken);
         }
 
         /// <inheritdoc/>
@@ -61,12 +59,10 @@ namespace BulletinBoard.Application.AppServices.Contexts.Attachment.Services
         {
             var att = _attachmentRepository.GetByPredicate(a => a.Id == id, cancellationToken).Result ?? throw new EntityNotFoundException();
 
-            return _entityAuthorizationService.Validate(_httpContextAccessor.HttpContext!.User, att.AdId, AuthRoles.Admin).ContinueWith(t =>
-            {
-                if (t.Result)
-                    throw new EntityForbiddenException();
-                return _attachmentRepository.DeleteAsync(att, cancellationToken);
-            }).Unwrap();
+            if (_entityAuthorizationService.Validate(_httpContextAccessor.HttpContext!.User, att.AdId, AuthRoles.Admin).Result)
+                throw new EntityForbiddenException();
+
+            return _attachmentRepository.DeleteAsync(att, cancellationToken);
         }
     }
 }

@@ -160,22 +160,5 @@ namespace BulletinBoard.Hosts.Api
             #endregion
             return services;
         }
-
-        /// <summary>
-        /// Добавляет кэш хранящийся в памяти веб-сервера.
-        /// </summary>
-        /// <param name="services"></param>
-        /// <returns></returns>
-        public static IServiceCollection AddMemoryCaching(this IServiceCollection services)
-        {
-            services.AddMemoryCache(options =>
-            {
-                options.SizeLimit = 1000;
-                options.CompactionPercentage = 0.8;
-                options.ExpirationScanFrequency = TimeSpan.FromMinutes(60); 
-            });
-
-            return services;
-        }
     }
 }

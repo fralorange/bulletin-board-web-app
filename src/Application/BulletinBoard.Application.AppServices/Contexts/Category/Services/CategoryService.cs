@@ -46,26 +46,20 @@ namespace BulletinBoard.Application.AppServices.Contexts.Category.Services
         /// <inheritdoc/>
         public Task UpdateAsync(Guid id, UpdateCategoryDto dto, CancellationToken cancellationToken)
         {
-            return _categoryRepository.GetByPredicate(c => c.Id == id, cancellationToken).ContinueWith(t =>
-            {
-                var category = t.Result ?? throw new EntityNotFoundException();
+            var category = _categoryRepository.GetByPredicate(c => c.Id == id, cancellationToken).Result ?? throw new EntityNotFoundException();
 
-                category.CategoryName = dto.CategoryName;
-                category.ParentId = dto.ParentId;
+            category.CategoryName = dto.CategoryName;
+            category.ParentId = dto.ParentId;
 
-                return _categoryRepository.UpdateAsync(id, category, cancellationToken);
-            }).Unwrap();
+            return _categoryRepository.UpdateAsync(id, category, cancellationToken);
         }
 
         /// <inheritdoc/>
         public Task DeleteAsync(Guid id, CancellationToken cancellationToken)
         {
-            return _categoryRepository.GetByPredicate(c => c.Id == id, cancellationToken).ContinueWith(t =>
-            {
-                var category = t.Result ?? throw new EntityNotFoundException();
+            var category = _categoryRepository.GetByPredicate(c => c.Id == id, cancellationToken).Result ?? throw new EntityNotFoundException();
 
-                return _categoryRepository.DeleteAsync(category, cancellationToken);
-            });
+            return _categoryRepository.DeleteAsync(category, cancellationToken);
         }
     }
 }

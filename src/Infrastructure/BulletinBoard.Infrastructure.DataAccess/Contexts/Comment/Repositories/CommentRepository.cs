@@ -1,6 +1,5 @@
 ﻿using AutoMapper;
 using BulletinBoard.Application.AppServices.Contexts.Comment.Repositories;
-using BulletinBoard.Contracts.Ad;
 using BulletinBoard.Contracts.Comment;
 using BulletinBoard.Domain.Ad;
 using BulletinBoard.Infrastructure.Repository;
@@ -38,11 +37,8 @@ namespace BulletinBoard.Infrastructure.DataAccess.Contexts.Comment.Repositories
         /// <inheritdoc/>
         public Task<CommentDto?> GetByIdAsync(Guid id, CancellationToken cancellationToken)
         {
-            return _repository.GetByIdAsync(id).ContinueWith(t =>
-            {
-                var comment = t.Result;
-                return _mapper.Map<CommentDto?>(comment);
-            }, cancellationToken);
+            var comment = _repository.GetByIdAsync(id).Result;
+            return Task.Run(() => _mapper.Map<CommentDto?>(comment), cancellationToken);
         }
 
         /// <inheritdoc/>
