@@ -20,11 +20,14 @@ namespace BulletinBoard.Application.AppServices.Authentication.Services
         /// <inheritdoc/>
         public Task<bool> Validate(ClaimsPrincipal user, Guid entityId, string role)
         {
-            var entity = _adRepository.GetByIdAsync(entityId, CancellationToken.None).Result;
-            var userId = user.FindFirstValue(ClaimTypes.NameIdentifier);
-            var userRole = user.FindFirstValue(ClaimTypes.Role);
+            return _adRepository.GetByIdAsync(entityId, CancellationToken.None).ContinueWith(t =>
+            {
+                var entity = t.Result;
+                var userId = user.FindFirstValue(ClaimTypes.NameIdentifier);
+                var userRole = user.FindFirstValue(ClaimTypes.Role);
 
-            return Task.FromResult(entity!.User.Id.ToString() != userId && userRole != role);
+                return entity!.User.Id.ToString() != userId && userRole != role;
+            });
         }
 
         /// <inheritdoc/>
