@@ -1,6 +1,5 @@
 ﻿using AutoMapper;
 using BulletinBoard.Application.AppServices.Contexts.Category.Repositories;
-using BulletinBoard.Contracts.Ad;
 using BulletinBoard.Contracts.Category;
 using BulletinBoard.Infrastructure.Repository;
 using System.Linq.Expressions;
@@ -37,11 +36,8 @@ namespace BulletinBoard.Infrastructure.DataAccess.Contexts.Category.Repositories
         /// <inheritdoc/>
         public Task<CategoryDto?> GetByIdAsync(Guid id, CancellationToken cancellationToken)
         {
-            return _repository.GetByIdAsync(id).ContinueWith(t =>
-            {
-                var category = t.Result;
-                return _mapper.Map<CategoryDto?>(category);
-            }, cancellationToken);
+            var category = _repository.GetByIdAsync(id).Result;
+            return Task.Run(() => _mapper.Map<CategoryDto?>(category), cancellationToken);
         }
 
         /// <inheritdoc/>
