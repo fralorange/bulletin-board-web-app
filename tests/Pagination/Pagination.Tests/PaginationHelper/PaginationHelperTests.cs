@@ -5,7 +5,7 @@ namespace Pagination.Tests.PaginationHelper
     public class PaginationHelperTests
     {
         [Fact]
-        public async Task SplitByPages_ShouldReturnCorrectPage()
+        public void SplitByPages_ShouldReturnCorrectPage()
         {
             // Arrange
             var modelCollection = new List<int> { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 };
@@ -13,7 +13,7 @@ namespace Pagination.Tests.PaginationHelper
             var pageIndex = 3;
 
             // Act
-            var result = await PaginationHelper<int>.SplitByPages(Task.FromResult((IReadOnlyCollection<int>)modelCollection), pageSize, pageIndex);
+            var result = PaginationHelper<int>.SplitByPages(modelCollection, pageSize, pageIndex);
 
             // Assert
             Assert.Equal(pageSize, result.Count);
