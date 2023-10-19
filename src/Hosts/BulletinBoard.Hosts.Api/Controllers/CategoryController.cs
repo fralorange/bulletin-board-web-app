@@ -4,6 +4,7 @@ using BulletinBoard.Application.AppServices.Exceptions;
 using BulletinBoard.Contracts.Category;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Caching.Memory;
 
 namespace BulletinBoard.Hosts.Api.Controllers
 {
@@ -15,16 +16,21 @@ namespace BulletinBoard.Hosts.Api.Controllers
     public class CategoryController : ControllerBase
     {
         private const string CacheKey = "CategoryList";
-
         private readonly ICategoryService _categoryService;
+        private readonly IMemoryCache _memoryCache;
+        private readonly ILogger<CategoryController> _logger;
 
         /// <summary>
         /// Инициализирует экземпляр <see cref="CategoryController"/>
         /// </summary>
         /// <param name="categoryService">Сервис для работы с категориями.</param>
-        public CategoryController(ICategoryService categoryService)
+        /// <param name="memoryCache">Кеш веб-сервера.</param>
+        /// <param name="logger">Логгер.</param>
+        public CategoryController(ICategoryService categoryService, IMemoryCache memoryCache, ILogger<CategoryController> logger)
         {
             _categoryService = categoryService;
+            _memoryCache = memoryCache;
+            _logger = logger;
         }
 
         /// <summary>
@@ -37,8 +43,24 @@ namespace BulletinBoard.Hosts.Api.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         public async Task<IActionResult> GetAllAsync(CancellationToken cancellationToken)
         {
-            var result = await _categoryService.GetAllAsync(cancellationToken);
-            return Ok(result);
+            if (!_memoryCache.TryGetValue(CacheKey, out var categoryList)) {
+                categoryList = await _memoryCache.GetOrCreateAsync(CacheKey, async entry =>
+                {
+                    entry.AbsoluteExpirationRelativeToNow = TimeSpan.FromHours(24);
+                    entry.Priority = CacheItemPriority.High;
+
+                    var categories = await _categoryService.GetAllAsync(cancellationToken);
+
+                    _logger.LogInformation("Categories were successfully retrieved from the service and stored in the cache.");
+
+                    return categories;
+                });
+            } else
+            {
+                _logger.LogInformation("Categories were successfully retrieved from the cache.");
+            }
+
+            return Ok(categoryList);
         }
 
         /// <summary>
@@ -75,6 +97,10 @@ namespace BulletinBoard.Hosts.Api.Controllers
         public async Task<IActionResult> CreateAsync([FromBody] CreateCategoryDto dto, CancellationToken cancellationToken)
         {
             var dtoId = await _categoryService.CreateAsync(dto, cancellationToken);
+
+            _memoryCache.Remove(CacheKey);
+            _logger.LogInformation("Сache was reset after the new category was created.");
+
             return Created(nameof(CreateAsync), dtoId);
         }
 
@@ -103,6 +129,9 @@ namespace BulletinBoard.Hosts.Api.Controllers
                 return NotFound(ModelState);
             }
 
+            _memoryCache.Remove(CacheKey);
+            _logger.LogInformation("Сache was reset after the category was updated.");
+
             return NoContent();
         }
 
@@ -130,6 +159,9 @@ namespace BulletinBoard.Hosts.Api.Controllers
                 ModelState.AddModelError("NotFoundError", ex.Message);
                 return NotFound(ModelState);
             }
+
+            _memoryCache.Remove(CacheKey);
+            _logger.LogInformation("Сache was reset after the category was deleted.");
 
             return NoContent();
         }

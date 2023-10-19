@@ -12,9 +12,9 @@
         /// <param name="pageSize">Размер страницы.</param>
         /// <param name="pageIndex">Номер страницы.</param>
         /// <returns></returns>
-        public static IReadOnlyCollection<TModel> SplitByPages(IReadOnlyCollection<TModel> modelCollection, int pageSize, int pageIndex) 
+        public static async Task<IReadOnlyCollection<TModel>> SplitByPages(Task<IReadOnlyCollection<TModel>> modelCollection, int pageSize, int pageIndex) 
         {
-            return modelCollection
+            return (await modelCollection)
                 .Skip(pageIndex * pageSize)
                 .Take(pageSize)
                 .ToList();

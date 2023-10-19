@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using BulletinBoard.Application.AppServices.Authentication.Constants;
 using BulletinBoard.Application.AppServices.Authentication.Services;
+using BulletinBoard.Application.AppServices.Contexts.Ad.Repositories;
 using BulletinBoard.Application.AppServices.Contexts.Comment.Repositories;
 using BulletinBoard.Application.AppServices.Exceptions;
 using BulletinBoard.Application.AppServices.Pagination.Helpers;
@@ -36,10 +37,10 @@ namespace BulletinBoard.Application.AppServices.Contexts.Comment.Services
         /// <inheritdoc/>
         public Task<IReadOnlyCollection<CommentDto>> GetAllAsync(int pageSize, int pageIndex, CancellationToken cancellationToken)
         {
-            var modelCollection = _commentRepository.GetAllAsync(cancellationToken).Result;
+            var modelCollection = _commentRepository.GetAllAsync(cancellationToken);
             var paginatedCollection = PaginationHelper<CommentDto>.SplitByPages(modelCollection, pageSize, pageIndex);
 
-            return Task.FromResult(paginatedCollection);
+            return paginatedCollection;
         }
 
         /// <inheritdoc/>
@@ -61,26 +62,36 @@ namespace BulletinBoard.Application.AppServices.Contexts.Comment.Services
         /// <inheritdoc/>
         public Task UpdateAsync(Guid id, UpdateCommentDto dto, CancellationToken cancellationToken)
         {
-            var comment = _commentRepository.GetByPredicate(c => c.Id == id, cancellationToken).Result ?? throw new EntityNotFoundException();
+            return _commentRepository.GetByPredicate(c => c.Id == id, cancellationToken).ContinueWith(t => {
+                var comment = t.Result ?? throw new EntityNotFoundException();
 
-            if (_entityAuthorizationService.ValidateUserOnly(_httpContextAccessor.HttpContext!.User, comment.UserId, AuthRoles.Admin).Result)
-                throw new EntityForbiddenException();
+                return _entityAuthorizationService.Validate(_httpContextAccessor.HttpContext!.User, comment.AdId, AuthRoles.Admin).ContinueWith(t2 =>
+                {
+                    if (t2.Result)
+                        throw new EntityForbiddenException();
 
-            comment.Content = dto.Content;
-            comment.Rating = dto.Rating;
+                    comment.Content = dto.Content;
+                    comment.Rating = dto.Rating;
 
-            return _commentRepository.UpdateAsync(id, comment, cancellationToken);
+                    return _commentRepository.UpdateAsync(id, comment, cancellationToken);
+                });
+            });
         }
 
         /// <inheritdoc/>
         public Task DeleteAsync(Guid id, CancellationToken cancellationToken)
         {
-            var comment = _commentRepository.GetByPredicate(c => c.Id == id, cancellationToken).Result ?? throw new EntityNotFoundException();
+            return _commentRepository.GetByPredicate(c => c.Id == id, cancellationToken).ContinueWith(t => {
+                var comment = t.Result ?? throw new EntityNotFoundException();
 
-            if (_entityAuthorizationService.ValidateUserOnly(_httpContextAccessor.HttpContext!.User, comment.UserId, AuthRoles.Admin).Result)
-                throw new EntityForbiddenException();
+                return _entityAuthorizationService.Validate(_httpContextAccessor.HttpContext!.User, comment.AdId, AuthRoles.Admin).ContinueWith(t2 =>
+                {
+                    if (t2.Result)
+                        throw new EntityForbiddenException();
 
-            return _commentRepository.DeleteAsync(comment, cancellationToken);
+                    return _commentRepository.DeleteAsync(comment, cancellationToken);
+                });
+            }).Unwrap();
         }
     }
 }
