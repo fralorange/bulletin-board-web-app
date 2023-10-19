@@ -14,6 +14,8 @@ namespace BulletinBoard.Hosts.Api.Controllers
     [Route("[controller]")]
     public class CategoryController : ControllerBase
     {
+        private const string CacheKey = "CategoryList";
+
         private readonly ICategoryService _categoryService;
 
         /// <summary>
