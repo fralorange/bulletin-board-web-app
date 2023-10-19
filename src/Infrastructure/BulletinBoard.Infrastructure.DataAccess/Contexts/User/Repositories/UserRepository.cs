@@ -1,6 +1,5 @@
 ﻿using AutoMapper;
 using BulletinBoard.Application.AppServices.Contexts.User.Repositories;
-using BulletinBoard.Contracts.Ad;
 using BulletinBoard.Contracts.User;
 using BulletinBoard.Infrastructure.Repository;
 using System.Linq.Expressions;
@@ -38,21 +37,15 @@ namespace BulletinBoard.Infrastructure.DataAccess.Contexts.User.Repositories
         /// <inheritdoc/>
         public Task<UserDto?> GetByIdAsync(Guid id, CancellationToken cancellationToken)
         {
-            return _repository.GetByIdAsync(id).ContinueWith(t =>
-            {
-                var user = t.Result;
-                return _mapper.Map<UserDto?>(user);
-            }, cancellationToken);
+            var user = _repository.GetByIdAsync(id).Result;
+            return Task.Run(() => _mapper.Map<UserDto?>(user), cancellationToken);
         }
 
         /// <inheritdoc/>
         public Task<InfoUserDto> GetCurrentUser(Guid id, CancellationToken cancellationToken)
         {
-            return _repository.GetByIdAsync(id).ContinueWith(t =>
-            {
-                var user = t.Result;
-                return _mapper.Map<InfoUserDto>(user);
-            }, cancellationToken);
+            var user = _repository.GetByIdAsync(id).Result;
+            return Task.Run(() => _mapper.Map<InfoUserDto>(user), cancellationToken);
         }
 
         /// <inheritdoc/>

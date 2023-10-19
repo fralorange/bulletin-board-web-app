@@ -1,6 +1,5 @@
 ﻿using AutoMapper;
 using BulletinBoard.Application.AppServices.Contexts.Attachment.Repositories;
-using BulletinBoard.Contracts.Ad;
 using BulletinBoard.Contracts.Attachment;
 using BulletinBoard.Infrastructure.Repository;
 using System.Linq.Expressions;
@@ -37,11 +36,8 @@ namespace BulletinBoard.Infrastructure.DataAccess.Contexts.Attachment.Repositori
         /// <inheritdoc/>
         public Task<AttachmentDto?> GetByIdAsync(Guid id, CancellationToken cancellationToken)
         {
-            return _repository.GetByIdAsync(id).ContinueWith(t =>
-            {
-                var att = t.Result;
-                return _mapper.Map<AttachmentDto?>(att);
-            }, cancellationToken);
+            var att = _repository.GetByIdAsync(id).Result;
+            return Task.Run(() => _mapper.Map<AttachmentDto?>(att));
         }
 
         /// <inheritdoc/>
