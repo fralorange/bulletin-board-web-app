@@ -50,8 +50,11 @@ namespace BulletinBoard.Infrastructure.DataAccess.Contexts.Ad.Repositories
         /// <inheritdoc/>
         public Task<AdDto?> GetByIdAsync(Guid id, CancellationToken cancellationToken)
         {
-            var ad = _repository.GetByIdAsync(id).Result;
-            return Task.Run(() => _mapper.Map<AdDto?>(ad), cancellationToken);
+            return _repository.GetByIdAsync(id).ContinueWith(t =>
+            {
+                var ad = t.Result;
+                return _mapper.Map<AdDto?>(ad);
+            }, cancellationToken);
         }
 
         /// <inheritdoc/>

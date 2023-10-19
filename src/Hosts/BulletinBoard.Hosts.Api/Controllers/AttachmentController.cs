@@ -29,7 +29,6 @@ namespace BulletinBoard.Hosts.Api.Controllers
         /// Возвращает ограниченный список всех изображений.
         /// </summary>
         /// <param name="cancellationToken">Отмена операции.</param>
-        /// <param name="limit">Ограничение.</param>
         /// <returns></returns>
         [Authorize]
         [Authorize(Roles = AuthRoles.Admin)]
@@ -37,7 +36,7 @@ namespace BulletinBoard.Hosts.Api.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
-        public async Task<IActionResult> GetAllAsync(CancellationToken cancellationToken, int limit = 10)
+        public async Task<IActionResult> GetAllAsync(CancellationToken cancellationToken)
         {
             var result = await _attachmentService.GetAllAsync(cancellationToken);
             return Ok(result);
