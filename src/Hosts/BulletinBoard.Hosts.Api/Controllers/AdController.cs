@@ -1,5 +1,7 @@
 using BulletinBoard.Application.AppServices.Contexts.Ad.Services;
 using BulletinBoard.Application.AppServices.Exceptions;
+using BulletinBoard.Application.AppServices.Filtration.Ad.Filter;
+using BulletinBoard.Application.AppServices.Filtration.Ad.Specification;
 using BulletinBoard.Contracts.Ad;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -30,6 +32,7 @@ namespace BulletinBoard.Hosts.Api.Controllers
         /// <remarks>
         /// Пример: curl -X 'GET' \ 'https://localhost:port/ad/get-all-by-pages?pageSize=10&amp;pageIndex=0'
         /// </remarks>
+        /// <param name="filter">Фильтр.</param>
         /// <param name="cancellationToken">Отмена операции.</param>
         /// <param name="pageSize">Размер страницы.</param>
         /// <param name="pageIndex">Номер страницы.</param>
@@ -37,9 +40,10 @@ namespace BulletinBoard.Hosts.Api.Controllers
         [AllowAnonymous]
         [HttpGet("get-all-by-pages")]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public async Task<IActionResult> GetAllAsync(CancellationToken cancellationToken, int pageSize = 10, int pageIndex = 0)
+        public async Task<IActionResult> GetAllAsync([FromQuery] AdFilter filter, CancellationToken cancellationToken, int pageSize = 10, int pageIndex = 0)
         {
-            var result = await _adService.GetAllAsync(pageSize, pageIndex, cancellationToken);
+            var spec = new AdSpecification(filter.Title, filter.MinPrice, filter.MaxPrice);
+            var result = await _adService.GetAllAsync(spec, pageSize, pageIndex, cancellationToken);
             return Ok(result);
         }
 

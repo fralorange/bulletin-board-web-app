@@ -3,6 +3,7 @@ using BulletinBoard.Application.AppServices.Authentication.Constants;
 using BulletinBoard.Application.AppServices.Authentication.Services;
 using BulletinBoard.Application.AppServices.Contexts.Ad.Repositories;
 using BulletinBoard.Application.AppServices.Exceptions;
+using BulletinBoard.Application.AppServices.Filtration.Ad.Specification;
 using BulletinBoard.Application.AppServices.Pagination.Helpers;
 using BulletinBoard.Contracts.Ad;
 using Microsoft.AspNetCore.Http;
@@ -35,9 +36,9 @@ namespace BulletinBoard.Application.AppServices.Contexts.Ad.Services
         }
 
         /// <inheritdoc/> 
-        public Task<IReadOnlyCollection<AdDto>> GetAllAsync(int pageSize, int pageIndex, CancellationToken cancellationToken)
+        public Task<IReadOnlyCollection<AdDto>> GetAllAsync(AdSpecification specification, int pageSize, int pageIndex, CancellationToken cancellationToken)
         {
-            var modelCollection = _adRepository.GetAllAsync(cancellationToken);
+            var modelCollection = _adRepository.GetAllAsync(specification, cancellationToken);
             var paginatedCollection = PaginationHelper<AdDto>.SplitByPages(modelCollection, pageSize, pageIndex);
             
             return paginatedCollection;
