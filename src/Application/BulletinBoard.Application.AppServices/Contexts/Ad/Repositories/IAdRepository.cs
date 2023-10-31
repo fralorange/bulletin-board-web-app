@@ -1,4 +1,5 @@
-﻿using BulletinBoard.Contracts.Ad;
+﻿using BulletinBoard.Application.AppServices.Filtration.Ad.Specification;
+using BulletinBoard.Contracts.Ad;
 using System.Linq.Expressions;
 
 namespace BulletinBoard.Application.AppServices.Contexts.Ad.Repositories
@@ -19,9 +20,10 @@ namespace BulletinBoard.Application.AppServices.Contexts.Ad.Repositories
         /// <summary>
         /// Возвращает объявления в пределах страницы.
         /// </summary>
+        /// <param name="specification">Спецификация.</param>
         /// <param name="cancellationToken">Отмена операции</param>
         /// <returns>Коллекция объявлений <see cref="AdDto"/>.</returns>
-        Task<IReadOnlyCollection<AdDto>> GetAllAsync(CancellationToken cancellationToken);
+        Task<IReadOnlyCollection<AdDto>> GetAllAsync(AdSpecification specification, CancellationToken cancellationToken);
 
         /// <summary>
         /// Возвращает объявление по заданному условию.

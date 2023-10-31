@@ -1,4 +1,5 @@
-﻿using BulletinBoard.Contracts.Comment;
+﻿using BulletinBoard.Application.AppServices.Filtration.Comment.Specification;
+using BulletinBoard.Contracts.Comment;
 
 namespace BulletinBoard.Application.AppServices.Contexts.Comment.Services
 {
@@ -10,11 +11,12 @@ namespace BulletinBoard.Application.AppServices.Contexts.Comment.Services
         /// <summary>
         /// Возвращает ограниченный список комментариев.
         /// </summary>
+        /// <param name="specification">Спецификация.</param>
         /// <param name="pageSize">Размер страницы.</param>
         /// <param name="pageIndex">Номер страницы.</param>
         /// <param name="cancellationToken">Отмена операции</param>
         /// <returns>Коллекция комментариев <see cref="CommentDto"/>.</returns>
-        Task<IReadOnlyCollection<CommentDto>> GetAllAsync(int pageSize, int pageIndex, CancellationToken cancellationToken);
+        Task<IReadOnlyCollection<CommentDto>> GetAllAsync(CommentSpecification specification, int pageSize, int pageIndex, CancellationToken cancellationToken);
 
         /// <summary>
         /// Возвращает комментарий по заданному идентификатору.

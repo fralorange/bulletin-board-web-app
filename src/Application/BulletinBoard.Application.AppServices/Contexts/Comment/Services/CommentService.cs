@@ -4,6 +4,7 @@ using BulletinBoard.Application.AppServices.Authentication.Services;
 using BulletinBoard.Application.AppServices.Contexts.Ad.Repositories;
 using BulletinBoard.Application.AppServices.Contexts.Comment.Repositories;
 using BulletinBoard.Application.AppServices.Exceptions;
+using BulletinBoard.Application.AppServices.Filtration.Comment.Specification;
 using BulletinBoard.Application.AppServices.Pagination.Helpers;
 using BulletinBoard.Contracts.Comment;
 using Microsoft.AspNetCore.Http;
@@ -35,9 +36,9 @@ namespace BulletinBoard.Application.AppServices.Contexts.Comment.Services
         }
 
         /// <inheritdoc/>
-        public Task<IReadOnlyCollection<CommentDto>> GetAllAsync(int pageSize, int pageIndex, CancellationToken cancellationToken)
+        public Task<IReadOnlyCollection<CommentDto>> GetAllAsync(CommentSpecification specification, int pageSize, int pageIndex, CancellationToken cancellationToken)
         {
-            var modelCollection = _commentRepository.GetAllAsync(cancellationToken);
+            var modelCollection = _commentRepository.GetAllAsync(specification, cancellationToken);
             var paginatedCollection = PaginationHelper<CommentDto>.SplitByPages(modelCollection, pageSize, pageIndex);
 
             return paginatedCollection;

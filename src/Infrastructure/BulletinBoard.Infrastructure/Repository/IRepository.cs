@@ -1,4 +1,5 @@
-﻿using System.Linq.Expressions;
+﻿using BulletinBoard.Application.AppServices.Filtration.Base.Specification;
+using System.Linq.Expressions;
 
 namespace BulletinBoard.Infrastructure.Repository
 {
@@ -13,6 +14,13 @@ namespace BulletinBoard.Infrastructure.Repository
         /// </summary>
         /// <returns>Коллекцию <see cref="TEntity"/>.</returns>
         IQueryable<TEntity> GetAll();
+
+        /// <summary>
+        /// Возвращает коллекцию с паттерном спецификации.
+        /// </summary>
+        /// <param name="specification">Спецификация.</param>
+        /// <returns></returns>
+        IQueryable<TEntity> GetAllSpecificated(ISpecification<TEntity> specification);
 
         /// <summary>
         /// Возвращает отфильтрованную коллекцию.

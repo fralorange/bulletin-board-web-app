@@ -1,5 +1,7 @@
 ﻿using BulletinBoard.Application.AppServices.Contexts.Comment.Services;
 using BulletinBoard.Application.AppServices.Exceptions;
+using BulletinBoard.Application.AppServices.Filtration.Comment.Filter;
+using BulletinBoard.Application.AppServices.Filtration.Comment.Specification;
 using BulletinBoard.Contracts.Comment;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -27,6 +29,7 @@ namespace BulletinBoard.Hosts.Api.Controllers
         /// <summary>
         /// Возвращает постраничные объявления.
         /// </summary>
+        /// <param name="filter">Фильтр.</param>
         /// <param name="cancellationToken">Отмена операции.</param>
         /// <param name="pageSize">Размер страницы.</param>
         /// <param name="pageIndex">Номер страницы.</param>
@@ -34,9 +37,10 @@ namespace BulletinBoard.Hosts.Api.Controllers
         [AllowAnonymous]
         [HttpGet("get-all-with-limit")]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public async Task<IActionResult> GetAllAsync(CancellationToken cancellationToken, int pageSize = 10, int pageIndex = 0)
+        public async Task<IActionResult> GetAllAsync([FromQuery] CommentFilter filter, CancellationToken cancellationToken, int pageSize = 10, int pageIndex = 0)
         {
-            var result = await _commentService.GetAllAsync(pageSize, pageIndex, cancellationToken);
+            var spec = new CommentSpecification(filter.MinRating, filter.MaxRating);
+            var result = await _commentService.GetAllAsync(spec, pageSize, pageIndex, cancellationToken);
             return Ok(result);
         }
 

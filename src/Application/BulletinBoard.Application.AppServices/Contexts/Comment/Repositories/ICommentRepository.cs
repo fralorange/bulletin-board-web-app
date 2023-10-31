@@ -1,4 +1,5 @@
-﻿using BulletinBoard.Contracts.Comment;
+﻿using BulletinBoard.Application.AppServices.Filtration.Comment.Specification;
+using BulletinBoard.Contracts.Comment;
 using System.Linq.Expressions;
 
 namespace BulletinBoard.Application.AppServices.Contexts.Comment.Repositories
@@ -19,9 +20,10 @@ namespace BulletinBoard.Application.AppServices.Contexts.Comment.Repositories
         /// <summary>
         /// Возвращает комментария в пределах страницы.
         /// </summary>
+        /// <param name="specification">Спецификация.</param>
         /// <param name="cancellationToken">Отмена операции</param>
         /// <returns>Коллекция комментариев <see cref="CommentDto"/></returns>
-        Task<IReadOnlyCollection<CommentDto>> GetAllAsync(CancellationToken cancellationToken);
+        Task<IReadOnlyCollection<CommentDto>> GetAllAsync(CommentSpecification specification, CancellationToken cancellationToken);
 
         /// <summary>
         /// Возвращает комментарий по заданному условию.

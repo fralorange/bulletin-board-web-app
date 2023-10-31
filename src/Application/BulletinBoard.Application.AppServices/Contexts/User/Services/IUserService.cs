@@ -1,4 +1,5 @@
-﻿using BulletinBoard.Contracts.User;
+﻿using BulletinBoard.Application.AppServices.Filtration.User.Specification;
+using BulletinBoard.Contracts.User;
 
 namespace BulletinBoard.Application.AppServices.Contexts.User.Services
 {
@@ -18,11 +19,12 @@ namespace BulletinBoard.Application.AppServices.Contexts.User.Services
         /// <summary>
         /// Возвращает всех пользователей в заданных пределах (по-умолчанию: 10).
         /// </summary>
+        /// <param name="specification">Спецификация.</param>
         /// <param name="pageSize">Размер страницы.</param>
         /// <param name="pageIndex">Номер страницы.</param>
         /// <param name="cancellationToken">Отмена операции.</param>
         /// <returns>Коллекция пользователей <see cref="UserDto"/>.</returns>
-        Task<IReadOnlyCollection<UserDto>> GetAllAsync(int pageSize, int pageIndex, CancellationToken cancellationToken);
+        Task<IReadOnlyCollection<UserDto>> GetAllAsync(UserSpecification specification, int pageSize, int pageIndex, CancellationToken cancellationToken);
 
         /// <summary>
         /// Возвращает текущего пользователя.
