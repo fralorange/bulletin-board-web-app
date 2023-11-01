@@ -94,7 +94,7 @@ namespace BulletinBoard.Application.AppServices.Contexts.User.Services
                         throw new EntityForbiddenException();
 
                     return _userRepository.DeleteAsync(user, cancellationToken);
-                });
+                }).Unwrap();
             }).Unwrap();
         }
     }
