@@ -1,4 +1,5 @@
-﻿using BulletinBoard.Contracts.User;
+﻿using BulletinBoard.Application.AppServices.Filtration.User.Specification;
+using BulletinBoard.Contracts.User;
 using System.Linq.Expressions;
 
 namespace BulletinBoard.Application.AppServices.Contexts.User.Repositories
@@ -19,9 +20,10 @@ namespace BulletinBoard.Application.AppServices.Contexts.User.Repositories
         /// <summary>
         /// Возвращает ограниченный список пользователей.
         /// </summary>
+        /// <param name="specification">Спецификация.</param>
         /// <param name="cancellationToken">Отмена операции</param>
         /// <returns>Коллекция пользователей <see cref="UserDto"/></returns>
-        Task<IReadOnlyCollection<UserDto>> GetAllAsync(CancellationToken cancellationToken);
+        Task<IReadOnlyCollection<UserDto>> GetAllAsync(UserSpecification specification, CancellationToken cancellationToken);
 
         /// <summary>
         /// Возвращает пользователя по заданному условию.

@@ -1,4 +1,5 @@
-﻿using BulletinBoard.Contracts.Ad;
+﻿using BulletinBoard.Application.AppServices.Filtration.Ad.Specification;
+using BulletinBoard.Contracts.Ad;
 
 namespace BulletinBoard.Application.AppServices.Contexts.Ad.Services
 {
@@ -10,11 +11,12 @@ namespace BulletinBoard.Application.AppServices.Contexts.Ad.Services
         /// <summary>
         /// Возвращает объявления в пределах страницы.
         /// </summary>
+        /// <param name="specification">Спецификация.</param>
         /// <param name="pageSize">Размер страницы.</param>
         /// <param name="pageIndex">Номер страницы.</param>
         /// <param name="cancellationToken">Отмена операции</param>
         /// <returns>Коллекция объявлений <see cref="AdDto"/>.</returns>
-        Task<IReadOnlyCollection<AdDto>> GetAllAsync(int pageSize, int pageIndex, CancellationToken cancellationToken);
+        Task<IReadOnlyCollection<AdDto>> GetAllAsync(AdSpecification specification, int pageSize, int pageIndex, CancellationToken cancellationToken);
 
         /// <summary>
         /// Возвращает объявление по заданному идентификатору.

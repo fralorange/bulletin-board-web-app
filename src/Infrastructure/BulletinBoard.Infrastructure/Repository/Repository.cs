@@ -1,4 +1,6 @@
-﻿using BulletinBoard.Domain.Ad;
+﻿using BulletinBoard.Application.AppServices.Filtration.Ad.Specification;
+using BulletinBoard.Application.AppServices.Filtration.Base.Specification;
+using BulletinBoard.Domain.Ad;
 using Microsoft.EntityFrameworkCore;
 using System.Linq.Expressions;
 
@@ -24,6 +26,12 @@ namespace BulletinBoard.Infrastructure.Repository
         public IQueryable<TEntity> GetAll()
         {
             return DbSet;
+        }
+
+        /// <inheritdoc/>
+        public IQueryable<TEntity> GetAllSpecificated(ISpecification<TEntity> specification)
+        {
+            return DbSet.Where(specification.Criteria);
         }
 
         /// <inheritdoc/>

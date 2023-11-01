@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using BulletinBoard.Application.AppServices.Contexts.Comment.Repositories;
+using BulletinBoard.Application.AppServices.Filtration.Comment.Specification;
 using BulletinBoard.Contracts.Ad;
 using BulletinBoard.Contracts.Comment;
 using BulletinBoard.Domain.Ad;
@@ -26,9 +27,9 @@ namespace BulletinBoard.Infrastructure.DataAccess.Contexts.Comment.Repositories
         }
 
         /// <inheritdoc/>
-        public Task<IReadOnlyCollection<CommentDto>> GetAllAsync(CancellationToken cancellationToken)
+        public Task<IReadOnlyCollection<CommentDto>> GetAllAsync(CommentSpecification specification, CancellationToken cancellationToken)
         {
-            var commentCollection = _repository.GetAll();
+            var commentCollection = _repository.GetAllSpecificated(specification);
             var dtoCollection = _mapper.Map<List<CommentDto>>(commentCollection.ToList());
             IReadOnlyCollection<CommentDto> readonlyCollection = dtoCollection.AsReadOnly();
 

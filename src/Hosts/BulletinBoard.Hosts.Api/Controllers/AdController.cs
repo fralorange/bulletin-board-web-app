@@ -1,8 +1,11 @@
 using BulletinBoard.Application.AppServices.Contexts.Ad.Services;
 using BulletinBoard.Application.AppServices.Exceptions;
+using BulletinBoard.Application.AppServices.Filtration.Ad.Filter;
+using BulletinBoard.Application.AppServices.Filtration.Ad.Specification;
 using BulletinBoard.Contracts.Ad;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Caching.Memory;
 
 namespace BulletinBoard.Hosts.Api.Controllers
 {
@@ -14,14 +17,20 @@ namespace BulletinBoard.Hosts.Api.Controllers
     public class AdController : ControllerBase
     {
         private readonly IAdService _adService;
+        private readonly IMemoryCache _memoryCache;
+        private readonly ILogger<AdController> _logger;
 
         /// <summary>
         /// Инициализирует экземпляр <see cref="AdController"/>
         /// </summary>
         /// <param name="adService">Сервис для работы с объявлениями.</param>
-        public AdController(IAdService adService)
+        /// <param name="logger">Логгер.</param>
+        /// <param name="memoryCache">Кеш веб-сервиса.</param>
+        public AdController(IAdService adService, ILogger<AdController> logger, IMemoryCache memoryCache)
         {
             _adService = adService;
+            _logger = logger;
+            _memoryCache = memoryCache;
         }
 
         /// <summary>
@@ -30,6 +39,7 @@ namespace BulletinBoard.Hosts.Api.Controllers
         /// <remarks>
         /// Пример: curl -X 'GET' \ 'https://localhost:port/ad/get-all-by-pages?pageSize=10&amp;pageIndex=0'
         /// </remarks>
+        /// <param name="filter">Фильтр.</param>
         /// <param name="cancellationToken">Отмена операции.</param>
         /// <param name="pageSize">Размер страницы.</param>
         /// <param name="pageIndex">Номер страницы.</param>
@@ -37,9 +47,10 @@ namespace BulletinBoard.Hosts.Api.Controllers
         [AllowAnonymous]
         [HttpGet("get-all-by-pages")]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public async Task<IActionResult> GetAllAsync(CancellationToken cancellationToken, int pageSize = 10, int pageIndex = 0)
+        public async Task<IActionResult> GetAllAsync([FromQuery] AdFilter filter, CancellationToken cancellationToken, int pageSize = 10, int pageIndex = 0)
         {
-            var result = await _adService.GetAllAsync(pageSize, pageIndex, cancellationToken);
+            var spec = new AdSpecification(filter.Title, filter.MinPrice, filter.MaxPrice);
+            var result = await _adService.GetAllAsync(spec, pageSize, pageIndex, cancellationToken);
             return Ok(result);
         }
 
@@ -58,7 +69,30 @@ namespace BulletinBoard.Hosts.Api.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> GetByIdAsync(Guid id, CancellationToken cancellationToken)
         {
-            var result = await _adService.GetByIdAsync(id, cancellationToken);
+            var cacheKey = $"Ad_{id}";
+
+            if (!_memoryCache.TryGetValue(cacheKey, out var result))
+            {
+                var ad = await _adService.GetByIdAsync(id, cancellationToken);
+
+                if (ad != null)
+                {
+                    result = await _memoryCache.GetOrCreateAsync(cacheKey, async entry =>
+                    {
+                        entry.AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(15);
+                        entry.Priority = CacheItemPriority.Low;
+
+                        _logger.LogInformation($"Ad with id {id} was successfully retrieved from the service and stored in the cache.");
+
+                        return ad;
+                    });
+                }
+            }
+            else
+            {
+                _logger.LogInformation($"Ad with id {id} was successfully retrieved from the cache.");
+            }
+
             if (result == null)
                 return NotFound(result);
             return Ok(result);

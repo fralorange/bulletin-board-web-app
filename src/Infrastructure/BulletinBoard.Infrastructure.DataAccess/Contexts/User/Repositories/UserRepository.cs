@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using BulletinBoard.Application.AppServices.Contexts.User.Repositories;
+using BulletinBoard.Application.AppServices.Filtration.User.Specification;
 using BulletinBoard.Contracts.Ad;
 using BulletinBoard.Contracts.User;
 using BulletinBoard.Infrastructure.Repository;
@@ -26,9 +27,9 @@ namespace BulletinBoard.Infrastructure.DataAccess.Contexts.User.Repositories
         }
 
         /// <inheritdoc/>
-        public Task<IReadOnlyCollection<UserDto>> GetAllAsync(CancellationToken cancellationToken)
+        public Task<IReadOnlyCollection<UserDto>> GetAllAsync(UserSpecification specification, CancellationToken cancellationToken)
         {
-            var userCollection = _repository.GetAll();
+            var userCollection = _repository.GetAllSpecificated(specification);
             var dtoCollection = _mapper.Map<List<UserDto>>(userCollection.ToList());
             IReadOnlyCollection<UserDto> readonlyCollection = dtoCollection.AsReadOnly();
 

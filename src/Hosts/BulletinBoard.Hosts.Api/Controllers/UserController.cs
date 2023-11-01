@@ -1,9 +1,12 @@
 ﻿using BulletinBoard.Application.AppServices.Authentication.Constants;
 using BulletinBoard.Application.AppServices.Contexts.User.Services;
 using BulletinBoard.Application.AppServices.Exceptions;
+using BulletinBoard.Application.AppServices.Filtration.User.Filter;
+using BulletinBoard.Application.AppServices.Filtration.User.Specification;
 using BulletinBoard.Contracts.User;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Caching.Memory;
 using System.Security.Claims;
 
 namespace BulletinBoard.Hosts.Api.Controllers
@@ -16,19 +19,26 @@ namespace BulletinBoard.Hosts.Api.Controllers
     public class UserController : ControllerBase
     {
         private readonly IUserService _userService;
+        private readonly IMemoryCache _memoryCache;
+        private readonly ILogger<UserController> _logger;
 
         /// <summary>
         /// Инициализирует экземпляр <see cref="UserController"/>
         /// </summary>
         /// <param name="userService"></param>
-        public UserController(IUserService userService)
+        /// <param name="memoryCache"></param>
+        /// <param name="logger"></param>
+        public UserController(IUserService userService, IMemoryCache memoryCache, ILogger<UserController> logger)
         {
             _userService = userService;
+            _memoryCache = memoryCache;
+            _logger = logger;
         }
 
         /// <summary>
         /// Возвращает список всех пользователей.
         /// </summary>
+        /// <param name="filter">Фильтр.</param>
         /// <param name="pageSize">Размер страницы.</param>
         /// <param name="pageIndex">Номер страницы.</param>
         /// <param name="cancellationToken"></param>
@@ -39,9 +49,10 @@ namespace BulletinBoard.Hosts.Api.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
-        public async Task<IActionResult> GetAllAsync(CancellationToken cancellationToken, int pageSize = 10, int pageIndex = 0)
+        public async Task<IActionResult> GetAllAsync([FromQuery] UserFilter filter, CancellationToken cancellationToken, int pageSize = 10, int pageIndex = 0)
         {
-            var result = await _userService.GetAllAsync(pageSize, pageIndex, cancellationToken);
+            var spec = new UserSpecification(filter.Name, filter.Role);
+            var result = await _userService.GetAllAsync(spec, pageSize, pageIndex, cancellationToken);
             return Ok(result);
         }
 
@@ -57,8 +68,30 @@ namespace BulletinBoard.Hosts.Api.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> GetByIdAsync(Guid id, CancellationToken cancellationToken)
         {
-            //TO-DO: Сделать чтобы возвращал логин.
-            var result = await _userService.GetByIdAsync(id, cancellationToken);
+            var cacheKey = $"User_{id}";
+
+            if (!_memoryCache.TryGetValue(cacheKey, out var result))
+            {
+                var user = await _userService.GetByIdAsync(id, cancellationToken);
+
+                if (user != null)
+                {
+                    result = await _memoryCache.GetOrCreateAsync(cacheKey, async entry =>
+                    {
+                        entry.AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(15);
+                        entry.Priority = CacheItemPriority.Low;
+
+                        _logger.LogInformation($"User with id {id} was successfully retrieved from the service and stored in the cache.");
+
+                        return user;
+                    });
+                }
+            }
+            else
+            {
+                _logger.LogInformation($"User with id {id} was successfully retrieved from the cache.");
+            }
+
             if (result == null)
                 return NotFound(result);
             return Ok(result);

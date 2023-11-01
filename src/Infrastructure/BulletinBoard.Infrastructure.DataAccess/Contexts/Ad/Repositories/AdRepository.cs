@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using BulletinBoard.Application.AppServices.Contexts.Ad.Repositories;
+using BulletinBoard.Application.AppServices.Filtration.Ad.Specification;
 using BulletinBoard.Contracts.Ad;
 using BulletinBoard.Infrastructure.Repository;
 using System.Linq.Expressions;
@@ -32,9 +33,9 @@ namespace BulletinBoard.Infrastructure.DataAccess.Contexts.Ad.Repositories
         }
 
         /// <inheritdoc/>
-        public Task<IReadOnlyCollection<AdDto>> GetAllAsync(CancellationToken cancellationToken)
+        public Task<IReadOnlyCollection<AdDto>> GetAllAsync(AdSpecification specification, CancellationToken cancellationToken)
         {
-            var adCollection = _repository.GetAll();
+            var adCollection = _repository.GetAllSpecificated(specification);
             var dtoCollection = _mapper.Map<List<AdDto>>(adCollection.ToList());
             IReadOnlyCollection<AdDto> readonlyCollection = dtoCollection.AsReadOnly();
 
