@@ -4,6 +4,7 @@ using BulletinBoard.Application.AppServices.Exceptions;
 using BulletinBoard.Contracts.Attachment;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Caching.Memory;
 
 namespace BulletinBoard.Hosts.Api.Controllers
 {
@@ -15,14 +16,20 @@ namespace BulletinBoard.Hosts.Api.Controllers
     public class AttachmentController : ControllerBase
     {
         private readonly IAttachmentService _attachmentService;
+        private readonly IMemoryCache _memoryCache;
+        private readonly ILogger<AttachmentController> _logger;
 
         /// <summary>
         /// Инициализирует экземпляр <see cref="AttachmentController"/>
         /// </summary>
         /// <param name="attachmentService"><see cref="IAttachmentService"/></param>
-        public AttachmentController(IAttachmentService attachmentService)
+        /// <param name="memoryCache"></param>
+        /// <param name="logger"></param>
+        public AttachmentController(IAttachmentService attachmentService, IMemoryCache memoryCache, ILogger<AttachmentController> logger)
         {
             _attachmentService = attachmentService;
+            _memoryCache = memoryCache;
+            _logger = logger;
         }
 
         /// <summary>
@@ -54,7 +61,30 @@ namespace BulletinBoard.Hosts.Api.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> GetByIdAsync(Guid id, CancellationToken cancellationToken)
         {
-            var result = await _attachmentService.GetByIdAsync(id, cancellationToken);
+            var cacheKey = $"Att_{id}";
+
+            if (!_memoryCache.TryGetValue(cacheKey, out var result))
+            {
+                var att = await _attachmentService.GetByIdAsync(id, cancellationToken);
+
+                if (att != null)
+                {
+                    result = await _memoryCache.GetOrCreateAsync(cacheKey, async entry =>
+                    {
+                        entry.AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(15);
+                        entry.Priority = CacheItemPriority.Low;
+
+                        _logger.LogInformation($"Attachment with id {id} was successfully retrieved from the service and stored in the cache.");
+
+                        return att;
+                    });
+                }
+            }
+            else
+            {
+                _logger.LogInformation($"Attachment with id {id} was successfully retrieved from the cache.");
+            }
+
             if (result == null)
                 return NotFound();
             return Ok(result);
