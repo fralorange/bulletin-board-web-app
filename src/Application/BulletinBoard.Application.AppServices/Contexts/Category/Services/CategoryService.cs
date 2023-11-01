@@ -65,7 +65,7 @@ namespace BulletinBoard.Application.AppServices.Contexts.Category.Services
                 var category = t.Result ?? throw new EntityNotFoundException();
 
                 return _categoryRepository.DeleteAsync(category, cancellationToken);
-            });
+            }).Unwrap();
         }
     }
 }

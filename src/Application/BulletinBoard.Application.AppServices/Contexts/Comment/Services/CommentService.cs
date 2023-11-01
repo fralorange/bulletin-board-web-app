@@ -91,7 +91,7 @@ namespace BulletinBoard.Application.AppServices.Contexts.Comment.Services
                         throw new EntityForbiddenException();
 
                     return _commentRepository.DeleteAsync(comment, cancellationToken);
-                });
+                }).Unwrap();
             }).Unwrap();
         }
     }

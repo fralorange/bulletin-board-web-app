@@ -93,7 +93,7 @@ namespace BulletinBoard.Application.AppServices.Contexts.Ad.Services
                         throw new EntityForbiddenException();
 
                     return _adRepository.DeleteAsync(ad, cancellationToken);
-                });
+                }).Unwrap();
             }).Unwrap();
         }
     }
