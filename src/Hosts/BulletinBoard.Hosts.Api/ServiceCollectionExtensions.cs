@@ -170,7 +170,6 @@ namespace BulletinBoard.Hosts.Api
         {
             services.AddMemoryCache(options =>
             {
-                options.SizeLimit = 1000;
                 options.CompactionPercentage = 0.8;
                 options.ExpirationScanFrequency = TimeSpan.FromMinutes(60); 
             });

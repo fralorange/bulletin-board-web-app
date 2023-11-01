@@ -5,6 +5,7 @@ using BulletinBoard.Application.AppServices.Filtration.Comment.Specification;
 using BulletinBoard.Contracts.Comment;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Caching.Memory;
 
 namespace BulletinBoard.Hosts.Api.Controllers
 {
@@ -16,14 +17,20 @@ namespace BulletinBoard.Hosts.Api.Controllers
     public class CommentController : ControllerBase
     {
         private readonly ICommentService _commentService;
+        private readonly IMemoryCache _memoryCache;
+        private readonly ILogger<CommentController> _logger;
 
         /// <summary>
         /// Инициализирует экземпляр <see cref="CommentController"/> 
         /// </summary>
         /// <param name="commentService"></param>
-        public CommentController(ICommentService commentService)
+        /// <param name="memoryCache"></param>
+        /// <param name="logger"></param>
+        public CommentController(ICommentService commentService, IMemoryCache memoryCache, ILogger<CommentController> logger)
         {
             _commentService = commentService;
+            _memoryCache = memoryCache;
+            _logger = logger;
         }
 
         /// <summary>
@@ -56,7 +63,30 @@ namespace BulletinBoard.Hosts.Api.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> GetByIdAsync(Guid id, CancellationToken cancellationToken)
         {
-            var result = await _commentService.GetByIdAsync(id, cancellationToken);
+            var cacheKey = $"Comment_{id}";
+
+            if (!_memoryCache.TryGetValue(cacheKey, out var result))
+            {
+                var comment = await _commentService.GetByIdAsync(id, cancellationToken);
+
+                if (comment != null)
+                {
+                    result = await _memoryCache.GetOrCreateAsync(cacheKey, async entry =>
+                    {
+                        entry.AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(15);
+                        entry.Priority = CacheItemPriority.Low;
+
+                        _logger.LogInformation($"Comment with id {id} was successfully retrieved from the service and stored in the cache.");
+
+                        return comment;
+                    });
+                }
+            }
+            else
+            {
+                _logger.LogInformation($"Comment with id {id} was successfully retrieved from the cache.");
+            }
+
             if (result == null)
                 return NotFound();
             return Ok(result);
