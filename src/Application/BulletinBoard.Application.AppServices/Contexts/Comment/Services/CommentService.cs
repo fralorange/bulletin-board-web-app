@@ -66,7 +66,7 @@ namespace BulletinBoard.Application.AppServices.Contexts.Comment.Services
             return _commentRepository.GetByPredicate(c => c.Id == id, cancellationToken).ContinueWith(t => {
                 var comment = t.Result ?? throw new EntityNotFoundException();
 
-                return _entityAuthorizationService.Validate(_httpContextAccessor.HttpContext!.User, comment.AdId, AuthRoles.Admin).ContinueWith(t2 =>
+                return _entityAuthorizationService.ValidateUserOnly(_httpContextAccessor.HttpContext!.User, comment.UserId, AuthRoles.Admin).ContinueWith(t2 =>
                 {
                     if (t2.Result)
                         throw new EntityForbiddenException();
@@ -75,8 +75,8 @@ namespace BulletinBoard.Application.AppServices.Contexts.Comment.Services
                     comment.Rating = dto.Rating;
 
                     return _commentRepository.UpdateAsync(id, comment, cancellationToken);
-                });
-            });
+                }).Unwrap();
+            }).Unwrap();
         }
 
         /// <inheritdoc/>
