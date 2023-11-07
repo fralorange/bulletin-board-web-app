@@ -77,7 +77,7 @@ namespace BulletinBoard.Application.AppServices.Contexts.User.Services
                     user.HashedPassword = Password;
 
                     return _userRepository.UpdateAsync(id, user, cancellationToken);
-                });
+                }).Unwrap();
             }).Unwrap();
         }
 
