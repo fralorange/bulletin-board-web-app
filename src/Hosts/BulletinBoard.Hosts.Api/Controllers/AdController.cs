@@ -113,6 +113,8 @@ namespace BulletinBoard.Hosts.Api.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> CreateAsync([FromBody] CreateAdDto dto, CancellationToken cancellationToken)
         {
+            _memoryCache.Remove("CategoryList");
+
             var dtoId = await _adService.CreateAsync(dto, cancellationToken);
             return Created(nameof(CreateAsync), dtoId);
         }
@@ -131,6 +133,10 @@ namespace BulletinBoard.Hosts.Api.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> UpdateAsync(Guid id, UpdateAdDto dto, CancellationToken cancellationToken)
         {
+            var cacheKey = $"Ad_{id}";
+            if (_memoryCache.TryGetValue(cacheKey, out var result))
+                _memoryCache.Remove(cacheKey);
+
             try
             {
                 await _adService.UpdateAsync(id, dto, cancellationToken);
